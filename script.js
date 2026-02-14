@@ -284,7 +284,7 @@ function buildSummary() {
   const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
   const budget = document.getElementById('cwBudget').value;
 
-  const r = (l, v) => '<div class="wr-row"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
+  const r = (l, v) => '<div class="wr-row" onclick="toggleConfirm(this)"><input type="checkbox" class="wr-check"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
   document.getElementById('wizReview').innerHTML =
     r('프로젝트', name) +
     r('기간', startD + ' ~ ' + endD) +
@@ -293,6 +293,23 @@ function buildSummary() {
     r('퀘스트', questNames.map(n => '<span class="wr-quest-tag">' + n + '</span>').join(' ')) +
     r('보상 토큰', token) +
     r('총 예산', '$' + Number(budget || 0).toLocaleString());
+  updateLaunchBtn();
+}
+
+function toggleConfirm(row) {
+  const cb = row.querySelector('.wr-check');
+  cb.checked = !cb.checked;
+  row.classList.toggle('confirmed', cb.checked);
+  updateLaunchBtn();
+}
+
+function updateLaunchBtn() {
+  const allChecks = document.querySelectorAll('#wizReview .wr-check');
+  const allDone = allChecks.length > 0 && [...allChecks].every(c => c.checked);
+  const btn = document.getElementById('wizNext');
+  if (wizStep === WIZ_TOTAL) {
+    btn.classList.toggle('disabled', !allDone);
+  }
 }
 
 function updateEstimate() {
@@ -323,6 +340,50 @@ function updateEstimate() {
   buildSummary();
 }
 
+// ==================== ADD CAMPAIGN TO QUEST TABLE ====================
+function addCampaignToQuestTable() {
+  const projName = document.getElementById('cwProjName').value || '새 프로젝트';
+  const chain = document.getElementById('cwChain').selectedOptions[0]?.text || 'Ethereum';
+  const abbr = projName.slice(0, 2).toUpperCase();
+  const gradients = [
+    '#6366f1,#818cf8', '#f59e0b,#fbbf24', '#ec4899,#f472b6',
+    '#22d3ee,#06b6d4', '#10b981,#34d399', '#8b5cf6,#a78bfa'
+  ];
+  const grad = gradients[Math.floor(Math.random() * gradients.length)];
+
+  // Collect quest names
+  const questNames = [];
+  document.querySelectorAll('.wiz-quest-cb:checked').forEach(cb => {
+    const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+    if (n) questNames.push(n);
+  });
+  if (document.getElementById('referralToggle').checked) questNames.push('레퍼럴');
+  const questLabel = questNames[0] || '퀘스트';
+  if (questNames.length > 1) questLabel;
+
+  // Reward info
+  const token = document.getElementById('cwToken').selectedOptions[0]?.text || 'USDT';
+  let totalReward = 0;
+  document.querySelectorAll('.wiz-qr-input input').forEach(inp => { totalReward += Number(inp.value) || 0; });
+  const rewardText = totalReward > 0 ? totalReward + ' ' + token : token;
+
+  // Participants
+  const est = document.getElementById('estParticipants').textContent.replace('~', '').replace('명', '');
+  const partText = '0 / ' + est;
+
+  const tr = document.createElement('tr');
+  tr.className = 'quest-row-new';
+  tr.innerHTML =
+    '<td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,' + grad + ');">' + abbr + '</div><div><div class="tr-pname">' + projName + '</div><div class="tr-chain">' + chain + '</div></div></div></td>' +
+    '<td>' + questLabel + (questNames.length > 1 ? ' 외 ' + (questNames.length - 1) + '건' : '') + '</td>' +
+    '<td class="tr-mono">' + rewardText + '</td>' +
+    '<td class="tr-mono">' + partText + '</td>' +
+    '<td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--orange);"></span>모집중</span></td>';
+
+  const tbody = document.querySelector('.troom-table tbody');
+  tbody.insertBefore(tr, tbody.firstChild);
+}
+
 // ==================== CONFETTI ====================
 function launchConfetti() {
   const colors = ['#3182F6', '#20C997', '#8B5CF6', '#F59E0B', '#EC4899', '#6366F1', '#22D3EE'];
@@ -350,12 +411,22 @@ function wizGo(dir) {
   if (next === 2 && dir === 1) applyQuestRecommendations();
   if (next === 3 && dir === 1) buildStep3();
   if (next === WIZ_TOTAL + 1) {
+    // Check all summary items confirmed
+    const allChecks = document.querySelectorAll('#wizReview .wr-check');
+    const allDone = allChecks.length > 0 && [...allChecks].every(c => c.checked);
+    if (!allDone) {
+      document.getElementById('wizReview').classList.add('shake');
+      setTimeout(() => document.getElementById('wizReview').classList.remove('shake'), 500);
+      return;
+    }
     // Populate done stats
     const budget = Number(document.getElementById('cwBudget').value) || 0;
     document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
     const qCount = document.querySelectorAll('.wiz-quest-cb:checked').length + (document.getElementById('referralToggle').checked ? 1 : 0);
     document.getElementById('doneQuests').textContent = qCount + '개';
     document.getElementById('doneEst').textContent = document.getElementById('estParticipants').textContent;
+    // Add to quest table
+    addCampaignToQuestTable();
     for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
     document.getElementById('wizDone').style.display = 'block';
     document.getElementById('wizNav').style.display = 'none';
@@ -371,6 +442,8 @@ function wizGo(dir) {
   updateStepDots(wizStep);
   document.getElementById('wizPrev').style.display = wizStep === 1 ? 'none' : '';
   document.getElementById('wizNext').textContent = wizStep === WIZ_TOTAL ? '캠페인 시작 🚀' : '다음';
+  if (wizStep === WIZ_TOTAL) updateLaunchBtn();
+  else document.getElementById('wizNext').classList.remove('disabled');
 }
 
 function updateStepDots(step) {
@@ -395,6 +468,8 @@ function closeCampWizard() {
     updateStepDots(1);
     document.getElementById('wizPrev').style.display = 'none';
     document.getElementById('wizNext').textContent = '다음';
+    document.getElementById('wizNext').classList.remove('disabled');
+    document.getElementById('wizReview').innerHTML = '';
     // Reset selections
     document.querySelectorAll('.wiz-goal').forEach(g => g.classList.remove('selected'));
     document.querySelectorAll('.wiz-ptype').forEach(p => p.classList.remove('selected'));
