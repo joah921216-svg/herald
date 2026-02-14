@@ -650,9 +650,8 @@
     <a href="#" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
     <button class="mob-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
-      <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
       <li><a href="#roster" data-i18n="nav_roster">KOL Roster</a></li>
-      <li><a href="#rooms" data-i18n="nav_rooms">Token Rooms</a></li>
+      <li><a href="#rooms" data-i18n="nav_rooms">Campaigns</a></li>
       <li><a href="#quests" data-i18n="nav_quest">Quests</a></li>
       <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
       <li>
@@ -680,7 +679,7 @@
     <div class="hero-left">
       <div class="hero-tag"><span class="td"></span><span data-i18n="hero_tag">The Open KOL Layer for Web3</span></div>
       <h1>KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span></h1>
-      <p class="hero-desc">The open marketplace where Web3 KOLs control their rates and projects launch performance-based campaigns with escrowed rewards. No middlemen, no trust issues.</p>
+      <p class="hero-desc">The open marketplace where Web3 KOLs set their own price and projects run performance-based campaigns. No middlemen, no trust issues.</p>
       <div class="hero-actions">
         <a href="javascript:openModal('campModal')" class="btn btn-lime">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
@@ -739,44 +738,7 @@
   </div>
 </section>
 
-<!-- ==================== HOW IT WORKS ==================== -->
-<section class="s-bg" id="how">
-  <div class="container">
-    <div class="sheader center">
-      <div class="eyebrow rv" data-i18n="how_eye">// process</div>
-      <h2 class="stitle rv" data-i18n="how_title">How It Works</h2>
-      <p class="sdesc rv" data-i18n="how_desc">Four steps from campaign brief to verified, on-chain payouts.</p>
-    </div>
-    <div class="how-steps">
-      <div class="how-step rv">
-        <div class="hs-num">01</div>
-        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <h4 data-i18n="hs1_t">KOL Register</h4>
-        <p data-i18n="hs1_d">Link Twitter &amp; Telegram. Set niche, rates, portfolio. Go live instantly.</p>
-      </div>
-      <div class="how-step rv rv-d1">
-        <div class="hs-num">02</div>
-        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg></div>
-        <h4 data-i18n="hs2_t">Ping Projects</h4>
-        <p data-i18n="hs2_d">Browse projects and send promotion proposals. Or projects find you via search and filters.</p>
-      </div>
-      <div class="how-step rv rv-d2">
-        <div class="hs-num">03</div>
-        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
-        <h4 data-i18n="hs3_t">Token Room Opens</h4>
-        <p data-i18n="hs3_d">Project funds escrow. KOLs accept terms, start promoting. KPIs tracked in real-time.</p>
-      </div>
-      <div class="how-step rv rv-d3">
-        <div class="hs-num">04</div>
-        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <h4 data-i18n="hs4_t">Auto Payout</h4>
-        <p data-i18n="hs4_d">KPI verified. Choose: receive project tokens or auto-swap to stablecoin via DEX. Both sides review.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== DUAL: FOR KOL / FOR PROJECT ==================== -->
+<!-- ==================== DUAL: FOR KOL / FOR PROJECT / FOR USER ==================== -->
 <section id="dual">
   <div class="container">
     <div class="sheader center">
@@ -961,17 +923,17 @@
   </div>
 </section>
 
-<!-- ==================== TOKEN ROOMS LIVE ==================== -->
+<!-- ==================== CAMPAIGN STATUS ==================== -->
 <section id="rooms">
   <div class="container">
     <div class="sheader">
-      <div class="eyebrow rv" data-i18n="rooms_eye">// live campaigns</div>
-      <h2 class="stitle rv" data-i18n="rooms_title">Token Rooms</h2>
+      <div class="eyebrow rv" data-i18n="rooms_eye">// campaign status</div>
+      <h2 class="stitle rv" data-i18n="rooms_title">Campaign Status</h2>
       <p class="sdesc rv" data-i18n="rooms_desc">Real-time campaign status. Escrowed funds, verified KPIs, transparent payouts.</p>
     </div>
     <div class="troom-wrap rv">
       <div class="troom-header">
-        <h4>Active Token Rooms</h4>
+        <h4 data-i18n="rooms_active">Active Campaigns</h4>
         <div class="troom-live"><span class="dot"></span>Live</div>
       </div>
       <table class="troom-table">
@@ -1749,11 +1711,11 @@
 
   const i18n = {
     en: {
-      nav_how: 'How it Works', nav_roster: 'KOL Roster', nav_rooms: 'Token Rooms',
+      nav_roster: 'KOL Roster', nav_rooms: 'Campaigns',
       nav_binance: 'Binance KOL', nav_pricing: 'Pricing', nav_wallet: 'Connect Wallet',
       hero_tag: 'The Open KOL Layer for Web3',
       hero_h1: 'KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span>',
-      hero_desc: 'The open marketplace where Web3 KOLs control their rates and projects launch performance-based campaigns with escrowed rewards. No middlemen, no trust issues.',
+      hero_desc: 'The open marketplace where Web3 KOLs set their own price and projects run performance-based campaigns. No middlemen, no trust issues.',
       hero_btn1: 'Launch Campaign', hero_btn2: 'Join as KOL',
       hm1: 'Verified KOLs', hm2: 'Rewards Distributed', hm3: 'Avg. Campaign ROI',
       how_eye: '// process', how_title: 'How It Works', how_desc: 'Four steps from campaign brief to verified, on-chain payouts.',
@@ -1765,8 +1727,9 @@
       dual_desc: 'A true multi-sided marketplace. KOLs promote, projects fund, users participate. Everyone earns.',
       roster_eye: '// kol directory', roster_title: 'KOL Roster',
       roster_desc: 'Browse verified KOLs or reach unregistered ones directly via Telegram & Twitter DM.',
-      rooms_eye: '// live campaigns', rooms_title: 'Token Rooms',
+      rooms_eye: '// campaign status', rooms_title: 'Campaign Status',
       rooms_desc: 'Real-time campaign status. Escrowed funds, verified KPIs, transparent payouts.',
+      rooms_active: 'Active Campaigns',
       bnb_title: 'Binance KOL Program <span style="color:#f3ba2f;">Eligible</span>',
       bnb_desc: 'We automatically screen our KOL roster against Binance\'s affiliate program requirements. Verified KOLs get fast-tracked.',
       bnb_req_title: 'Binance KOL Requirements',
@@ -1870,11 +1833,11 @@
       reg_done_btn: 'Go to Dashboard'
     },
     ko: {
-      nav_how: '이용 방법', nav_roster: 'KOL 명단', nav_rooms: '토큰 룸',
+      nav_roster: 'KOL 명단', nav_rooms: '캠페인 현황',
       nav_binance: '바이낸스 KOL', nav_pricing: '가격', nav_wallet: '지갑 연결',
       hero_tag: 'Web3를 위한 오픈 KOL 레이어',
       hero_h1: 'KOL이 가격을 정한다.<br><span class="lime">프로젝트가 알파를 고른다.</span>',
-      hero_desc: 'KOL이 광고비를 직접 정하고, 프로젝트가 성과 캠페인을 직접 운영하는 오픈 마켓플레이스. 중개인 없이, 신뢰 문제 없이.',
+      hero_desc: 'Web3 KOL이 자신의 가격을 직접 설정하고, 프로젝트가 성과 캠페인을 운영하는 오픈 마켓플레이스. 중개인 없이, 신뢰 문제 없이.',
       hero_btn1: '캠페인 시작', hero_btn2: 'KOL 등록',
       hm1: '인증된 KOL', hm2: '보상 지급액', hm3: '평균 캠페인 ROI',
       how_eye: '// 프로세스', how_title: '이용 방법', how_desc: '캠페인 브리프부터 온체인 정산까지 4단계.',
@@ -1896,8 +1859,9 @@
       dp_f5: '실시간 대시보드: 노출, 인게이지먼트, 온체인 전환', dp_f6: 'KOL 평가 & ROI 분석 접근',
       roster_eye: '// KOL 디렉토리', roster_title: 'KOL 명단',
       roster_desc: '인증된 KOL을 탐색하거나 텔레그램 & 트위터 DM으로 미등록 KOL에게 직접 연락하세요.',
-      rooms_eye: '// 라이브 캠페인', rooms_title: '토큰 룸',
+      rooms_eye: '// 캠페인 현황', rooms_title: '캠페인 현황',
       rooms_desc: '실시간 캠페인 현황. 에스크로 자금, 검증된 KPI, 투명한 정산.',
+      rooms_active: '진행 중인 캠페인',
       bnb_title: '바이낸스 KOL 프로그램 <span style="color:#f3ba2f;">적격</span>',
       bnb_desc: '바이낸스 어필리에이트 프로그램 요건에 맞춰 KOL 명단을 자동 스크리닝합니다.',
       bnb_req_title: '바이낸스 KOL 요건',
@@ -1993,11 +1957,11 @@
       wm_rw_desc: 'EVM 멀티체인 지갑'
     },
     ja: {
-      nav_how: '使い方', nav_roster: 'KOLリスト', nav_rooms: 'トークンルーム',
+      nav_roster: 'KOLリスト', nav_rooms: 'キャンペーン',
       nav_binance: 'Binance KOL', nav_pricing: '料金', nav_wallet: 'ウォレット接続',
       hero_tag: 'Web3のためのオープンKOLレイヤー',
       hero_h1: 'KOLが価格を決める。<br><span class="lime">プロジェクトがアルファを選ぶ。</span>',
-      hero_desc: 'Web3 KOLが自分のレートを設定し、プロジェクトがエスクロー付きのパフォーマンスキャンペーンを実施するオープンマーケットプレイス。',
+      hero_desc: 'Web3 KOLが自分の価格を設定し、プロジェクトがパフォーマンスキャンペーンを運営するオープンマーケットプレイス。仲介者なし、信頼問題なし。',
       hero_btn1: 'キャンペーン開始', hero_btn2: 'KOL登録',
       hm1: '認証済みKOL', hm2: '報酬配布額', hm3: '平均キャンペーンROI',
       how_eye: '// プロセス', how_title: '使い方', how_desc: 'キャンペーン概要からオンチェーン決済まで4ステップ。',
@@ -2019,8 +1983,9 @@
       dp_f5: 'リアルタイムダッシュボード：インプレッション、エンゲージメント、オンチェーン転換', dp_f6: 'KOL評価＆ROI分析アクセス',
       roster_eye: '// KOLディレクトリ', roster_title: 'KOLリスト',
       roster_desc: '認証済みKOLを閲覧するか、Telegram＆Twitter DMで未登録KOLに直接連絡。',
-      rooms_eye: '// ライブキャンペーン', rooms_title: 'トークンルーム',
+      rooms_eye: '// キャンペーン状況', rooms_title: 'キャンペーン状況',
       rooms_desc: 'リアルタイムキャンペーン状況。エスクロー資金、検証済みKPI、透明な決済。',
+      rooms_active: '進行中のキャンペーン',
       bnb_title: 'Binance KOLプログラム <span style="color:#f3ba2f;">適格</span>',
       bnb_desc: 'BinanceアフィリエイトプログラムのKOLリストを自動スクリーニングします。',
       bnb_req_title: 'Binance KOL要件', bnb_req_desc: 'Binance KOL/アフィリエイトプログラムの資格を得るには：',
@@ -2109,11 +2074,11 @@
       wm_rw_desc: 'EVMマルチチェーンウォレット'
     },
     zh: {
-      nav_how: '使用方法', nav_roster: 'KOL名单', nav_rooms: '代币房间',
+      nav_roster: 'KOL名单', nav_rooms: '活动状态',
       nav_binance: 'Binance KOL', nav_pricing: '价格', nav_wallet: '连接钱包',
       hero_tag: 'Web3的开放KOL层',
       hero_h1: 'KOL定价。<br><span class="lime">项目选择Alpha。</span>',
-      hero_desc: 'Web3 KOL自主定价，项目方运行基于托管的绩效营销活动的开放市场。没有中间商，没有信任问题。',
+      hero_desc: 'Web3 KOL自主定价，项目方运行绩效营销活动的开放市场。没有中间商，没有信任问题。',
       hero_btn1: '启动营销活动', hero_btn2: '注册KOL',
       hm1: '认证KOL', hm2: '已分配奖励', hm3: '平均活动ROI',
       how_eye: '// 流程', how_title: '使用方法', how_desc: '从活动简报到链上验证结算，四个步骤。',
@@ -2135,8 +2100,9 @@
       dp_f5: '实时仪表板：曝光、互动、链上转化', dp_f6: 'KOL评价和ROI分析',
       roster_eye: '// KOL目录', roster_title: 'KOL名单',
       roster_desc: '浏览认证KOL或通过Telegram和Twitter DM直接联系未注册KOL。',
-      rooms_eye: '// 实时活动', rooms_title: '代币房间',
+      rooms_eye: '// 活动状态', rooms_title: '活动状态',
       rooms_desc: '实时活动状态。托管资金，验证KPI，透明结算。',
+      rooms_active: '进行中的活动',
       bnb_title: 'Binance KOL项目 <span style="color:#f3ba2f;">合格</span>',
       bnb_desc: '自动根据Binance附属计划要求筛选KOL名单。',
       bnb_req_title: 'Binance KOL要求', bnb_req_desc: '要获得Binance KOL/附属计划资格，需满足以下条件之一：',
