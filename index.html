@@ -243,7 +243,7 @@
     .how-step p { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; }
 
     /* === DUAL CARDS === */
-    .dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .dual-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
     .dual-card {
       border-radius: var(--r); padding: 2.5rem; position: relative; overflow: hidden;
       transition: transform 0.35s;
@@ -270,6 +270,17 @@
     }
     .for-kol .dc-check { background: var(--lime-soft); color: var(--lime); }
     .for-proj .dc-check { background: var(--purple-soft); color: var(--purple); }
+    .dual-card.for-user {
+      background: linear-gradient(135deg, rgba(34,211,238,0.06), rgba(34,211,238,0.015));
+      border: 1px solid rgba(34,211,238,0.12);
+    }
+    .for-user .dc-label { color: var(--cyan); }
+    .for-user .dc-check { background: var(--cyan-soft); color: var(--cyan); }
+    .qt-badge { font-size: 0.65rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px; white-space: nowrap; }
+    .qt-exp { background: var(--lime-soft); color: var(--lime); }
+    .qt-review { background: var(--purple-soft); color: var(--purple); }
+    .qt-referral { background: var(--cyan-soft); color: var(--cyan); }
+    .qt-airdrop { background: rgba(251,191,36,0.1); color: var(--gold); }
 
     /* === KOL ROSTER === */
     .roster-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
@@ -642,6 +653,7 @@
       <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
       <li><a href="#roster" data-i18n="nav_roster">KOL Roster</a></li>
       <li><a href="#rooms" data-i18n="nav_rooms">Token Rooms</a></li>
+      <li><a href="#quests" data-i18n="nav_quest">Quests</a></li>
       <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
       <li>
         <div class="lang-sw">
@@ -769,8 +781,8 @@
   <div class="container">
     <div class="sheader center">
       <div class="eyebrow rv" data-i18n="dual_eye">// two sides</div>
-      <h2 class="stitle rv" data-i18n="dual_title">Built for <span class="lime">KOLs</span> &amp; <span class="purple">Projects</span></h2>
-      <p class="sdesc rv" data-i18n="dual_desc">A true two-sided marketplace. Maximum freedom for sellers, maximum transparency for buyers.</p>
+      <h2 class="stitle rv" data-i18n="dual_title">Built for <span class="lime">KOLs</span>, <span class="purple">Projects</span> &amp; <span class="cyan">Users</span></h2>
+      <p class="sdesc rv" data-i18n="dual_desc">A true multi-sided marketplace. KOLs promote, projects fund, users participate. Everyone earns.</p>
     </div>
     <div class="dual-grid">
       <div class="dual-card for-kol rv">
@@ -801,6 +813,21 @@
           <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f6">Rate KOLs &amp; access ROI analytics</span></li>
         </ul>
         <a href="javascript:openModal('campModal')" class="btn btn-purple" data-i18n="hero_btn1">Launch Campaign</a>
+      </div>
+
+      <div class="dual-card for-user rv rv-d2">
+        <div class="dc-label" data-i18n="du_label">For Users</div>
+        <h3 data-i18n="du_title">Participate &amp; Earn</h3>
+        <p data-i18n="du_desc">No massive following needed. Complete quests, write reviews, refer friends, and earn rewards from real projects.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f1">Complete quests: airdrops, signups, testnets</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f2">Write project reviews (like delivery app reviews)</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f3">Refer friends &amp; earn bonus rewards</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f4">Introduce networks &amp; communities to projects</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f5">Build trust score from participation history</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f6">No channel required — anyone can join</span></li>
+        </ul>
+        <a href="javascript:openModal('regModal')" class="btn btn-ghost" style="border-color:var(--cyan);color:var(--cyan);" data-i18n="du_btn">Join Quest Board</a>
       </div>
     </div>
   </div>
@@ -993,6 +1020,72 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUEST BOARD ==================== -->
+<section class="s-bg" id="quests">
+  <div class="container">
+    <div class="sheader">
+      <div class="eyebrow rv" data-i18n="quest_eye">// quest board</div>
+      <h2 class="stitle rv" data-i18n="quest_title">Quest Board</h2>
+      <p class="sdesc rv" data-i18n="quest_desc">Complete quests, write reviews, refer friends. No channel needed — anyone can earn rewards.</p>
+    </div>
+    <div class="troom-wrap rv">
+      <div class="troom-header">
+        <h4 data-i18n="quest_active">Available Quests</h4>
+        <div class="troom-live"><span class="dot"></span>Live</div>
+      </div>
+      <table class="troom-table">
+        <thead>
+          <tr>
+            <th data-i18n="qt_project">Project</th>
+            <th data-i18n="qt_quest">Quest</th>
+            <th data-i18n="qt_type">Type</th>
+            <th data-i18n="qt_reward">Reward</th>
+            <th data-i18n="qt_participants">Participants</th>
+            <th data-i18n="qt_status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
+            <td data-i18n="qq1_quest">First swap experience</td>
+            <td><span class="qt-badge qt-exp" data-i18n="qt_exp">Experience</span></td>
+            <td class="tr-mono">10 USDT + Airdrop</td>
+            <td class="tr-mono">234 / 500</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
+            <td data-i18n="qq2_quest">Write usage review</td>
+            <td><span class="qt-badge qt-review" data-i18n="qt_review">Review</span></td>
+            <td class="tr-mono">5 USDT</td>
+            <td class="tr-mono">89 / 200</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
+            <td data-i18n="qq3_quest">Invite 3 friends</td>
+            <td><span class="qt-badge qt-referral" data-i18n="qt_referral">Referral</span></td>
+            <td class="tr-mono">15 USDT + NFT</td>
+            <td class="tr-mono">45 / 100</td>
+            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span><span data-i18n="qt_recruiting">Recruiting</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
+            <td data-i18n="qq4_quest">Join testnet &amp; give feedback</td>
+            <td><span class="qt-badge qt-airdrop" data-i18n="qt_airdrop">Airdrop</span></td>
+            <td class="tr-mono" data-i18n="qq4_reward">TGE Airdrop</td>
+            <td class="tr-mono">1.2K</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="quest_btn">Join Quest Board</button>
     </div>
   </div>
 </section>
@@ -1668,8 +1761,8 @@
       hs2_t: 'Ping Projects', hs2_d: 'Browse projects and send promotion proposals. Or projects find you via search and filters.',
       hs3_t: 'Token Room Opens', hs3_d: 'Project funds escrow. KOLs accept terms, start promoting. KPIs tracked in real-time.',
       hs4_t: 'Auto Payout', hs4_d: 'KPI verified. Choose: receive project tokens or auto-swap to stablecoin via DEX. Both sides review.',
-      dual_eye: '// two sides', dual_title: 'Built for <span class="lime">KOLs</span> & <span class="purple">Projects</span>',
-      dual_desc: 'A true two-sided marketplace. Maximum freedom for sellers, maximum transparency for buyers.',
+      dual_eye: '// three sides', dual_title: 'Built for <span class="lime">KOLs</span>, <span class="purple">Projects</span> & <span class="cyan">Users</span>',
+      dual_desc: 'A true multi-sided marketplace. KOLs promote, projects fund, users participate. Everyone earns.',
       roster_eye: '// kol directory', roster_title: 'KOL Roster',
       roster_desc: 'Browse verified KOLs or reach unregistered ones directly via Telegram & Twitter DM.',
       rooms_eye: '// live campaigns', rooms_title: 'Token Rooms',
@@ -1734,6 +1827,21 @@
       rm3_1: '$SHILL token launch', rm3_2: 'DAO governance for platform decisions',
       rm3_3: 'Revenue sharing for token holders', rm3_4: 'KOL index & reputation NFTs', rm3_5: 'Decentralized dispute resolution',
       kc_tg: 'TG Subscribers', kc_tw: 'X Followers', roster_register: 'Register as KOL',
+      nav_quest: 'Quests',
+      du_label: 'For Users', du_title: 'Participate & Earn',
+      du_desc: 'No massive following needed. Complete quests, write reviews, refer friends, and earn rewards from real projects.',
+      du_f1: 'Complete quests: airdrops, signups, testnets', du_f2: 'Write project reviews (like delivery app reviews)',
+      du_f3: 'Refer friends & earn bonus rewards', du_f4: 'Introduce networks & communities to projects',
+      du_f5: 'Build trust score from participation history', du_f6: 'No channel required — anyone can join',
+      du_btn: 'Join Quest Board',
+      quest_eye: '// quest board', quest_title: 'Quest Board',
+      quest_desc: 'Complete quests, write reviews, refer friends. No channel needed — anyone can earn rewards.',
+      quest_active: 'Available Quests', quest_btn: 'Join Quest Board',
+      qt_project: 'Project', qt_quest: 'Quest', qt_type: 'Type', qt_reward: 'Reward', qt_participants: 'Participants', qt_status: 'Status',
+      qt_exp: 'Experience', qt_review: 'Review', qt_referral: 'Referral', qt_airdrop: 'Airdrop',
+      qt_live: 'Active', qt_recruiting: 'Recruiting',
+      qq1_quest: 'First swap experience', qq2_quest: 'Write usage review',
+      qq3_quest: 'Invite 3 friends', qq4_quest: 'Join testnet & give feedback', qq4_reward: 'TGE Airdrop',
       pc_starter_name: 'Starter', pc_starter_price: 'Free', pc_starter_sub: 'For KOLs & small projects',
       pc_s_f1: 'KOL profile & portfolio', pc_s_f2: 'Up to 3 active campaigns', pc_s_f3: 'Basic analytics',
       pc_s_f4: '3% matching fee', pc_s_f5: 'Priority KOL placement', pc_s_f6: 'DM auto-outreach',
@@ -1774,8 +1882,8 @@
       hs2_t: '프로젝트에 핑', hs2_d: '프로젝트를 탐색하고 홍보 제안을 보내세요. 또는 프로젝트가 검색과 필터로 당신을 찾습니다.',
       hs3_t: '토큰 룸 오픈', hs3_d: '프로젝트가 에스크로 펀딩. KOL이 조건 수락 후 홍보 시작. KPI 실시간 추적.',
       hs4_t: '자동 정산', hs4_d: 'KPI 검증 완료. 선택: 프로젝트 토큰 수령 또는 DEX에서 스테이블코인으로 즉시 스왑. 양측 리뷰.',
-      dual_eye: '// 양면 마켓', dual_title: '<span class="lime">KOL</span>과 <span class="purple">프로젝트</span>를 위해',
-      dual_desc: '진정한 양면 마켓플레이스. 판매자에게는 최대한의 자유를, 구매자에게는 최대한의 투명성을.',
+      dual_eye: '// 삼면 마켓', dual_title: '<span class="lime">KOL</span>, <span class="purple">프로젝트</span>, <span class="cyan">유저</span>를 위해',
+      dual_desc: '진정한 다면 마켓플레이스. KOL은 홍보하고, 프로젝트는 펀딩하고, 유저는 참여합니다. 모두가 보상을 받습니다.',
       dk_label: 'KOL용', dk_title: '내 영향력, 내 가격',
       dk_desc: '딜에서 수수료를 떼어가는 에이전시 없이. 직접 단가를 설정하고, 포트폴리오를 전시하고, 온체인 평판을 쌓으세요.',
       dk_f1: '트위터 & 텔레그램 ID 자동 연동', dk_f2: '실시간으로 단가를 자유롭게 설정 & 변경',
@@ -1867,6 +1975,21 @@
       pc_p_f1: '무제한 캠페인', pc_p_f2: '고급 분석 & ROI 리포트', pc_p_f3: '미등록 KOL DM 자동 발송',
       pc_p_f4: '우선 지원', pc_p_f5: '매칭 수수료 0%', pc_p_f6: '프라이빗 투자 라운드 참여',
       pc_pro_btn: 'Pro 시작',
+      nav_quest: '퀘스트',
+      du_label: '일반 유저용', du_title: '참여만 해도 보상이 온다',
+      du_desc: '대형 채널이 없어도 괜찮습니다. 퀘스트 수행, 리뷰 작성, 친구 추천으로 실제 프로젝트에서 보상을 받으세요.',
+      du_f1: '퀘스트 참여: 에어드랍, 가입, 테스트넷', du_f2: '프로젝트 리뷰 작성 (배민 리뷰처럼)',
+      du_f3: '친구 추천으로 추가 보상', du_f4: '네트워크 & 커뮤니티를 프로젝트에 소개',
+      du_f5: '참여 이력 기반 신뢰 점수 적립', du_f6: '채널 없어도 누구나 참여 가능',
+      du_btn: '퀘스트 보드 참여',
+      quest_eye: '// 퀘스트 보드', quest_title: '퀘스트 보드',
+      quest_desc: '퀘스트 수행, 리뷰 작성, 친구 추천. 채널 없어도 누구나 보상을 받을 수 있습니다.',
+      quest_active: '참여 가능한 퀘스트', quest_btn: '퀘스트 보드 참여',
+      qt_project: '프로젝트', qt_quest: '퀘스트', qt_type: '유형', qt_reward: '보상', qt_participants: '참여자', qt_status: '상태',
+      qt_exp: '체험', qt_review: '리뷰', qt_referral: '레퍼럴', qt_airdrop: '에어드랍',
+      qt_live: '진행중', qt_recruiting: '모집중',
+      qq1_quest: '첫 스왑 체험', qq2_quest: '사용 리뷰 작성',
+      qq3_quest: '친구 3명 초대', qq4_quest: '테스트넷 참여 & 피드백', qq4_reward: 'TGE 에어드랍',
       wm_rw_desc: 'EVM 멀티체인 지갑'
     },
     ja: {
@@ -1882,8 +2005,8 @@
       hs2_t: 'プロジェクトにピン', hs2_d: 'プロジェクトを閲覧しプロモーション提案を送信。またはプロジェクトが検索とフィルターであなたを発見。',
       hs3_t: 'トークンルーム開設', hs3_d: 'プロジェクトがエスクロー資金投入。KOLが条件を承認しプロモーション開始。KPIリアルタイム追跡。',
       hs4_t: '自動決済', hs4_d: 'KPI検証完了。選択：プロジェクトトークン受取またはDEXでステーブルコインに即時スワップ。双方レビュー。',
-      dual_eye: '// 双方向', dual_title: '<span class="lime">KOL</span>と<span class="purple">プロジェクト</span>のために',
-      dual_desc: '真の双方向マーケットプレイス。売り手には最大限の自由を、買い手には最大限の透明性を。',
+      dual_eye: '// 三方向', dual_title: '<span class="lime">KOL</span>、<span class="purple">プロジェクト</span>、<span class="cyan">ユーザー</span>のために',
+      dual_desc: '真のマルチサイドマーケットプレイス。KOLは宣伝、プロジェクトは資金提供、ユーザーは参加。全員が報酬を獲得。',
       dk_label: 'KOL向け', dk_title: 'あなたの影響力、あなたの価格',
       dk_desc: 'エージェンシーの手数料なし。自分でレートを設定し、ポートフォリオを展示し、オンチェーンの評判を構築。',
       dk_f1: 'Twitter＆Telegram ID自動連携', dk_f2: 'リアルタイムで料金を自由に設定＆変更',
@@ -1968,6 +2091,21 @@
       pc_p_f1: '無制限キャンペーン', pc_p_f2: '高度な分析＆ROIレポート', pc_p_f3: '未登録KOLへDM自動送信',
       pc_p_f4: '優先サポート', pc_p_f5: 'マッチング手数料0%', pc_p_f6: 'プライベート投資ラウンド参加',
       pc_pro_btn: 'Pro開始',
+      nav_quest: 'クエスト',
+      du_label: '一般ユーザー向け', du_title: '参加するだけで報酬がもらえる',
+      du_desc: '大きなチャンネルは不要。クエスト完了、レビュー執筆、友達紹介で実際のプロジェクトから報酬を獲得。',
+      du_f1: 'クエスト参加：エアドロップ、登録、テストネット', du_f2: 'プロジェクトレビュー執筆（デリバリーアプリのレビューのように）',
+      du_f3: '友達紹介でボーナス報酬', du_f4: 'ネットワーク＆コミュニティをプロジェクトに紹介',
+      du_f5: '参加履歴から信頼スコアを構築', du_f6: 'チャンネル不要 — 誰でも参加可能',
+      du_btn: 'クエストボード参加',
+      quest_eye: '// クエストボード', quest_title: 'クエストボード',
+      quest_desc: 'クエスト完了、レビュー執筆、友達紹介。チャンネル不要 — 誰でも報酬を獲得できます。',
+      quest_active: '参加可能なクエスト', quest_btn: 'クエストボード参加',
+      qt_project: 'プロジェクト', qt_quest: 'クエスト', qt_type: 'タイプ', qt_reward: '報酬', qt_participants: '参加者', qt_status: 'ステータス',
+      qt_exp: '体験', qt_review: 'レビュー', qt_referral: 'リファラル', qt_airdrop: 'エアドロップ',
+      qt_live: '進行中', qt_recruiting: '募集中',
+      qq1_quest: '初回スワップ体験', qq2_quest: '利用レビュー執筆',
+      qq3_quest: '友達3人招待', qq4_quest: 'テストネット参加＆フィードバック', qq4_reward: 'TGEエアドロップ',
       wm_rw_desc: 'EVMマルチチェーンウォレット'
     },
     zh: {
@@ -1983,8 +2121,8 @@
       hs2_t: '向项目发送提案', hs2_d: '浏览项目并发送推广提案。或由项目方通过搜索和筛选找到你。',
       hs3_t: '代币房间开启', hs3_d: '项目方托管资金。KOL接受条款后开始推广。KPI实时追踪。',
       hs4_t: '自动结算', hs4_d: 'KPI验证完成。选择：接收项目代币或通过DEX即时兑换为稳定币。双方互评。',
-      dual_eye: '// 双边市场', dual_title: '为<span class="lime">KOL</span>和<span class="purple">项目</span>打造',
-      dual_desc: '真正的双边市场。卖方最大自由，买方最大透明。',
+      dual_eye: '// 三方市场', dual_title: '为<span class="lime">KOL</span>、<span class="purple">项目</span>和<span class="cyan">用户</span>打造',
+      dual_desc: '真正的多方市场。KOL推广，项目资助，用户参与。人人获得奖励。',
       dk_label: 'KOL专区', dk_title: '你的影响力，你的定价',
       dk_desc: '没有中介抽成。自主设定费率，展示作品集，建立链上信誉。',
       dk_f1: 'Twitter和Telegram ID自动关联', dk_f2: '实时自由设定和更新费率',
@@ -2069,6 +2207,21 @@
       pc_p_f1: '无限活动', pc_p_f2: '高级分析和ROI报告', pc_p_f3: '向未注册KOL自动发送DM',
       pc_p_f4: '优先支持', pc_p_f5: '匹配费0%', pc_p_f6: '私募投资轮参与',
       pc_pro_btn: '开始Pro',
+      nav_quest: '任务',
+      du_label: '普通用户', du_title: '参与即获奖励',
+      du_desc: '不需要大量粉丝。完成任务、撰写评价、推荐朋友，即可从真实项目中获得奖励。',
+      du_f1: '完成任务：空投、注册、测试网', du_f2: '撰写项目评价（像外卖APP评价一样）',
+      du_f3: '推荐朋友获得额外奖励', du_f4: '向项目介绍人脉和社区',
+      du_f5: '通过参与历史建立信任分数', du_f6: '无需频道 — 任何人都可以参与',
+      du_btn: '加入任务板',
+      quest_eye: '// 任务板', quest_title: '任务板',
+      quest_desc: '完成任务、撰写评价、推荐朋友。无需频道 — 任何人都可以获得奖励。',
+      quest_active: '可参与的任务', quest_btn: '加入任务板',
+      qt_project: '项目', qt_quest: '任务', qt_type: '类型', qt_reward: '奖励', qt_participants: '参与者', qt_status: '状态',
+      qt_exp: '体验', qt_review: '评价', qt_referral: '推荐', qt_airdrop: '空投',
+      qt_live: '进行中', qt_recruiting: '招募中',
+      qq1_quest: '首次兑换体验', qq2_quest: '撰写使用评价',
+      qq3_quest: '邀请3位朋友', qq4_quest: '参与测试网并提供反馈', qq4_reward: 'TGE空投',
       wm_rw_desc: 'EVM多链钱包'
     }
   };
