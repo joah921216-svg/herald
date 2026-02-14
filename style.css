@@ -292,28 +292,6 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 .foot-links a { font-size: 0.78rem; color: var(--text-3); text-decoration: none; transition: color 0.2s; }
 .foot-links a:hover { color: var(--text-2); }
 
-/* === LANG SWITCHER === */
-.lang-sw { position: relative; }
-.lang-btn {
-  background: var(--bg-2); border: 1px solid var(--border); color: var(--text-2);
-  padding: 0.3rem 0.65rem; border-radius: var(--r-xs); font-size: 0.78rem; font-weight: 600;
-  cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 0.3rem; transition: all 0.2s;
-}
-.lang-btn:hover { border-color: var(--border-2); color: var(--text); }
-.lang-drop {
-  display: none; position: absolute; top: calc(100% + 6px); right: 0; min-width: 110px;
-  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r-xs);
-  overflow: hidden; z-index: 200; box-shadow: var(--shadow-lg);
-}
-.lang-drop.open { display: block; }
-.lang-opt {
-  display: block; width: 100%; padding: 0.5rem 0.8rem; background: none; border: none;
-  color: var(--text-2); font-size: 0.8rem; font-family: inherit; cursor: pointer; text-align: left;
-  transition: all 0.15s;
-}
-.lang-opt:hover { background: var(--bg-2); color: var(--text); }
-.lang-opt.active { color: var(--blue); font-weight: 600; }
-
 /* === WALLET BTN === */
 .wallet-btn {
   padding: 0.4rem 1rem; background: var(--blue); color: white;
@@ -409,6 +387,156 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   cursor: pointer; transition: all 0.2s;
 }
 .wallet-disconnect-btn:hover { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); }
+
+/* === CAMPAIGN WIZARD (3-step) === */
+.wiz-modal { max-width: 560px; }
+.wiz-progress {
+  height: 4px; background: var(--bg-3); border-radius: 2px; margin-bottom: 1.25rem; overflow: hidden;
+}
+.wiz-progress-bar {
+  height: 100%; background: var(--blue); border-radius: 2px;
+  transition: width 0.4s cubic-bezier(.16,1,.3,1);
+}
+.wiz-dots { display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.5rem; }
+.wiz-dot { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; }
+.wiz-dot-num {
+  width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 0.72rem; font-weight: 700;
+  background: var(--bg-3); color: var(--text-3); transition: all 0.3s;
+}
+.wiz-dot.active .wiz-dot-num { background: var(--blue); color: white; }
+.wiz-dot.done .wiz-dot-num { background: var(--green); color: white; }
+.wiz-dot-label { font-size: 0.68rem; color: var(--text-3); font-weight: 500; transition: color 0.3s; }
+.wiz-dot.active .wiz-dot-label { color: var(--blue); font-weight: 600; }
+.wiz-dot.done .wiz-dot-label { color: var(--green); }
+.wiz-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.wiz-date-row { display: flex; align-items: center; gap: 0.5rem; }
+.wiz-date-row input[type="date"] {
+  flex: 1; padding: 0.65rem 0.85rem; background: var(--bg-2);
+  border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text);
+  font-family: inherit; font-size: 0.85rem; outline: none; transition: border-color 0.2s;
+}
+.wiz-date-row input[type="date"]:focus { border-color: var(--blue); }
+.wiz-date-sep { color: var(--text-3); font-weight: 500; }
+.field-hint { font-weight: 400; color: var(--text-3); font-size: 0.7rem; }
+/* Goal cards */
+.wiz-goals { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+.wiz-goal {
+  display: flex; flex-direction: column; align-items: center; gap: 0.25rem;
+  padding: 0.75rem 0.4rem; background: var(--bg-2); border: 2px solid var(--border);
+  border-radius: var(--r-sm); cursor: pointer; transition: all 0.2s;
+  text-align: center; position: relative; font-family: inherit; color: var(--text);
+}
+.wiz-goal:hover { border-color: var(--blue-mid); background: var(--blue-soft); }
+.wiz-goal.selected { border-color: var(--blue); background: var(--blue-soft); }
+.wiz-goal-check {
+  position: absolute; top: 5px; right: 7px; font-size: 0.6rem; font-weight: 700;
+  color: var(--blue); opacity: 0; transition: opacity 0.2s;
+}
+.wiz-goal.selected .wiz-goal-check { opacity: 1; }
+.wiz-goal-emoji { font-size: 1.25rem; line-height: 1; }
+.wiz-goal-name { font-size: 0.72rem; font-weight: 700; line-height: 1.3; }
+/* Participant type cards */
+.wiz-ptypes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+.wiz-ptype {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  padding: 1rem 0.5rem; background: var(--bg-2); border: 2px solid var(--border);
+  border-radius: var(--r-sm); cursor: pointer; transition: all 0.2s;
+  text-align: center; position: relative; font-family: inherit; color: var(--text);
+}
+.wiz-ptype:hover { border-color: var(--blue-mid); }
+.wiz-ptype.selected { border-color: var(--blue); background: var(--blue-soft); }
+.wiz-ptype-icon { font-size: 1.4rem; line-height: 1; }
+.wiz-ptype-name { font-size: 0.82rem; font-weight: 700; }
+.wiz-ptype-desc { font-size: 0.65rem; color: var(--text-3); }
+.wiz-ptype-badge {
+  position: absolute; top: -8px; right: -4px; font-size: 0.58rem;
+  padding: 0.12rem 0.45rem; border-radius: 100px;
+  background: var(--orange-soft); color: var(--orange); font-weight: 700;
+}
+/* Quest builder groups */
+.wiz-quest-groups { display: flex; flex-direction: column; gap: 0.75rem; }
+.wiz-qg-label {
+  display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem;
+  font-weight: 700; color: var(--text-3); text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 0.35rem;
+}
+.wiz-qg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.wiz-qg-tag {
+  font-size: 0.6rem; padding: 0.1rem 0.35rem; border-radius: 100px;
+  background: var(--purple-soft); color: var(--purple); font-weight: 600;
+  text-transform: none; letter-spacing: 0;
+}
+.wiz-quest-item {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.7rem;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-xs);
+  margin-bottom: 0.3rem;
+}
+.wiz-quest-item input[type="checkbox"] { accent-color: var(--blue); flex-shrink: 0; }
+.wiz-quest-item .wq-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+/* Referral */
+.wiz-referral-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.6rem 0.7rem; background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+}
+.wiz-referral-row .wq-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+.wiz-toggle {
+  position: relative; display: inline-block; width: 38px; height: 20px; cursor: pointer;
+}
+.wiz-toggle input { opacity: 0; width: 0; height: 0; }
+.wiz-toggle-slider {
+  position: absolute; inset: 0; background: var(--bg-3); border-radius: 20px; transition: 0.3s;
+}
+.wiz-toggle-slider::before {
+  content: ''; position: absolute; left: 3px; bottom: 3px;
+  width: 14px; height: 14px; border-radius: 50%; background: white; transition: 0.3s;
+}
+.wiz-toggle input:checked + .wiz-toggle-slider { background: var(--blue); }
+.wiz-toggle input:checked + .wiz-toggle-slider::before { transform: translateX(18px); }
+.wiz-referral-reward {
+  display: none; align-items: center; gap: 0.5rem; margin-top: 0.35rem;
+  padding: 0.5rem 0.7rem; background: var(--blue-soft); border-radius: var(--r-xs);
+}
+.wiz-referral-reward span { font-size: 0.75rem; color: var(--text-2); font-weight: 500; white-space: nowrap; }
+.wiz-referral-reward input {
+  flex: 1; padding: 0.4rem 0.6rem; border: 1px solid var(--border);
+  border-radius: var(--r-xs); font-size: 0.8rem; background: var(--bg);
+  font-family: inherit; outline: none; color: var(--text);
+}
+.wiz-referral-reward input:focus { border-color: var(--blue); }
+/* Review */
+.wiz-review {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 1rem; font-size: 0.85rem;
+}
+.wiz-review .wr-row {
+  display: flex; justify-content: space-between; padding: 0.45rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.wiz-review .wr-row:last-child { border-bottom: none; }
+.wiz-review .wr-label { color: var(--text-3); font-size: 0.78rem; }
+.wiz-review .wr-value { font-weight: 600; color: var(--text); font-size: 0.82rem; text-align: right; }
+/* Nav */
+.wiz-nav { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.25rem; }
+.wiz-btn-prev {
+  flex: 1; padding: 0.7rem; background: none; border: 1px solid var(--border-2);
+  border-radius: var(--r-sm); font-family: inherit; font-size: 0.85rem; font-weight: 600;
+  color: var(--text-2); cursor: pointer; transition: all 0.2s;
+}
+.wiz-btn-prev:hover { border-color: var(--text-3); color: var(--text); }
+.wiz-btn-next {
+  flex: 2; padding: 0.7rem; background: var(--blue); border: none;
+  border-radius: var(--r-sm); font-family: inherit; font-size: 0.85rem; font-weight: 700;
+  color: white; cursor: pointer; transition: all 0.2s;
+}
+.wiz-btn-next:hover { opacity: 0.9; }
+@media(max-width:768px) {
+  .wiz-goals { grid-template-columns: repeat(2, 1fr); }
+  .wiz-ptypes { grid-template-columns: 1fr; }
+  .wiz-row-2 { grid-template-columns: 1fr; }
+  .wiz-dots { gap: 1.5rem; }
+}
 
 /* === REGISTRATION FORM (campaign modal) === */
 .reg-field { margin-bottom: 0.85rem; }

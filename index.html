@@ -23,20 +23,6 @@
       <li><a href="#quests" data-i18n="nav_quests">Quests</a></li>
       <li><a href="#campaigns" data-i18n="nav_campaigns">Campaigns</a></li>
       <li><a href="#for-projects" data-i18n="nav_projects">For Projects</a></li>
-      <li>
-        <div class="lang-sw">
-          <button class="lang-btn" onclick="document.querySelector('.lang-drop').classList.toggle('open')">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-            <span id="langLabel">KR</span>
-          </button>
-          <div class="lang-drop">
-            <button class="lang-opt active" onclick="setLang('ko')">한국어</button>
-            <button class="lang-opt" onclick="setLang('en')">English</button>
-            <button class="lang-opt" onclick="setLang('ja')">日本語</button>
-            <button class="lang-opt" onclick="setLang('zh')">中文</button>
-          </div>
-        </div>
-      </li>
       <li><button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')" data-i18n="nav_wallet">지갑 연결</button></li>
     </ul>
   </div>
@@ -343,72 +329,218 @@
   </div>
 </div>
 
-<!-- ==================== CAMPAIGN START MODAL ==================== -->
+<!-- ==================== CAMPAIGN WIZARD MODAL (3-step) ==================== -->
 <div class="modal-overlay" id="campModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('campModal')">&times;</button>
-    <h3 data-i18n="camp_modal_title">캠페인 시작하기</h3>
+  <div class="modal wiz-modal">
+    <button class="modal-close" onclick="closeCampWizard()">&times;</button>
 
-    <!-- Project Form -->
-    <div id="campProjectForm">
-      <p class="modal-desc" data-i18n="camp_form_desc">프로젝트와 캠페인 목표를 알려주세요.</p>
-      <div class="reg-field">
-        <label data-i18n="camp_proj_name">프로젝트 이름</label>
-        <input type="text" id="campProjName" placeholder="e.g. AxiomDEX">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="camp_sector">섹터 / 카테고리</label>
-        <select id="campSector">
-          <option value="defi">DeFi</option>
-          <option value="nft">NFT / Collectibles</option>
-          <option value="gaming">Gaming / P2E</option>
-          <option value="l1l2">L1 / L2 / Infra</option>
-          <option value="ai">AI / DePIN</option>
-          <option value="meme">Meme Token</option>
-          <option value="rwa">RWA</option>
-          <option value="social">SocialFi</option>
-          <option value="exchange">Exchange / CEX / DEX</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      <div class="reg-field">
-        <label data-i18n="camp_chain">체인</label>
-        <select id="campChain">
-          <option value="ethereum">Ethereum</option>
-          <option value="solana">Solana</option>
-          <option value="arbitrum">Arbitrum</option>
-          <option value="base">Base</option>
-          <option value="bnb">BNB Chain</option>
-          <option value="polygon">Polygon</option>
-          <option value="multi">Multi-chain</option>
-        </select>
-      </div>
-      <div class="reg-field">
-        <label data-i18n="camp_budget">예산 (USD)</label>
-        <input type="number" id="campBudget" placeholder="e.g. 10000">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="camp_kpi">성과 KPI</label>
-        <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.2rem;">
-          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" checked style="accent-color:var(--blue);"><span data-i18n="camp_kpi_views">조회수 / 노출</span></label>
-          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" checked style="accent-color:var(--blue);"><span data-i18n="camp_kpi_eng">인게이지먼트 (좋아요, 리트윗, 댓글)</span></label>
-          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" style="accent-color:var(--blue);"><span data-i18n="camp_kpi_clicks">링크 클릭 / 레퍼럴</span></label>
-          <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" style="accent-color:var(--blue);"><span data-i18n="camp_kpi_onchain">온체인 전환 (스왑, 민트)</span></label>
-        </div>
-      </div>
-      <button class="reg-btn" onclick="submitCampaign()" data-i18n="camp_submit">캠페인 생성 →</button>
+    <!-- Progress -->
+    <div class="wiz-progress">
+      <div class="wiz-progress-bar" id="wizBar" style="width:33.33%"></div>
+    </div>
+    <div class="wiz-dots">
+      <div class="wiz-dot active"><span class="wiz-dot-num">1</span><span class="wiz-dot-label">기본 정보</span></div>
+      <div class="wiz-dot"><span class="wiz-dot-num">2</span><span class="wiz-dot-label">참여자·퀘스트</span></div>
+      <div class="wiz-dot"><span class="wiz-dot-num">3</span><span class="wiz-dot-label">보상·검토</span></div>
     </div>
 
-    <!-- Campaign Created -->
-    <div id="campDone" style="display:none;text-align:center;padding:1.5rem 0;">
-      <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#9989;</div>
-      <h3 style="color:var(--blue);margin-bottom:0.4rem;" data-i18n="camp_done_title">캠페인 생성 완료!</h3>
-      <p class="modal-desc" data-i18n="camp_done_desc">캠페인이 설정되었습니다. 대시보드에서 관리하세요.</p>
-      <button class="reg-btn" onclick="closeModal('campModal')" data-i18n="camp_done_btn">확인</button>
+    <!-- Step 1: 기본 정보 + 목표 -->
+    <div class="wiz-step" id="wizStep1">
+      <div class="reg-field">
+        <label>프로젝트 이름</label>
+        <input type="text" id="cwProjName" placeholder="예: AxiomDEX">
+      </div>
+      <div class="wiz-row-2">
+        <div class="reg-field">
+          <label>카테고리</label>
+          <select id="cwSector">
+            <option value="defi">DeFi</option>
+            <option value="nft">NFT / Collectibles</option>
+            <option value="gamefi">GameFi</option>
+            <option value="l1l2">L1 · L2 / Infra</option>
+            <option value="ai">AI · DePIN</option>
+            <option value="meme">Meme Token</option>
+            <option value="other">기타</option>
+          </select>
+        </div>
+        <div class="reg-field">
+          <label>체인</label>
+          <select id="cwChain">
+            <option value="ethereum">Ethereum</option>
+            <option value="solana">Solana</option>
+            <option value="base">Base</option>
+            <option value="arbitrum">Arbitrum</option>
+            <option value="bnb">BNB Chain</option>
+            <option value="polygon">Polygon</option>
+            <option value="multi">멀티체인</option>
+          </select>
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>캠페인 기간</label>
+        <div class="wiz-date-row">
+          <input type="date" id="cwStart">
+          <span class="wiz-date-sep">~</span>
+          <input type="date" id="cwEnd">
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>캠페인 목표 <span class="field-hint">복수 선택 가능</span></label>
+        <div class="wiz-goals">
+          <button class="wiz-goal" data-goal="community" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128101;</span>
+            <span class="wiz-goal-name">커뮤니티 성장</span>
+          </button>
+          <button class="wiz-goal" data-goal="awareness" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128226;</span>
+            <span class="wiz-goal-name">인지도 확대</span>
+          </button>
+          <button class="wiz-goal" data-goal="dapp" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128241;</span>
+            <span class="wiz-goal-name">dApp 사용자 확보</span>
+          </button>
+          <button class="wiz-goal" data-goal="onchain" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128279;</span>
+            <span class="wiz-goal-name">온체인 활동</span>
+          </button>
+          <button class="wiz-goal" data-goal="content" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#127909;</span>
+            <span class="wiz-goal-name">콘텐츠 생성</span>
+          </button>
+          <button class="wiz-goal" data-goal="referral" onclick="toggleGoal(this)">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128227;</span>
+            <span class="wiz-goal-name">레퍼럴 확산</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: 참여자 + 퀘스트 -->
+    <div class="wiz-step" id="wizStep2" style="display:none;">
+      <div class="reg-field">
+        <label>참여자 타입</label>
+        <div class="wiz-ptypes">
+          <button class="wiz-ptype selected" data-ptype="general" onclick="selectPType(this)">
+            <span class="wiz-ptype-icon">&#128100;</span>
+            <span class="wiz-ptype-name">일반 유저</span>
+            <span class="wiz-ptype-desc">누구나 참여 가능</span>
+          </button>
+          <button class="wiz-ptype" data-ptype="influencer" onclick="selectPType(this)">
+            <span class="wiz-ptype-icon">&#11088;</span>
+            <span class="wiz-ptype-name">인플루언서</span>
+            <span class="wiz-ptype-desc">팔로워 필터 적용</span>
+          </button>
+          <button class="wiz-ptype" data-ptype="mix" onclick="selectPType(this)">
+            <span class="wiz-ptype-badge">추천 &#11088;</span>
+            <span class="wiz-ptype-icon">&#128101;</span>
+            <span class="wiz-ptype-name">믹스</span>
+            <span class="wiz-ptype-desc">유저 + 인플루언서</span>
+          </button>
+        </div>
+      </div>
+      <div class="reg-field" id="followerField" style="display:none;">
+        <label>최소 팔로워 수</label>
+        <select id="cwMinFollower">
+          <option value="5000">5K+</option>
+          <option value="10000">10K+</option>
+          <option value="50000">50K+</option>
+        </select>
+      </div>
+      <div class="reg-field">
+        <label>퀘스트 빌더 <span class="field-hint">목표에 따라 자동 추천</span></label>
+        <div class="wiz-quest-groups">
+          <!-- 소셜 -->
+          <div class="wiz-quest-group">
+            <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--blue);"></span>소셜</div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_follow"><div class="wq-text"><span class="wq-name">트위터 팔로우</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_rt"><div class="wq-text"><span class="wq-name">트윗 RT &amp; 좋아요</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_tg"><div class="wq-text"><span class="wq-name">텔레그램 가입</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_discord"><div class="wq-text"><span class="wq-name">디스코드 참여</span></div></div>
+          </div>
+          <!-- 온체인 -->
+          <div class="wiz-quest-group">
+            <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--green);"></span>온체인</div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_swap"><div class="wq-text"><span class="wq-name">토큰 스왑</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_mint"><div class="wq-text"><span class="wq-name">NFT 민팅</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_stake"><div class="wq-text"><span class="wq-name">스테이킹</span></div></div>
+          </div>
+          <!-- 콘텐츠 (인플루언서/믹스 선택시만) -->
+          <div class="wiz-quest-group" id="contentQuestGroup" style="display:none;">
+            <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--purple);"></span>콘텐츠 <span class="wiz-qg-tag">인플루언서</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_review"><div class="wq-text"><span class="wq-name">리뷰 작성</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_youtube"><div class="wq-text"><span class="wq-name">유튜브 영상</span></div></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_thread"><div class="wq-text"><span class="wq-name">트위터 스레드</span></div></div>
+          </div>
+          <!-- 레퍼럴 -->
+          <div class="wiz-quest-group">
+            <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--orange);"></span>레퍼럴</div>
+            <div class="wiz-referral-row">
+              <span class="wq-name">레퍼럴 링크 공유</span>
+              <label class="wiz-toggle">
+                <input type="checkbox" id="referralToggle" onchange="toggleReferral()">
+                <span class="wiz-toggle-slider"></span>
+              </label>
+            </div>
+            <div class="wiz-referral-reward" id="referralRewardField">
+              <span>1명당 보상</span>
+              <input type="text" id="cwRefReward" placeholder="예: 2 USDT">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: 보상 + 검토 -->
+    <div class="wiz-step" id="wizStep3" style="display:none;">
+      <div class="wiz-row-2">
+        <div class="reg-field">
+          <label>보상 토큰</label>
+          <select id="cwToken">
+            <option value="usdt">USDT</option>
+            <option value="usdc">USDC</option>
+            <option value="eth">ETH</option>
+            <option value="custom">프로젝트 토큰</option>
+          </select>
+        </div>
+        <div class="reg-field">
+          <label>총 예산 (USD)</label>
+          <input type="number" id="cwBudget" placeholder="예: 10,000">
+        </div>
+      </div>
+      <div class="wiz-row-2">
+        <div class="reg-field">
+          <label>퀘스트당 보상</label>
+          <input type="text" id="cwPerQuest" placeholder="예: 5 USDT">
+        </div>
+        <div class="reg-field">
+          <label>최대 참여자 수</label>
+          <input type="number" id="cwMaxPart" placeholder="예: 500">
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>캠페인 요약</label>
+        <div class="wiz-review" id="wizReview"></div>
+      </div>
+    </div>
+
+    <!-- Done -->
+    <div class="wiz-step" id="wizDone" style="display:none;text-align:center;padding:2rem 0;">
+      <div style="font-size:3rem;margin-bottom:0.75rem;">&#9989;</div>
+      <h3 style="color:var(--blue);margin-bottom:0.4rem;">캠페인 생성 완료!</h3>
+      <p class="modal-desc">캠페인이 설정되었습니다. 대시보드에서 관리하세요.</p>
+      <button class="reg-btn" onclick="closeCampWizard()">확인</button>
+    </div>
+
+    <!-- Nav Buttons -->
+    <div class="wiz-nav" id="wizNav">
+      <button class="wiz-btn-prev" id="wizPrev" onclick="wizGo(-1)" style="display:none;">이전</button>
+      <button class="wiz-btn-next" id="wizNext" onclick="wizGo(1)">다음</button>
     </div>
   </div>
 </div>
