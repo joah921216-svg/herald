@@ -1,0 +1,1808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SHILL VAULT | Web3 KOL Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #07070c;
+      --bg-2: #0b0b14;
+      --bg-3: #0e0e16;
+      --bg-card: rgba(14, 14, 22, 0.75);
+      --border: rgba(255,255,255,0.06);
+      --border-2: rgba(255,255,255,0.1);
+      --text: #e9eaec;
+      --text-2: #8b8e9b;
+      --text-3: #50536a;
+      --lime: #c8ff2e;
+      --lime-soft: rgba(200,255,46,0.08);
+      --lime-mid: rgba(200,255,46,0.15);
+      --purple: #8b5cf6;
+      --purple-soft: rgba(139,92,246,0.1);
+      --cyan: #22d3ee;
+      --cyan-soft: rgba(34,211,238,0.08);
+      --red: #f87171;
+      --gold: #fbbf24;
+      --r: 14px;
+      --r-sm: 10px;
+      --r-xs: 6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* === BACKGROUND LAYERS === */
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(200,255,46,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,255,46,0.018) 1px, transparent 1px);
+      background-size: 72px 72px;
+    }
+    .bg-noise {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .bg-glow {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .bg-glow span {
+      position: absolute; border-radius: 50%; filter: blur(130px);
+    }
+    .bg-glow span:nth-child(1) { width: 700px; height: 700px; background: rgba(200,255,46,0.04); top: -15%; left: -10%; animation: drift 28s ease-in-out infinite; }
+    .bg-glow span:nth-child(2) { width: 500px; height: 500px; background: rgba(139,92,246,0.04); top: 40%; right: -8%; animation: drift 32s ease-in-out infinite reverse; }
+    .bg-glow span:nth-child(3) { width: 450px; height: 450px; background: rgba(34,211,238,0.03); bottom: 5%; left: 25%; animation: drift 24s ease-in-out infinite; animation-delay: -10s; }
+    @keyframes drift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(40px,-30px) scale(1.06); }
+      66% { transform: translate(-30px,40px) scale(0.94); }
+    }
+
+    /* === UTILITY === */
+    .container { max-width: 1240px; margin: 0 auto; }
+    section { padding: 7rem 2rem; position: relative; z-index: 1; }
+    .s-border { border-top: 1px solid var(--border); }
+    .s-bg { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--lime); margin-bottom: 0.75rem;
+    }
+    .stitle {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.75rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.025em; line-height: 1.15; margin-bottom: 1rem;
+    }
+    .sdesc { color: var(--text-2); max-width: 560px; font-size: 1.05rem; line-height: 1.7; }
+    .sheader { margin-bottom: 3.5rem; }
+    .sheader.center { text-align: center; }
+    .sheader.center .sdesc { margin: 0 auto; }
+
+    .lime { color: var(--lime); }
+    .purple { color: var(--purple); }
+    .cyan { color: var(--cyan); }
+
+    /* === REVEAL === */
+    .rv { opacity: 0; transform: translateY(28px); transition: all 0.65s cubic-bezier(.16,1,.3,1); }
+    .rv.vis { opacity: 1; transform: translateY(0); }
+    .rv-d1 { transition-delay: .08s; }
+    .rv-d2 { transition-delay: .16s; }
+    .rv-d3 { transition-delay: .24s; }
+    .rv-d4 { transition-delay: .32s; }
+
+    /* === NAV === */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1rem 2rem; transition: all 0.4s ease;
+    }
+    nav.scrolled {
+      background: rgba(7,7,12,0.88); backdrop-filter: blur(20px) saturate(1.2);
+      border-bottom: 1px solid var(--border); padding: 0.65rem 2rem;
+    }
+    .nav-inner { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { display: flex; align-items: center; gap: 0.55rem; text-decoration: none; }
+    .logo-mark {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--lime); display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.7rem; color: var(--bg); letter-spacing: 0.02em;
+    }
+    .logo-name {
+      font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem;
+      color: var(--text); letter-spacing: 0.06em;
+    }
+    .nav-links { display: flex; gap: 1.75rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-2); text-decoration: none; font-size: 0.84rem; font-weight: 500;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 0.5rem 1.3rem !important; background: var(--lime) !important; color: var(--bg) !important;
+      border-radius: var(--r-sm) !important; font-weight: 700 !important;
+      transition: all 0.25s !important; font-size: 0.82rem !important;
+    }
+    .nav-cta:hover { opacity: 0.88 !important; transform: translateY(-1px); }
+    .mob-toggle {
+      display: none; background: none; border: 1px solid var(--border); color: var(--text);
+      padding: 0.35rem 0.55rem; border-radius: var(--r-xs); cursor: pointer; font-size: 1.15rem;
+    }
+
+    /* === HERO === */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding: 8rem 2rem 5rem; }
+    .hero .container { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 4rem; align-items: center; width: 100%; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 1rem 0.35rem 0.55rem; border-radius: 100px;
+      background: var(--lime-soft); border: 1px solid rgba(200,255,46,0.18);
+      font-size: 0.78rem; color: var(--lime); font-weight: 600; margin-bottom: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+    .hero-tag .td { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 8px var(--lime); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:.35;} }
+    .hero h1 {
+      font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 5.2vw, 4rem);
+      font-weight: 800; line-height: 1.08; letter-spacing: -0.035em; margin-bottom: 1.5rem;
+    }
+    .hero-desc { font-size: 1.1rem; color: var(--text-2); line-height: 1.8; margin-bottom: 2.5rem; max-width: 520px; }
+    .hero-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 3rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.8rem 1.8rem; border-radius: var(--r-sm); font-size: 0.88rem; font-weight: 600;
+      text-decoration: none; transition: all 0.3s; cursor: pointer; border: none; font-family: inherit;
+    }
+    .btn-lime { background: var(--lime); color: var(--bg); box-shadow: 0 2px 20px rgba(200,255,46,0.15); }
+    .btn-lime:hover { box-shadow: 0 6px 32px rgba(200,255,46,0.25); transform: translateY(-2px); }
+    .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border-2); }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.03); transform: translateY(-2px); }
+    .btn-purple { background: var(--purple); color: white; box-shadow: 0 2px 20px rgba(139,92,246,0.2); }
+    .btn-purple:hover { box-shadow: 0 6px 32px rgba(139,92,246,0.3); transform: translateY(-2px); }
+
+    .hero-metrics { display: flex; gap: 2.5rem; }
+    .hm-num { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; }
+    .hm-num .u { color: var(--lime); font-size: 0.8rem; }
+    .hm-lbl { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.15rem; }
+
+    /* hero cards */
+    .hero-vis { position: relative; }
+    .hcard-stack { position: relative; width: 100%; max-width: 440px; margin: 0 auto; aspect-ratio: 1; }
+    .hcard {
+      position: absolute; background: var(--bg-card); backdrop-filter: blur(16px);
+      border: 1px solid var(--border); border-radius: var(--r); padding: 1.25rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35); transition: all 0.4s cubic-bezier(.16,1,.3,1);
+    }
+    .hcard:hover { border-color: var(--lime); box-shadow: 0 8px 40px rgba(0,0,0,0.35), 0 0 20px rgba(200,255,46,0.06); }
+    .hcard.c1 { top:2%; left:0; width:270px; z-index:4; animation: cf1 7s ease-in-out infinite; }
+    .hcard.c2 { top:28%; right:0; width:255px; z-index:3; animation: cf2 8s ease-in-out infinite; }
+    .hcard.c3 { bottom:8%; left:12%; width:245px; z-index:2; animation: cf3 9s ease-in-out infinite; }
+    @keyframes cf1 { 0%,100%{transform:translate(0,0);}50%{transform:translate(4px,-8px);} }
+    @keyframes cf2 { 0%,100%{transform:translate(0,0);}50%{transform:translate(-6px,6px);} }
+    @keyframes cf3 { 0%,100%{transform:translate(0,0);}50%{transform:translate(6px,-5px);} }
+    .hc-head { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.85rem; }
+    .hc-av {
+      width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 0.75rem; color: white; flex-shrink: 0;
+    }
+    .hc-name { font-weight: 700; font-size: 0.85rem; }
+    .hc-handle { font-size: 0.7rem; color: var(--text-3); }
+    .hc-badge {
+      margin-left: auto; font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; padding: 0.15rem 0.5rem; border-radius: 100px;
+    }
+    .hc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .hc-stat { background: rgba(255,255,255,0.025); border-radius: var(--r-xs); padding: 0.45rem; text-align: center; }
+    .hc-sv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.78rem; }
+    .hc-sl { font-size: 0.58rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
+    .hc-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .hc-tag {
+      padding: 0.15rem 0.5rem; border-radius: 100px; font-size: 0.6rem; font-weight: 500;
+      background: var(--lime-soft); color: var(--lime); border: 1px solid rgba(200,255,46,0.12);
+    }
+    .hc-price {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border);
+    }
+    .hc-pl { font-size: 0.62rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
+    .hc-pv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.82rem; color: var(--lime); }
+
+    /* === HOW IT WORKS === */
+    .how-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; }
+    .how-step {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 2rem 1.5rem; text-align: center; transition: all 0.35s ease; position: relative;
+      backdrop-filter: blur(8px);
+    }
+    .how-step:hover { border-color: var(--border-2); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+    .hs-num {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 700;
+      color: var(--lime); background: var(--lime-soft); width: 26px; height: 26px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .hs-icon {
+      width: 48px; height: 48px; border-radius: 12px; margin: 0 auto 1.25rem;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+    }
+    .how-step h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .how-step p { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; }
+
+    /* === DUAL CARDS === */
+    .dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .dual-card {
+      border-radius: var(--r); padding: 2.5rem; position: relative; overflow: hidden;
+      transition: transform 0.35s;
+    }
+    .dual-card:hover { transform: translateY(-3px); }
+    .dual-card.for-kol {
+      background: linear-gradient(135deg, rgba(200,255,46,0.06), rgba(200,255,46,0.015));
+      border: 1px solid rgba(200,255,46,0.12);
+    }
+    .dual-card.for-proj {
+      background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(139,92,246,0.02));
+      border: 1px solid rgba(139,92,246,0.15);
+    }
+    .dc-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; margin-bottom: 0.75rem; }
+    .for-kol .dc-label { color: var(--lime); }
+    .for-proj .dc-label { color: var(--purple); }
+    .dual-card h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .dual-card > p { color: var(--text-2); margin-bottom: 1.75rem; font-size: 0.95rem; line-height: 1.65; }
+    .dc-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem; }
+    .dc-list li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; color: var(--text-2); }
+    .dc-check {
+      width: 18px; height: 18px; min-width: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 0.55rem;
+    }
+    .for-kol .dc-check { background: var(--lime-soft); color: var(--lime); }
+    .for-proj .dc-check { background: var(--purple-soft); color: var(--purple); }
+
+    /* === KOL ROSTER === */
+    .roster-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; }
+    .kcard {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 1.5rem; backdrop-filter: blur(8px); transition: all 0.35s; position: relative; cursor: pointer;
+    }
+    .kcard-link {
+      position: absolute; inset: 0; z-index: 1; border-radius: var(--r);
+    }
+    .kc-actions { position: relative; z-index: 2; }
+    .kc-actions a { text-decoration: none; }
+    .kcard:hover { border-color: rgba(200,255,46,0.2); box-shadow: 0 0 24px rgba(200,255,46,0.04); transform: translateY(-3px); }
+    .kc-top { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; }
+    .kc-av {
+      width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-weight: 800; font-size: 0.85rem; color: white; flex-shrink: 0;
+    }
+    .kc-name { font-weight: 700; font-size: 0.9rem; }
+    .kc-handle { font-size: 0.72rem; color: var(--text-3); display: flex; align-items: center; gap: 0.25rem; }
+    .kc-tier {
+      margin-left: auto; padding: 0.15rem 0.55rem; border-radius: 100px;
+      font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .t-diamond { background: var(--lime-soft); color: var(--lime); border: 1px solid rgba(200,255,46,0.15); }
+    .t-gold { background: rgba(251,191,36,0.1); color: var(--gold); border: 1px solid rgba(251,191,36,0.15); }
+    .t-silver { background: rgba(139,92,246,0.1); color: var(--purple); border: 1px solid rgba(139,92,246,0.12); }
+    .t-unreg { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid var(--border); }
+    .kc-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.4rem; margin-bottom: 1rem; }
+    .kc-m { background: rgba(255,255,255,0.02); border-radius: var(--r-xs); padding: 0.5rem 0.25rem; text-align: center; }
+    .kc-mv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; }
+    .kc-ml { font-size: 0.55rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.1rem; }
+    .kc-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .kc-tag {
+      padding: 0.15rem 0.5rem; border-radius: 100px; font-size: 0.6rem; font-weight: 500;
+      background: rgba(255,255,255,0.035); color: var(--text-2); border: 1px solid var(--border);
+    }
+    .kc-actions { display: flex; gap: 0.4rem; }
+    .kc-btn {
+      flex: 1; padding: 0.5rem 0.35rem; border-radius: var(--r-xs); font-size: 0.7rem; font-weight: 600;
+      text-align: center; border: none; cursor: pointer; font-family: inherit; transition: all 0.25s;
+      display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+    }
+    .kc-btn-profile { background: var(--lime); color: var(--bg); }
+    .kc-btn-profile:hover { opacity: 0.85; }
+    .kc-btn-tg { background: rgba(0,136,204,0.1); color: #29b6f6; border: 1px solid rgba(0,136,204,0.15); }
+    .kc-btn-tg:hover { background: rgba(0,136,204,0.18); }
+    .kc-btn-tw { background: rgba(255,255,255,0.04); color: var(--text-2); border: 1px solid var(--border); }
+    .kc-btn-tw:hover { background: rgba(255,255,255,0.07); color: var(--text); }
+    .kc-unreg-label { font-size: 0.65rem; color: var(--text-3); text-align: center; margin-bottom: 0.5rem; font-style: italic; }
+
+    /* === TOKEN ROOM TABLE === */
+    .troom-wrap {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      overflow: hidden; backdrop-filter: blur(8px);
+    }
+    .troom-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+    }
+    .troom-header h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; }
+    .troom-live {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.7rem; color: var(--lime); font-weight: 600;
+    }
+    .troom-live .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 6px var(--lime); animation: blink 1.5s ease-in-out infinite; }
+    .troom-table { width: 100%; border-collapse: collapse; }
+    .troom-table th {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--text-3); font-weight: 600; padding: 0.85rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.015);
+    }
+    .troom-table td {
+      font-size: 0.85rem; padding: 1rem; border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .troom-table tr:hover td { background: rgba(255,255,255,0.015); }
+    .troom-table tr:last-child td { border-bottom: none; }
+    .tr-project { display: flex; align-items: center; gap: 0.6rem; }
+    .tr-picon {
+      width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-weight: 700; font-size: 0.7rem; color: white; flex-shrink: 0;
+    }
+    .tr-pname { font-weight: 600; }
+    .tr-chain { font-size: 0.7rem; color: var(--text-3); }
+    .tr-status {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.68rem; font-weight: 600;
+    }
+    .tr-active { background: var(--lime-soft); color: var(--lime); }
+    .tr-filling { background: rgba(251,191,36,0.1); color: var(--gold); }
+    .tr-completed { background: rgba(255,255,255,0.04); color: var(--text-3); }
+    .tr-bar-wrap { width: 100%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 0.3rem; }
+    .tr-bar { height: 100%; border-radius: 2px; background: var(--lime); transition: width 1s ease; }
+    .tr-mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.82rem; }
+
+    /* === TRUST === */
+    .trust-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .trust-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 2rem; backdrop-filter: blur(8px); transition: all 0.35s;
+    }
+    .trust-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .tc-icon {
+      width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 1.25rem; font-size: 1.3rem;
+    }
+    .trust-card h4 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .trust-card p { font-size: 0.88rem; color: var(--text-2); line-height: 1.6; }
+
+    /* === ROADMAP === */
+    .rm-timeline { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .rm-phase {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 2rem; backdrop-filter: blur(8px); transition: all 0.35s; position: relative;
+    }
+    .rm-phase:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .rm-phase::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      border-radius: var(--r) var(--r) 0 0;
+    }
+    .rm-phase:nth-child(1)::before { background: var(--lime); }
+    .rm-phase:nth-child(2)::before { background: var(--purple); }
+    .rm-phase:nth-child(3)::before { background: var(--cyan); }
+    .rm-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.75rem; }
+    .rm-phase:nth-child(1) .rm-label { color: var(--lime); }
+    .rm-phase:nth-child(2) .rm-label { color: var(--purple); }
+    .rm-phase:nth-child(3) .rm-label { color: var(--cyan); }
+    .rm-phase h4 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .rm-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .rm-list li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-2); }
+    .rm-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .rm-phase:nth-child(1) .rm-dot { background: var(--lime); }
+    .rm-phase:nth-child(2) .rm-dot { background: var(--purple); }
+    .rm-phase:nth-child(3) .rm-dot { background: var(--cyan); }
+
+    /* === PRICING === */
+    .price-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .price-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 2.5rem 2rem; backdrop-filter: blur(8px); transition: all 0.35s; text-align: center;
+    }
+    .price-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .price-card.featured { border-color: rgba(200,255,46,0.2); }
+    .price-card.featured::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--lime); border-radius: var(--r) var(--r) 0 0;
+    }
+    .price-card { position: relative; }
+    .pc-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .pc-price {
+      font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem;
+    }
+    .pc-price .small { font-size: 0.85rem; color: var(--text-2); font-weight: 500; }
+    .pc-sub { font-size: 0.8rem; color: var(--text-3); margin-bottom: 1.5rem; }
+    .pc-features { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; margin-bottom: 2rem; text-align: left; }
+    .pc-features li { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-2); }
+    .pc-ck { color: var(--lime); font-size: 0.7rem; width: 16px; text-align: center; }
+    .pc-x { color: var(--text-3); font-size: 0.7rem; width: 16px; text-align: center; }
+
+    /* === CTA === */
+    .cta-section { text-align: center; padding: 8rem 2rem; }
+    .cta-section .stitle { max-width: 600px; margin: 0 auto 1rem; }
+    .cta-section .sdesc { margin: 0 auto 2.5rem; }
+    .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+
+    /* === FOOTER === */
+    footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .foot-inner { max-width: 1240px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .foot-left { display: flex; align-items: center; gap: 1.5rem; }
+    .foot-logo { display: flex; align-items: center; gap: 0.4rem; text-decoration: none; }
+    .foot-mark {
+      width: 24px; height: 24px; border-radius: 6px; background: var(--lime);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne'; font-weight: 800; font-size: 0.55rem; color: var(--bg);
+    }
+    .foot-name { font-family: 'Syne'; font-weight: 700; font-size: 0.82rem; color: var(--text-2); letter-spacing: 0.04em; }
+    .foot-copy { font-size: 0.72rem; color: var(--text-3); }
+    .foot-links { display: flex; gap: 1.25rem; }
+    .foot-links a { font-size: 0.78rem; color: var(--text-3); text-decoration: none; transition: color 0.25s; }
+    .foot-links a:hover { color: var(--text-2); }
+
+    /* === LANG SWITCHER === */
+    .lang-sw { position: relative; }
+    .lang-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: var(--text-2);
+      padding: 0.35rem 0.7rem; border-radius: var(--r-xs); font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 0.35rem; transition: all 0.25s;
+    }
+    .lang-btn:hover { border-color: var(--border-2); color: var(--text); }
+    .lang-drop {
+      display: none; position: absolute; top: calc(100% + 6px); right: 0; min-width: 120px;
+      background: rgba(14,14,22,0.95); backdrop-filter: blur(16px); border: 1px solid var(--border);
+      border-radius: var(--r-xs); overflow: hidden; z-index: 200;
+    }
+    .lang-drop.open { display: block; }
+    .lang-opt {
+      display: block; width: 100%; padding: 0.55rem 0.85rem; background: none; border: none;
+      color: var(--text-2); font-size: 0.8rem; font-family: inherit; cursor: pointer; text-align: left;
+      transition: all 0.2s;
+    }
+    .lang-opt:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .lang-opt.active { color: var(--lime); }
+
+    /* === WALLET BTN === */
+    .wallet-btn {
+      padding: 0.45rem 1.1rem; background: linear-gradient(135deg, var(--purple), #6d28d9);
+      color: white; border: none; border-radius: var(--r-sm); font-size: 0.8rem; font-weight: 700;
+      cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 0.4rem;
+      transition: all 0.25s;
+    }
+    .wallet-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(139,92,246,0.3); }
+    .wallet-btn.connected { background: linear-gradient(135deg, var(--lime), #a3d624); color: var(--bg); }
+    .wallet-addr { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; }
+
+    /* === MODAL === */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+      align-items: center; justify-content: center; padding: 1.5rem;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-2); border: 1px solid var(--border-2); border-radius: var(--r);
+      padding: 2.5rem; max-width: 480px; width: 100%; position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+      color: var(--text-3); font-size: 1.3rem; cursor: pointer; transition: color 0.2s; line-height: 1;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 0.5rem;
+    }
+    .modal p.modal-desc { color: var(--text-2); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
+    .wallet-options { display: flex; flex-direction: column; gap: 0.75rem; }
+    .wallet-opt {
+      display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem;
+      background: rgba(255,255,255,0.025); border: 1px solid var(--border); border-radius: var(--r-sm);
+      cursor: pointer; transition: all 0.25s; width: 100%; font-family: inherit; color: var(--text);
+    }
+    .wallet-opt:hover { border-color: var(--lime); background: rgba(200,255,46,0.03); }
+    .wallet-opt-icon {
+      width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center;
+      justify-content: center; font-size: 1.4rem; flex-shrink: 0;
+    }
+    .wallet-opt-name { font-weight: 700; font-size: 0.95rem; }
+    .wallet-opt-desc { font-size: 0.75rem; color: var(--text-3); }
+    .wallet-opt-badge {
+      margin-left: auto; font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 100px;
+      background: var(--lime-soft); color: var(--lime); font-weight: 600;
+    }
+
+    /* === REGISTRATION FORM === */
+    .reg-steps { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .reg-step-dot {
+      flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06);
+    }
+    .reg-step-dot.active { background: var(--lime); }
+    .reg-step-dot.done { background: var(--purple); }
+    .reg-field { margin-bottom: 1rem; }
+    .reg-field label {
+      display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-2);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem;
+    }
+    .reg-field input, .reg-field select {
+      width: 100%; padding: 0.7rem 1rem; background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border); border-radius: var(--r-xs); color: var(--text);
+      font-family: inherit; font-size: 0.88rem; transition: border-color 0.25s; outline: none;
+    }
+    .reg-field input:focus, .reg-field select:focus { border-color: var(--lime); }
+    .reg-field select option { background: var(--bg-2); color: var(--text); }
+    .reg-wallet-status {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem;
+      background: rgba(200,255,46,0.04); border: 1px solid rgba(200,255,46,0.12);
+      border-radius: var(--r-xs); font-size: 0.85rem; color: var(--lime);
+    }
+    .reg-wallet-status .addr { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+    .reg-btn {
+      width: 100%; padding: 0.8rem; background: var(--lime); color: var(--bg); border: none;
+      border-radius: var(--r-sm); font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      cursor: pointer; transition: all 0.25s; margin-top: 0.5rem;
+    }
+    .reg-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .reg-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .reg-btn.secondary { background: var(--purple); color: white; }
+
+    /* === BINANCE SECTION === */
+    .bnb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .bnb-info {
+      background: linear-gradient(135deg, rgba(243,186,47,0.08), rgba(243,186,47,0.02));
+      border: 1px solid rgba(243,186,47,0.15); border-radius: var(--r); padding: 2.5rem;
+    }
+    .bnb-info h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 0.6rem; }
+    .bnb-info > p { color: var(--text-2); font-size: 0.9rem; line-height: 1.65; margin-bottom: 1.5rem; }
+    .bnb-reqs { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.5rem; }
+    .bnb-reqs li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.85rem; color: var(--text-2); }
+    .bnb-reqs .bnb-ck { color: #f3ba2f; font-size: 0.7rem; }
+    .bnb-eligible {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 2rem;
+    }
+    .bnb-eligible h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+    .bnb-kol-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .bnb-kol-row {
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.85rem;
+      background: rgba(255,255,255,0.02); border-radius: var(--r-xs); transition: background 0.2s;
+    }
+    .bnb-kol-row:hover { background: rgba(243,186,47,0.04); }
+    .bnb-kol-av {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(243,186,47,0.1);
+      display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
+      font-weight: 700; color: #f3ba2f; flex-shrink: 0;
+    }
+    .bnb-kol-name { font-weight: 600; font-size: 0.85rem; flex: 1; }
+    .bnb-kol-fol { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--text-2); }
+    .bnb-kol-badge {
+      font-size: 0.58rem; padding: 0.15rem 0.5rem; border-radius: 100px;
+      background: rgba(243,186,47,0.1); color: #f3ba2f; font-weight: 700; border: 1px solid rgba(243,186,47,0.15);
+    }
+
+    /* === RESPONSIVE === */
+    @media(max-width:1024px) {
+      .hero .container { grid-template-columns: 1fr; text-align: center; }
+      .hero-desc { margin: 0 auto 2.5rem; }
+      .hero-actions { justify-content: center; }
+      .hero-metrics { justify-content: center; }
+      .hero-vis { display: none; }
+      .dual-grid { grid-template-columns: 1fr; }
+      .roster-grid { grid-template-columns: repeat(2,1fr); }
+      .how-steps { grid-template-columns: repeat(2,1fr); }
+      .trust-grid { grid-template-columns: repeat(2,1fr); }
+      .rm-timeline { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; }
+      .troom-table { font-size: 0.8rem; }
+      .bnb-grid { grid-template-columns: 1fr; }
+    }
+    @media(max-width:768px) {
+      .mob-toggle { display: block; }
+      .nav-links {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; background: rgba(7,7,12,0.95); backdrop-filter: blur(16px);
+        padding: 1.25rem 2rem; gap: 0.85rem; border-bottom: 1px solid var(--border);
+      }
+      .nav-links.active { display: flex; }
+      .hero h1 { font-size: 2rem; }
+      .how-steps, .roster-grid, .trust-grid, .features-grid { grid-template-columns: 1fr; }
+      .hero-metrics { flex-direction: column; gap: 0.75rem; align-items: center; }
+      .foot-inner { flex-direction: column; gap: 1.25rem; text-align: center; }
+      .foot-left { flex-direction: column; gap: 0.75rem; }
+      .troom-wrap { overflow-x: auto; }
+      .troom-table { min-width: 700px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-noise"></div>
+<div class="bg-glow"><span></span><span></span><span></span></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
+    <button class="mob-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
+      <li><a href="#roster" data-i18n="nav_roster">KOL Roster</a></li>
+      <li><a href="#rooms" data-i18n="nav_rooms">Token Rooms</a></li>
+      <li><a href="#binance" data-i18n="nav_binance">Binance KOL</a></li>
+      <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
+      <li>
+        <div class="lang-sw">
+          <button class="lang-btn" onclick="document.querySelector('.lang-drop').classList.toggle('open')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+            <span id="langLabel">EN</span>
+          </button>
+          <div class="lang-drop">
+            <button class="lang-opt active" onclick="setLang('en')">English</button>
+            <button class="lang-opt" onclick="setLang('ko')">한국어</button>
+            <button class="lang-opt" onclick="setLang('ja')">日本語</button>
+            <button class="lang-opt" onclick="setLang('zh')">中文</button>
+          </div>
+        </div>
+      </li>
+      <li><button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')" data-i18n="nav_wallet">Connect Wallet</button></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-left">
+      <div class="hero-tag"><span class="td"></span>Post-Kaito KOL Infrastructure</div>
+      <h1>KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span></h1>
+      <p class="hero-desc">The open marketplace where Web3 KOLs control their rates and projects launch performance-based campaigns with escrowed rewards. No middlemen, no trust issues.</p>
+      <div class="hero-actions">
+        <a href="#cta" class="btn btn-lime">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Launch Campaign
+        </a>
+        <a href="#cta" class="btn btn-ghost">Join as KOL</a>
+      </div>
+      <div class="hero-metrics">
+        <div><div class="hm-num">320<span class="u">+</span></div><div class="hm-lbl">Verified KOLs</div></div>
+        <div><div class="hm-num">$4.1<span class="u">M</span></div><div class="hm-lbl">Rewards Distributed</div></div>
+        <div><div class="hm-num">92<span class="u">%</span></div><div class="hm-lbl">Avg. Campaign ROI</div></div>
+      </div>
+    </div>
+
+    <div class="hero-vis">
+      <div class="hcard-stack">
+        <div class="hcard c1">
+          <div class="hc-head">
+            <div class="hc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">NK</div>
+            <div><div class="hc-name">NeonKrypt</div><div class="hc-handle">@neonkrypt</div></div>
+            <span class="hc-badge t-diamond">Diamond</span>
+          </div>
+          <div class="hc-row">
+            <div class="hc-stat"><div class="hc-sv">218K</div><div class="hc-sl">Followers</div></div>
+            <div class="hc-stat"><div class="hc-sv">5.4%</div><div class="hc-sl">Eng. Rate</div></div>
+          </div>
+          <div class="hc-tags"><span class="hc-tag">DeFi</span><span class="hc-tag">Layer 2</span><span class="hc-tag">Infra</span></div>
+          <div class="hc-price"><span class="hc-pl">Base Rate</span><span class="hc-pv">$1,200/post</span></div>
+        </div>
+
+        <div class="hcard c2">
+          <div class="hc-head">
+            <div class="hc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">OM</div>
+            <div><div class="hc-name">OxMaxi</div><div class="hc-handle">@oxmaxi_ct</div></div>
+            <span class="hc-badge t-gold">Gold</span>
+          </div>
+          <div class="hc-row">
+            <div class="hc-stat"><div class="hc-sv">95K</div><div class="hc-sl">Followers</div></div>
+            <div class="hc-stat"><div class="hc-sv">6.1%</div><div class="hc-sl">Eng. Rate</div></div>
+          </div>
+          <div class="hc-tags"><span class="hc-tag">NFT</span><span class="hc-tag">Gaming</span></div>
+        </div>
+
+        <div class="hcard c3">
+          <div class="hc-head">
+            <div class="hc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">DQ</div>
+            <div><div class="hc-name">DegenQueen</div><div class="hc-handle">@degenqueen_</div></div>
+          </div>
+          <div class="hc-row">
+            <div class="hc-stat"><div class="hc-sv">71K</div><div class="hc-sl">Followers</div></div>
+            <div class="hc-stat"><div class="hc-sv">7.3%</div><div class="hc-sl">Eng. Rate</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section class="s-bg" id="how">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="how_eye">// process</div>
+      <h2 class="stitle rv" data-i18n="how_title">How It Works</h2>
+      <p class="sdesc rv" data-i18n="how_desc">Four steps from campaign brief to verified, on-chain payouts.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step rv">
+        <div class="hs-num">01</div>
+        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h4 data-i18n="hs1_t">KOLs Register</h4>
+        <p data-i18n="hs1_d">Link Twitter &amp; Telegram. Set niche, rates, portfolio. Go live instantly.</p>
+      </div>
+      <div class="how-step rv rv-d1">
+        <div class="hs-num">02</div>
+        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <h4 data-i18n="hs2_t">Projects Search</h4>
+        <p data-i18n="hs2_d">Filter by followers, niche, engagement, price, language. Or DM unregistered KOLs.</p>
+      </div>
+      <div class="how-step rv rv-d2">
+        <div class="hs-num">03</div>
+        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
+        <h4 data-i18n="hs3_t">Token Room Opens</h4>
+        <p data-i18n="hs3_d">Project funds escrow. KOLs accept terms and start promoting.</p>
+      </div>
+      <div class="how-step rv rv-d3">
+        <div class="hs-num">04</div>
+        <div class="hs-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h4 data-i18n="hs4_t">Auto Payout</h4>
+        <p data-i18n="hs4_d">KPIs verified on-chain. Rewards auto-distributed. Both sides leave reviews.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DUAL: FOR KOL / FOR PROJECT ==================== -->
+<section id="dual">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="dual_eye">// two sides</div>
+      <h2 class="stitle rv" data-i18n="dual_title">Built for <span class="lime">KOLs</span> &amp; <span class="purple">Projects</span></h2>
+      <p class="sdesc rv" data-i18n="dual_desc">A true two-sided marketplace. Maximum freedom for sellers, maximum transparency for buyers.</p>
+    </div>
+    <div class="dual-grid">
+      <div class="dual-card for-kol rv">
+        <div class="dc-label">For KOLs</div>
+        <h3>Your Influence, Your Price</h3>
+        <p>No agency taking cuts from your deals. Set your own rates, showcase your portfolio, build your on-chain reputation.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span>Twitter &amp; Telegram ID auto-linked</li>
+          <li><span class="dc-check">&#10003;</span>Freely set &amp; update rates and discounts in real-time</li>
+          <li><span class="dc-check">&#10003;</span>Custom profile: specialties, portfolio, campaign history</li>
+          <li><span class="dc-check">&#10003;</span>Reward dashboard (tokens &amp; stablecoins)</li>
+          <li><span class="dc-check">&#10003;</span>Auto-accumulated performance score &amp; trust rating</li>
+          <li><span class="dc-check">&#10003;</span>Rate &amp; review projects after campaigns</li>
+        </ul>
+        <a href="#cta" class="btn btn-lime">Join as KOL</a>
+      </div>
+
+      <div class="dual-card for-proj rv rv-d1">
+        <div class="dc-label">For Projects</div>
+        <h3>Targeted Reach, Verified Results</h3>
+        <p>Find the right voices for your launch. Data-driven selection, escrowed payments, real-time performance tracking.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span>Create token rooms &amp; invite KOLs</li>
+          <li><span class="dc-check">&#10003;</span>Search/filter: followers, niche, performance, price, language</li>
+          <li><span class="dc-check">&#10003;</span>Auto-invite unregistered KOLs via TG/Twitter DM</li>
+          <li><span class="dc-check">&#10003;</span>Smart contract escrow: fund &rarr; verify &rarr; auto-pay</li>
+          <li><span class="dc-check">&#10003;</span>Real-time dashboard: impressions, engagement, on-chain conversions</li>
+          <li><span class="dc-check">&#10003;</span>Rate KOLs &amp; access ROI analytics</li>
+        </ul>
+        <a href="#cta" class="btn btn-purple">Launch Campaign</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== KOL ROSTER ==================== -->
+<section class="s-bg" id="roster">
+  <div class="container">
+    <div class="sheader">
+      <div class="eyebrow rv" data-i18n="roster_eye">// kol directory</div>
+      <h2 class="stitle rv" data-i18n="roster_title">KOL Roster</h2>
+      <p class="sdesc rv" data-i18n="roster_desc">Browse verified KOLs or reach unregistered ones directly via Telegram &amp; Twitter DM.</p>
+    </div>
+    <div class="roster-grid">
+      <!-- KOL 1 - Diamond (Tier 1) -->
+      <div class="kcard rv">
+        <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#127833;</div>
+          <div><div class="kc-name">&#51100;&#48124;123</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@mujammin123</div></div>
+          <span class="kc-tier t-diamond">Diamond</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">23.9K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 2 - Diamond (Tier 1) -->
+      <div class="kcard rv rv-d1">
+        <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#9992;</div>
+          <div><div class="kc-name">&#50640;&#50612;&#46300;&#46989;&#53076;&#47532;&#50500;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@airdrop_kor</div></div>
+          <span class="kc-tier t-diamond">Diamond</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">20.6K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 3 - Gold (Tier 1) -->
+      <div class="kcard rv rv-d2">
+        <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128293;</div>
+          <div><div class="kc-name">&#50836;&#48660;&#51060; &#49464;&#49345;&#49332;&#51060;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@yobeullyANN</div></div>
+          <span class="kc-tier t-gold">Gold</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">21.0K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 4 - Gold (Tier 1) -->
+      <div class="kcard rv rv-d3">
+        <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128188;</div>
+          <div><div class="kc-name">30&#45824; &#51008;&#53748;&#48264;&#48373; &#47672;&#54588;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@murphybus</div></div>
+          <span class="kc-tier t-gold">Gold</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">16.5K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#50976;&#47672;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 5 - Silver (Tier 2.5) -->
+      <div class="kcard rv">
+        <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">&#128038;</div>
+          <div><div class="kc-name">&#50864;&#47532;&#45716; &#53944;&#50967;&#52649;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@twitchoong</div></div>
+          <span class="kc-tier t-silver">Silver</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">44.0K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 6 - Silver (Tier 2.5) -->
+      <div class="kcard rv rv-d1">
+        <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">M</div>
+          <div><div class="kc-name">MBM ALPHA</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@MBMweb3</div></div>
+          <span class="kc-tier t-silver">Silver</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">25.8K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 7 - Silver (Tier 2.5) -->
+      <div class="kcard rv rv-d2">
+        <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">&#128081;</div>
+          <div><div class="kc-name">&#53588;&#47112;&#44536;&#47016; CEN</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@emperorcoin</div></div>
+          <span class="kc-tier t-silver">Silver</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">34.8K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#49884;&#49324;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+      <!-- KOL 8 - Bronze (Tier 3) -->
+      <div class="kcard rv rv-d3">
+        <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kcard-link"></a>
+        <div class="kc-top">
+          <div class="kc-av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">&#127912;</div>
+          <div><div class="kc-name">&#52712;&#48120;&#49373;&#54876;&#48169;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@enjoymyhobby</div></div>
+          <span class="kc-tier t-unreg">Bronze</span>
+        </div>
+        <div class="kc-metrics">
+          <div class="kc-m"><div class="kc-mv">52.6K</div><div class="kc-ml">Followers</div></div>
+          <div class="kc-m"><div class="kc-mv">Tier 3</div><div class="kc-ml">Rating</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+        </div>
+        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-actions">
+          <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TOKEN ROOMS LIVE ==================== -->
+<section id="rooms">
+  <div class="container">
+    <div class="sheader">
+      <div class="eyebrow rv" data-i18n="rooms_eye">// live campaigns</div>
+      <h2 class="stitle rv" data-i18n="rooms_title">Token Rooms</h2>
+      <p class="sdesc rv" data-i18n="rooms_desc">Real-time campaign status. Escrowed funds, verified KPIs, transparent payouts.</p>
+    </div>
+    <div class="troom-wrap rv">
+      <div class="troom-header">
+        <h4>Active Token Rooms</h4>
+        <div class="troom-live"><span class="dot"></span>Live</div>
+      </div>
+      <table class="troom-table">
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>KOLs</th>
+            <th>Pool Size</th>
+            <th>Distributed</th>
+            <th>Progress</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
+            <td class="tr-mono">12</td>
+            <td class="tr-mono">$48,000</td>
+            <td class="tr-mono">$31,200</td>
+            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:65%"></div></div></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>Active</span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
+            <td class="tr-mono">8</td>
+            <td class="tr-mono">$25,000</td>
+            <td class="tr-mono">$18,750</td>
+            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:75%"></div></div></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>Active</span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
+            <td class="tr-mono">5</td>
+            <td class="tr-mono">$15,000</td>
+            <td class="tr-mono">$6,000</td>
+            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:40%"></div></div></td>
+            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span>Filling</span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
+            <td class="tr-mono">15</td>
+            <td class="tr-mono">$62,000</td>
+            <td class="tr-mono">$62,000</td>
+            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:100%; background: var(--text-3);"></div></div></td>
+            <td><span class="tr-status tr-completed">Completed</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== BINANCE KOL SCREENING ==================== -->
+<section class="s-bg" id="binance">
+  <div class="container">
+    <div class="sheader">
+      <div class="eyebrow rv">// partner screening</div>
+      <h2 class="stitle rv" data-i18n="bnb_title">Binance KOL Program <span style="color:#f3ba2f;">Eligible</span></h2>
+      <p class="sdesc rv" data-i18n="bnb_desc">We automatically screen our KOL roster against Binance's affiliate program requirements. Verified KOLs get fast-tracked.</p>
+    </div>
+    <div class="bnb-grid">
+      <div class="bnb-info rv">
+        <h3 data-i18n="bnb_req_title">Binance KOL Requirements</h3>
+        <p data-i18n="bnb_req_desc">To qualify for the Binance KOL/Affiliate program, influencers must meet at least one of the following criteria:</p>
+        <ul class="bnb-reqs">
+          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r1">5,000+ followers on social media (Twitter, YouTube, etc.)</span></li>
+          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r2">500+ members in community groups (Telegram, Discord)</span></li>
+          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r3">Active crypto content creation history</span></li>
+          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r4">41~50% spot commission + 30~40% futures commission</span></li>
+          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r5">Quarterly performance review (10+ traders, 50+ BTC volume)</span></li>
+        </ul>
+        <a href="https://www.binance.com/en/activity/affiliate/register" target="_blank" rel="noopener" class="btn btn-ghost" style="border-color:rgba(243,186,47,0.3);color:#f3ba2f;" data-i18n="bnb_apply">Apply to Binance KOL Program &rarr;</a>
+      </div>
+      <div class="bnb-eligible rv rv-d1">
+        <h4 data-i18n="bnb_eligible_title">Eligible KOLs from Our Roster</h4>
+        <div class="bnb-kol-list">
+          <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">1</div>
+            <div class="bnb-kol-name">취미생활방</div>
+            <div class="bnb-kol-fol">52,698</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">2</div>
+            <div class="bnb-kol-name">우리는 트윗충</div>
+            <div class="bnb-kol-fol">44,048</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">3</div>
+            <div class="bnb-kol-name">텔레그램 CEN</div>
+            <div class="bnb-kol-fol">34,845</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">4</div>
+            <div class="bnb-kol-name">MBM ALPHA</div>
+            <div class="bnb-kol-fol">25,846</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">5</div>
+            <div class="bnb-kol-name">잼민123</div>
+            <div class="bnb-kol-fol">23,964</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">6</div>
+            <div class="bnb-kol-name">요블이 세상살이</div>
+            <div class="bnb-kol-fol">21,054</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">7</div>
+            <div class="bnb-kol-name">에어드랍코리아</div>
+            <div class="bnb-kol-fol">20,649</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+          <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
+            <div class="bnb-kol-av">8</div>
+            <div class="bnb-kol-name">30대 은퇴번복 머피</div>
+            <div class="bnb-kol-fol">16,501</div>
+            <span class="bnb-kol-badge">ELIGIBLE</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== TRUST ==================== -->
+<section class="s-bg" id="trust">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="trust_eye">// trust layer</div>
+      <h2 class="stitle rv" data-i18n="trust_title">Transparent by Design</h2>
+      <p class="sdesc rv" data-i18n="trust_desc">No more rug-pulled campaigns or ghost KOLs. Every interaction is verifiable.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card rv">
+        <div class="tc-icon" style="background:var(--lime-soft);color:var(--lime);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <h4>Smart Contract Escrow</h4>
+        <p>Campaign funds locked in escrow. Released only when KPIs are cryptographically verified. No more "payment pending" limbo.</p>
+      </div>
+      <div class="trust-card rv rv-d1">
+        <div class="tc-icon" style="background:var(--purple-soft);color:var(--purple);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <h4>On-Chain Records</h4>
+        <p>Every campaign, payout, and review is recorded on-chain. Full history accessible anytime. Auditable and immutable.</p>
+      </div>
+      <div class="trust-card rv rv-d2">
+        <div class="tc-icon" style="background:var(--cyan-soft);color:var(--cyan);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h4>Two-Way Reviews</h4>
+        <p>Both KOLs and projects rate each other post-campaign. Reputation builds over time. Bad actors get filtered out naturally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ROADMAP ==================== -->
+<section id="roadmap">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="road_eye">// roadmap</div>
+      <h2 class="stitle rv" data-i18n="road_title">What's Next</h2>
+      <p class="sdesc rv" data-i18n="road_desc">From marketplace to full-stack KOL infrastructure.</p>
+    </div>
+    <div class="rm-timeline">
+      <div class="rm-phase rv">
+        <div class="rm-label">Phase 1 &mdash; Now</div>
+        <h4>Marketplace</h4>
+        <ul class="rm-list">
+          <li><span class="rm-dot"></span>KOL registration &amp; profile system</li>
+          <li><span class="rm-dot"></span>Token room creation &amp; escrow</li>
+          <li><span class="rm-dot"></span>DM outreach (Telegram &amp; Twitter)</li>
+          <li><span class="rm-dot"></span>Performance tracking dashboard</li>
+          <li><span class="rm-dot"></span>Two-way review system</li>
+        </ul>
+      </div>
+      <div class="rm-phase rv rv-d1">
+        <div class="rm-label">Phase 2 &mdash; Q3 2026</div>
+        <h4>Launchpad Integration</h4>
+        <ul class="rm-list">
+          <li><span class="rm-dot"></span>KOL-backed token launches</li>
+          <li><span class="rm-dot"></span>Pre-launch marketing bundles</li>
+          <li><span class="rm-dot"></span>Staking &amp; loyalty tiers</li>
+          <li><span class="rm-dot"></span>Cross-chain expansion</li>
+          <li><span class="rm-dot"></span>API for third-party integrations</li>
+        </ul>
+      </div>
+      <div class="rm-phase rv rv-d2">
+        <div class="rm-label">Phase 3 &mdash; 2027</div>
+        <h4>Governance Token</h4>
+        <ul class="rm-list">
+          <li><span class="rm-dot"></span>$SHILL token launch</li>
+          <li><span class="rm-dot"></span>DAO governance for platform decisions</li>
+          <li><span class="rm-dot"></span>Revenue sharing for token holders</li>
+          <li><span class="rm-dot"></span>KOL index &amp; reputation NFTs</li>
+          <li><span class="rm-dot"></span>Decentralized dispute resolution</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRICING ==================== -->
+<section class="s-bg" id="pricing">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="price_eye">// pricing</div>
+      <h2 class="stitle rv" data-i18n="price_title">Simple, Transparent Fees</h2>
+      <p class="sdesc rv" data-i18n="price_desc">Free to join. You only pay when value is delivered.</p>
+    </div>
+    <div class="price-grid">
+      <div class="price-card rv">
+        <div class="pc-name">Starter</div>
+        <div class="pc-price">Free</div>
+        <div class="pc-sub">For KOLs &amp; small projects</div>
+        <ul class="pc-features">
+          <li><span class="pc-ck">&#10003;</span>KOL profile &amp; portfolio</li>
+          <li><span class="pc-ck">&#10003;</span>Up to 3 active campaigns</li>
+          <li><span class="pc-ck">&#10003;</span>Basic analytics</li>
+          <li><span class="pc-ck">&#10003;</span>3% matching fee</li>
+          <li><span class="pc-x">&times;</span>Priority KOL placement</li>
+          <li><span class="pc-x">&times;</span>DM auto-outreach</li>
+        </ul>
+        <a href="#cta" class="btn btn-ghost" style="width:100%;justify-content:center;">Get Started</a>
+      </div>
+      <div class="price-card featured rv rv-d1">
+        <div class="pc-name"><span class="lime">Pro</span></div>
+        <div class="pc-price">$199<span class="small">/mo</span></div>
+        <div class="pc-sub">For growth-stage projects</div>
+        <ul class="pc-features">
+          <li><span class="pc-ck">&#10003;</span>Unlimited campaigns</li>
+          <li><span class="pc-ck">&#10003;</span>Advanced analytics &amp; ROI reports</li>
+          <li><span class="pc-ck">&#10003;</span>DM auto-outreach to unregistered KOLs</li>
+          <li><span class="pc-ck">&#10003;</span>Priority support</li>
+          <li><span class="pc-ck">&#10003;</span>3% matching fee</li>
+          <li><span class="pc-x">&times;</span>Boost &amp; featured placement</li>
+        </ul>
+        <a href="#cta" class="btn btn-lime" style="width:100%;justify-content:center;">Go Pro</a>
+      </div>
+      <div class="price-card rv rv-d2">
+        <div class="pc-name"><span class="purple">Enterprise</span></div>
+        <div class="pc-price">Custom</div>
+        <div class="pc-sub">For protocols &amp; launchpads</div>
+        <ul class="pc-features">
+          <li><span class="pc-ck">&#10003;</span>Everything in Pro</li>
+          <li><span class="pc-ck">&#10003;</span>Reduced matching fee (negotiable)</li>
+          <li><span class="pc-ck">&#10003;</span>Dedicated account manager</li>
+          <li><span class="pc-ck">&#10003;</span>Boost &amp; featured KOL placement</li>
+          <li><span class="pc-ck">&#10003;</span>White-label option</li>
+          <li><span class="pc-ck">&#10003;</span>API access</li>
+        </ul>
+        <a href="#cta" class="btn btn-ghost" style="width:100%;justify-content:center;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta-section s-border" id="cta">
+  <div class="container">
+    <div class="eyebrow rv" data-i18n="cta_eye">// get started</div>
+    <h2 class="stitle rv" data-i18n="cta_title" style="max-width:650px;margin:0 auto 1rem;">The Post-Kaito<br><span class="lime">KOL Marketplace</span> Is Here</h2>
+    <p class="sdesc rv" data-i18n="cta_desc" style="margin:0 auto 2.5rem;text-align:center;">KOLs set their price. Projects pick their alpha. Smart contracts handle the rest. No middlemen, no trust issues, no rugs.</p>
+    <div class="cta-actions rv">
+      <a href="javascript:openModal('walletModal')" class="btn btn-lime">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        <span data-i18n="hero_btn1">Launch a Campaign</span>
+      </a>
+      <a href="javascript:openModal('regModal')" class="btn btn-purple" data-i18n="hero_btn2">Join as KOL</a>
+      <a href="#" class="btn btn-ghost">Read Docs</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WALLET MODAL ==================== -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
+    <h3 data-i18n="wm_title">Connect Wallet</h3>
+    <p class="modal-desc" data-i18n="wm_desc">Connect your wallet to register as a KOL, receive campaign rewards, and manage your on-chain reputation.</p>
+    <div class="wallet-options">
+      <button class="wallet-opt" onclick="connectMetaMask()">
+        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
+        </div>
+        <div>
+          <div class="wallet-opt-name">MetaMask</div>
+          <div class="wallet-opt-desc" data-i18n="wm_mm_desc">Browser extension wallet</div>
+        </div>
+        <span class="wallet-opt-badge" data-i18n="wm_popular">Popular</span>
+      </button>
+      <button class="wallet-opt" onclick="connectRedditWallet()">
+        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#ff4500,#ff6634);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><circle cx="8.5" cy="11" r="1.5" fill="#ff4500"/><circle cx="15.5" cy="11" r="1.5" fill="#ff4500"/><path d="M8 14.5c0 0 1.5 2 4 2s4-2 4-2" fill="none" stroke="#ff4500" stroke-width="1.5"/></svg>
+        </div>
+        <div>
+          <div class="wallet-opt-name">Reddit Wallet</div>
+          <div class="wallet-opt-desc" data-i18n="wm_rw_desc">Reddit Vault / Web3 Wallet</div>
+        </div>
+        <span class="wallet-opt-badge">Web3</span>
+      </button>
+      <button class="wallet-opt" onclick="connectWalletConnect()">
+        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#3b99fc,#2d7dd2);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M6.1 8.5c3.3-3.2 8.5-3.2 11.8 0l.4.4c.2.2.2.4 0 .5l-1.3 1.3c-.1.1-.2.1-.3 0l-.5-.5c-2.3-2.2-5.9-2.2-8.2 0l-.6.5c-.1.1-.2.1-.3 0L5.8 9.4c-.1-.1-.1-.4 0-.5l.3-.4zm14.6 2.7l1.2 1.1c.2.2.2.4 0 .5l-5.2 5.1c-.2.2-.4.2-.6 0l-3.7-3.6c0-.1-.1-.1-.1 0l-3.7 3.6c-.2.2-.4.2-.6 0l-5.2-5.1c-.2-.1-.2-.4 0-.5l1.2-1.1c.2-.2.4-.2.6 0l3.7 3.6c.1 0 .1 0 .2 0l3.7-3.6c.2-.2.4-.2.6 0l3.7 3.6c0 0 .1 0 .1 0l3.7-3.6c.2-.2.5-.2.6 0z"/></svg>
+        </div>
+        <div>
+          <div class="wallet-opt-name">WalletConnect</div>
+          <div class="wallet-opt-desc" data-i18n="wm_wc_desc">Scan QR with mobile wallet</div>
+        </div>
+      </button>
+    </div>
+    <div id="walletStatus" style="display:none; margin-top:1.25rem;">
+      <div class="reg-wallet-status">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span data-i18n="wm_connected">Connected:</span> <span class="addr" id="walletAddr"></span>
+      </div>
+      <button class="reg-btn secondary" style="margin-top:0.75rem;" onclick="closeModal('walletModal');openModal('regModal')" data-i18n="wm_register">Register as KOL &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== KOL REGISTRATION MODAL ==================== -->
+<div class="modal-overlay" id="regModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('regModal')">&times;</button>
+    <h3 data-i18n="reg_title">KOL Registration</h3>
+    <div class="reg-steps">
+      <div class="reg-step-dot active" id="rs1"></div>
+      <div class="reg-step-dot" id="rs2"></div>
+      <div class="reg-step-dot" id="rs3"></div>
+    </div>
+
+    <!-- Step 1: Wallet -->
+    <div id="regStep1">
+      <p class="modal-desc" data-i18n="reg_s1_desc">First, connect your wallet to create your on-chain KOL identity.</p>
+      <div id="regWalletCheck"></div>
+      <button class="reg-btn" id="regWalletBtn" onclick="regConnectWallet()" data-i18n="reg_s1_btn">Connect Wallet</button>
+      <button class="reg-btn" id="regNextBtn1" style="display:none;" onclick="regGoStep(2)" data-i18n="reg_next">Next &rarr;</button>
+    </div>
+
+    <!-- Step 2: Profile -->
+    <div id="regStep2" style="display:none;">
+      <p class="modal-desc" data-i18n="reg_s2_desc">Set up your KOL profile. This will be visible to projects looking for influencers.</p>
+      <div class="reg-field">
+        <label data-i18n="reg_name">Display Name</label>
+        <input type="text" id="regName" placeholder="e.g. CryptoAlpha">
+      </div>
+      <div class="reg-field">
+        <label data-i18n="reg_tg">Telegram Handle</label>
+        <input type="text" id="regTg" placeholder="@your_telegram">
+      </div>
+      <div class="reg-field">
+        <label data-i18n="reg_twitter">Twitter / X Handle</label>
+        <input type="text" id="regTwitter" placeholder="@your_twitter">
+      </div>
+      <div class="reg-field">
+        <label data-i18n="reg_niche">Niche / Sector</label>
+        <select id="regNiche">
+          <option value="defi">DeFi</option>
+          <option value="airdrop">Airdrop</option>
+          <option value="nft">NFT</option>
+          <option value="gaming">Gaming / P2E</option>
+          <option value="meme">Meme</option>
+          <option value="infra">Infra / L2</option>
+          <option value="research">Research</option>
+          <option value="trading">Trading</option>
+          <option value="news">News / Media</option>
+        </select>
+      </div>
+      <div class="reg-field">
+        <label data-i18n="reg_followers">Follower Count</label>
+        <input type="number" id="regFollowers" placeholder="e.g. 15000">
+      </div>
+      <div class="reg-field">
+        <label data-i18n="reg_rate">Base Rate (USD / Post)</label>
+        <input type="number" id="regRate" placeholder="e.g. 500">
+      </div>
+      <button class="reg-btn" onclick="regGoStep(3)" data-i18n="reg_next">Next &rarr;</button>
+    </div>
+
+    <!-- Step 3: Confirm -->
+    <div id="regStep3" style="display:none;">
+      <p class="modal-desc" data-i18n="reg_s3_desc">Review your information and submit your KOL registration.</p>
+      <div id="regSummary" style="background:rgba(255,255,255,0.02);border-radius:var(--r-xs);padding:1.25rem;margin-bottom:1rem;font-size:0.88rem;"></div>
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;font-size:0.8rem;color:var(--text-2);">
+        <input type="checkbox" id="regAgree" style="accent-color:var(--lime);">
+        <label for="regAgree" data-i18n="reg_agree">I agree to the SHILL VAULT Terms of Service and Privacy Policy</label>
+      </div>
+      <button class="reg-btn" onclick="submitRegistration()" data-i18n="reg_submit">Submit Registration</button>
+    </div>
+
+    <!-- Step Done -->
+    <div id="regDone" style="display:none;text-align:center;padding:1.5rem 0;">
+      <div style="font-size:3rem;margin-bottom:1rem;">&#10003;</div>
+      <h3 style="color:var(--lime);margin-bottom:0.5rem;" data-i18n="reg_done_title">Registration Complete!</h3>
+      <p class="modal-desc" data-i18n="reg_done_desc">Your KOL profile is now live. Projects can find you in the roster and invite you to campaigns.</p>
+      <button class="reg-btn" onclick="closeModal('regModal')" data-i18n="reg_done_btn">Go to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div class="foot-left">
+      <a href="#" class="foot-logo"><div class="foot-mark">SV</div><span class="foot-name">SHILL VAULT</span></a>
+      <span class="foot-copy">&copy; 2026 Shill Vault. All rights reserved.</span>
+    </div>
+    <div class="foot-links">
+      <a href="#">Docs</a>
+      <a href="#">Twitter</a>
+      <a href="#">Telegram</a>
+      <a href="#">Discord</a>
+      <a href="#">Blog</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ==================== SCROLL REVEAL ====================
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+  // Nav scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', scrollY > 50);
+  });
+
+  // Mobile menu close on link click
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', () => document.querySelector('.nav-links').classList.remove('active'));
+  });
+
+  // Close lang dropdown on outside click
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.lang-sw')) document.querySelector('.lang-drop')?.classList.remove('open');
+  });
+
+  // ==================== MODAL ====================
+  function openModal(id) { document.getElementById(id).classList.add('open'); }
+  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(m => {
+    m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+  });
+
+  // ==================== WALLET CONNECTION ====================
+  let connectedAddr = null;
+
+  async function connectMetaMask() {
+    if (typeof window.ethereum === 'undefined') {
+      alert(i18n[currentLang].wm_no_mm || 'MetaMask is not installed. Please install MetaMask extension.');
+      window.open('https://metamask.io/download/', '_blank');
+      return;
+    }
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (accounts[0]) onWalletConnected(accounts[0], 'MetaMask');
+    } catch (err) {
+      console.error('MetaMask connection failed:', err);
+    }
+  }
+
+  async function connectRedditWallet() {
+    // Reddit Wallet uses ethereum-compatible provider
+    const provider = window.ethereum?.providers?.find(p => p.isReddit) || window.reddit?.ethereum;
+    if (provider) {
+      try {
+        const accounts = await provider.request({ method: 'eth_requestAccounts' });
+        if (accounts[0]) onWalletConnected(accounts[0], 'Reddit');
+      } catch(err) { console.error('Reddit Wallet error:', err); }
+    } else if (typeof window.ethereum !== 'undefined') {
+      // Fallback: use default provider
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts[0]) onWalletConnected(accounts[0], 'Reddit Wallet');
+      } catch(err) { console.error(err); }
+    } else {
+      alert(i18n[currentLang].wm_no_rw || 'No Web3 wallet detected. Please install a compatible wallet.');
+    }
+  }
+
+  async function connectWalletConnect() {
+    alert(i18n[currentLang].wm_wc_soon || 'WalletConnect integration coming soon. Use MetaMask or Reddit Wallet for now.');
+  }
+
+  function onWalletConnected(addr, walletName) {
+    connectedAddr = addr;
+    const short = addr.slice(0,6) + '...' + addr.slice(-4);
+    // Update wallet button in nav
+    const btn = document.getElementById('walletBtn');
+    btn.classList.add('connected');
+    btn.innerHTML = '<span class="wallet-addr">' + short + '</span>';
+    btn.onclick = () => openModal('walletModal');
+    // Update modal status
+    document.getElementById('walletStatus').style.display = 'block';
+    document.getElementById('walletAddr').textContent = short;
+    // Update registration
+    updateRegWalletStatus();
+  }
+
+  // ==================== KOL REGISTRATION ====================
+  function regConnectWallet() {
+    closeModal('regModal');
+    openModal('walletModal');
+  }
+
+  function updateRegWalletStatus() {
+    if (!connectedAddr) return;
+    const short = connectedAddr.slice(0,6) + '...' + connectedAddr.slice(-4);
+    const check = document.getElementById('regWalletCheck');
+    check.innerHTML = '<div class="reg-wallet-status"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>' + (i18n[currentLang].wm_connected || 'Connected:') + ' <span class="addr">' + short + '</span></div>';
+    document.getElementById('regWalletBtn').style.display = 'none';
+    document.getElementById('regNextBtn1').style.display = 'block';
+  }
+
+  function regGoStep(step) {
+    document.getElementById('regStep1').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('regStep2').style.display = step === 2 ? 'block' : 'none';
+    document.getElementById('regStep3').style.display = step === 3 ? 'block' : 'none';
+    document.getElementById('rs1').className = 'reg-step-dot ' + (step >= 1 ? (step > 1 ? 'done' : 'active') : '');
+    document.getElementById('rs2').className = 'reg-step-dot ' + (step >= 2 ? (step > 2 ? 'done' : 'active') : '');
+    document.getElementById('rs3').className = 'reg-step-dot ' + (step >= 3 ? 'active' : '');
+    if (step === 3) buildSummary();
+  }
+
+  function buildSummary() {
+    const name = document.getElementById('regName').value || '-';
+    const tg = document.getElementById('regTg').value || '-';
+    const tw = document.getElementById('regTwitter').value || '-';
+    const niche = document.getElementById('regNiche').value || '-';
+    const fol = document.getElementById('regFollowers').value || '-';
+    const rate = document.getElementById('regRate').value || '-';
+    const short = connectedAddr ? connectedAddr.slice(0,6)+'...'+connectedAddr.slice(-4) : '-';
+    const L = i18n[currentLang];
+    document.getElementById('regSummary').innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;">' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">' + (L.reg_name||'Display Name') + '</span><br><strong>' + name + '</strong></div>' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">Wallet</span><br><strong style="font-family:JetBrains Mono,monospace;font-size:0.82rem;">' + short + '</strong></div>' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">Telegram</span><br><strong>' + tg + '</strong></div>' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">Twitter</span><br><strong>' + tw + '</strong></div>' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">' + (L.reg_niche||'Niche') + '</span><br><strong>' + niche + '</strong></div>' +
+      '<div><span style="color:var(--text-3);font-size:0.72rem;">' + (L.reg_followers||'Followers') + '</span><br><strong>' + Number(fol).toLocaleString() + '</strong></div>' +
+      '<div style="grid-column:span 2;"><span style="color:var(--text-3);font-size:0.72rem;">' + (L.reg_rate||'Base Rate') + '</span><br><strong style="color:var(--lime);">$' + Number(rate).toLocaleString() + '/post</strong></div>' +
+      '</div>';
+  }
+
+  function submitRegistration() {
+    if (!document.getElementById('regAgree').checked) {
+      alert(i18n[currentLang].reg_agree_alert || 'Please agree to the Terms of Service.');
+      return;
+    }
+    document.getElementById('regStep3').style.display = 'none';
+    document.getElementById('regDone').style.display = 'block';
+    document.querySelectorAll('.reg-step-dot').forEach(d => d.className = 'reg-step-dot done');
+  }
+
+  // ==================== i18n ====================
+  let currentLang = 'en';
+
+  const i18n = {
+    en: {
+      nav_how: 'How it Works', nav_roster: 'KOL Roster', nav_rooms: 'Token Rooms',
+      nav_binance: 'Binance KOL', nav_pricing: 'Pricing', nav_wallet: 'Connect Wallet',
+      hero_tag: 'Post-Kaito KOL Infrastructure',
+      hero_h1: 'KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span>',
+      hero_desc: 'The open marketplace where Web3 KOLs control their rates and projects launch performance-based campaigns with escrowed rewards. No middlemen, no trust issues.',
+      hero_btn1: 'Launch Campaign', hero_btn2: 'Join as KOL',
+      hm1: 'Verified KOLs', hm2: 'Rewards Distributed', hm3: 'Avg. Campaign ROI',
+      how_eye: '// process', how_title: 'How It Works', how_desc: 'Four steps from campaign brief to verified, on-chain payouts.',
+      hs1_t: 'KOLs Register', hs1_d: 'Link Twitter & Telegram. Set niche, rates, portfolio. Go live instantly.',
+      hs2_t: 'Projects Search', hs2_d: 'Filter by followers, niche, engagement, price, language. Or DM unregistered KOLs.',
+      hs3_t: 'Token Room Opens', hs3_d: 'Project funds escrow. KOLs accept terms and start promoting.',
+      hs4_t: 'Auto Payout', hs4_d: 'KPIs verified on-chain. Rewards auto-distributed. Both sides leave reviews.',
+      dual_eye: '// two sides', dual_title: 'Built for <span class="lime">KOLs</span> & <span class="purple">Projects</span>',
+      dual_desc: 'A true two-sided marketplace. Maximum freedom for sellers, maximum transparency for buyers.',
+      roster_eye: '// kol directory', roster_title: 'KOL Roster',
+      roster_desc: 'Browse verified KOLs or reach unregistered ones directly via Telegram & Twitter DM.',
+      rooms_eye: '// live campaigns', rooms_title: 'Token Rooms',
+      rooms_desc: 'Real-time campaign status. Escrowed funds, verified KPIs, transparent payouts.',
+      bnb_title: 'Binance KOL Program <span style="color:#f3ba2f;">Eligible</span>',
+      bnb_desc: 'We automatically screen our KOL roster against Binance\'s affiliate program requirements. Verified KOLs get fast-tracked.',
+      bnb_req_title: 'Binance KOL Requirements',
+      bnb_req_desc: 'To qualify for the Binance KOL/Affiliate program, influencers must meet at least one of the following criteria:',
+      bnb_r1: '5,000+ followers on social media (Twitter, YouTube, etc.)',
+      bnb_r2: '500+ members in community groups (Telegram, Discord)',
+      bnb_r3: 'Active crypto content creation history',
+      bnb_r4: '41~50% spot commission + 30~40% futures commission',
+      bnb_r5: 'Quarterly performance review (10+ traders, 50+ BTC volume)',
+      bnb_apply: 'Apply to Binance KOL Program →',
+      bnb_eligible_title: 'Eligible KOLs from Our Roster',
+      trust_eye: '// trust layer', trust_title: 'Transparent by Design',
+      trust_desc: 'No more rug-pulled campaigns or ghost KOLs. Every interaction is verifiable.',
+      road_eye: '// roadmap', road_title: 'What\'s Next', road_desc: 'From marketplace to full-stack KOL infrastructure.',
+      price_eye: '// pricing', price_title: 'Simple, Transparent Fees', price_desc: 'Free to join. You only pay when value is delivered.',
+      cta_eye: '// get started', cta_title: 'The Post-Kaito<br><span class="lime">KOL Marketplace</span> Is Here',
+      cta_desc: 'KOLs set their price. Projects pick their alpha. Smart contracts handle the rest.',
+      wm_title: 'Connect Wallet', wm_desc: 'Connect your wallet to register as a KOL, receive campaign rewards, and manage your on-chain reputation.',
+      wm_mm_desc: 'Browser extension wallet', wm_rw_desc: 'Reddit Vault / Web3 Wallet', wm_wc_desc: 'Scan QR with mobile wallet',
+      wm_popular: 'Popular', wm_connected: 'Connected:', wm_register: 'Register as KOL →',
+      wm_no_mm: 'MetaMask is not installed. Please install MetaMask extension.',
+      wm_no_rw: 'No Web3 wallet detected. Please install a compatible wallet.',
+      wm_wc_soon: 'WalletConnect integration coming soon.',
+      reg_title: 'KOL Registration', reg_s1_desc: 'First, connect your wallet to create your on-chain KOL identity.',
+      reg_s1_btn: 'Connect Wallet', reg_next: 'Next →',
+      reg_s2_desc: 'Set up your KOL profile. This will be visible to projects looking for influencers.',
+      reg_name: 'Display Name', reg_tg: 'Telegram Handle', reg_twitter: 'Twitter / X Handle',
+      reg_niche: 'Niche / Sector', reg_followers: 'Follower Count', reg_rate: 'Base Rate (USD / Post)',
+      reg_s3_desc: 'Review your information and submit your KOL registration.',
+      reg_agree: 'I agree to the SHILL VAULT Terms of Service and Privacy Policy',
+      reg_agree_alert: 'Please agree to the Terms of Service.',
+      reg_submit: 'Submit Registration',
+      reg_done_title: 'Registration Complete!',
+      reg_done_desc: 'Your KOL profile is now live. Projects can find you in the roster and invite you to campaigns.',
+      reg_done_btn: 'Go to Dashboard'
+    },
+    ko: {
+      nav_how: '이용 방법', nav_roster: 'KOL 명단', nav_rooms: '토큰 룸',
+      nav_binance: '바이낸스 KOL', nav_pricing: '가격', nav_wallet: '지갑 연결',
+      hero_tag: '포스트-카이토 KOL 인프라',
+      hero_h1: 'KOL이 가격을 정한다.<br><span class="lime">프로젝트가 알파를 고른다.</span>',
+      hero_desc: 'Web3 KOL이 자신의 레이트를 직접 설정하고, 프로젝트가 에스크로 기반 성과 캠페인을 운영하는 오픈 마켓플레이스. 중개인 없이, 신뢰 문제 없이.',
+      hero_btn1: '캠페인 시작', hero_btn2: 'KOL 등록',
+      hm1: '인증된 KOL', hm2: '보상 지급액', hm3: '평균 캠페인 ROI',
+      how_eye: '// 프로세스', how_title: '이용 방법', how_desc: '캠페인 브리프부터 온체인 정산까지 4단계.',
+      hs1_t: 'KOL 등록', hs1_d: '트위터 & 텔레그램 연동. 분야, 단가, 포트폴리오 설정. 즉시 라이브.',
+      hs2_t: '프로젝트 검색', hs2_d: '팔로워, 분야, 인게이지먼트, 가격, 언어 필터. 미등록 KOL DM 가능.',
+      hs3_t: '토큰 룸 오픈', hs3_d: '프로젝트가 에스크로 펀딩. KOL이 조건 수락 후 홍보 시작.',
+      hs4_t: '자동 정산', hs4_d: 'KPI 온체인 검증. 보상 자동 분배. 양측 리뷰 작성.',
+      dual_eye: '// 양면 마켓', dual_title: '<span class="lime">KOL</span>과 <span class="purple">프로젝트</span>를 위해',
+      dual_desc: '진정한 양면 마켓플레이스. 판매자에게는 최대한의 자유를, 구매자에게는 최대한의 투명성을.',
+      roster_eye: '// KOL 디렉토리', roster_title: 'KOL 명단',
+      roster_desc: '인증된 KOL을 탐색하거나 텔레그램 & 트위터 DM으로 미등록 KOL에게 직접 연락하세요.',
+      rooms_eye: '// 라이브 캠페인', rooms_title: '토큰 룸',
+      rooms_desc: '실시간 캠페인 현황. 에스크로 자금, 검증된 KPI, 투명한 정산.',
+      bnb_title: '바이낸스 KOL 프로그램 <span style="color:#f3ba2f;">적격</span>',
+      bnb_desc: '바이낸스 어필리에이트 프로그램 요건에 맞춰 KOL 명단을 자동 스크리닝합니다.',
+      bnb_req_title: '바이낸스 KOL 요건',
+      bnb_req_desc: '바이낸스 KOL/어필리에이트 프로그램 자격을 갖추려면 다음 기준 중 하나 이상을 충족해야 합니다:',
+      bnb_r1: '소셜 미디어 팔로워 5,000명 이상 (트위터, 유튜브 등)',
+      bnb_r2: '커뮤니티 그룹 멤버 500명 이상 (텔레그램, 디스코드)',
+      bnb_r3: '활발한 크립토 콘텐츠 제작 이력',
+      bnb_r4: '현물 41~50% + 선물 30~40% 커미션',
+      bnb_r5: '분기별 성과 리뷰 (10명 이상 트레이더, 50+ BTC 거래량)',
+      bnb_apply: '바이낸스 KOL 프로그램 신청 →',
+      bnb_eligible_title: '적격 KOL 리스트',
+      trust_eye: '// 신뢰 레이어', trust_title: '투명한 설계',
+      trust_desc: '러그풀 캠페인이나 유령 KOL은 더 이상 없습니다. 모든 상호작용이 검증 가능합니다.',
+      road_eye: '// 로드맵', road_title: '다음 단계', road_desc: '마켓플레이스에서 풀스택 KOL 인프라로.',
+      price_eye: '// 가격', price_title: '심플하고 투명한 수수료', price_desc: '가입 무료. 가치가 전달될 때만 비용을 지불합니다.',
+      cta_eye: '// 시작하기', cta_title: '포스트-카이토<br><span class="lime">KOL 마켓플레이스</span>가 왔다',
+      cta_desc: 'KOL이 가격을 정하고, 프로젝트가 알파를 고르고, 스마트 컨트랙트가 나머지를 처리합니다.',
+      wm_title: '지갑 연결', wm_desc: '지갑을 연결하여 KOL로 등록하고, 캠페인 보상을 받고, 온체인 평판을 관리하세요.',
+      wm_mm_desc: '브라우저 확장 지갑', wm_rw_desc: 'Reddit Vault / Web3 지갑', wm_wc_desc: '모바일 지갑으로 QR 스캔',
+      wm_popular: '인기', wm_connected: '연결됨:', wm_register: 'KOL로 등록 →',
+      wm_no_mm: 'MetaMask가 설치되어 있지 않습니다. MetaMask 확장을 설치해주세요.',
+      wm_no_rw: 'Web3 지갑이 감지되지 않습니다. 호환 지갑을 설치해주세요.',
+      wm_wc_soon: 'WalletConnect 연동 준비 중입니다.',
+      reg_title: 'KOL 등록', reg_s1_desc: '먼저 지갑을 연결하여 온체인 KOL 신원을 생성하세요.',
+      reg_s1_btn: '지갑 연결', reg_next: '다음 →',
+      reg_s2_desc: 'KOL 프로필을 설정하세요. 인플루언서를 찾는 프로젝트에게 공개됩니다.',
+      reg_name: '표시 이름', reg_tg: '텔레그램 핸들', reg_twitter: '트위터 / X 핸들',
+      reg_niche: '분야 / 섹터', reg_followers: '팔로워 수', reg_rate: '기본 단가 (USD / 포스트)',
+      reg_s3_desc: '정보를 확인하고 KOL 등록을 제출하세요.',
+      reg_agree: 'SHILL VAULT 이용약관 및 개인정보처리방침에 동의합니다',
+      reg_agree_alert: '이용약관에 동의해주세요.',
+      reg_submit: '등록 제출',
+      reg_done_title: '등록 완료!',
+      reg_done_desc: 'KOL 프로필이 라이브 되었습니다. 프로젝트에서 명단에서 당신을 찾아 캠페인에 초대할 수 있습니다.',
+      reg_done_btn: '대시보드로 이동'
+    },
+    ja: {
+      nav_how: '使い方', nav_roster: 'KOLリスト', nav_rooms: 'トークンルーム',
+      nav_binance: 'Binance KOL', nav_pricing: '料金', nav_wallet: 'ウォレット接続',
+      hero_tag: 'ポストKaito KOLインフラ',
+      hero_h1: 'KOLが価格を決める。<br><span class="lime">プロジェクトがアルファを選ぶ。</span>',
+      hero_desc: 'Web3 KOLが自分のレートを設定し、プロジェクトがエスクロー付きのパフォーマンスキャンペーンを実施するオープンマーケットプレイス。',
+      hero_btn1: 'キャンペーン開始', hero_btn2: 'KOL登録',
+      hm1: '認証済みKOL', hm2: '報酬配布額', hm3: '平均キャンペーンROI',
+      how_eye: '// プロセス', how_title: '使い方', how_desc: 'キャンペーン概要からオンチェーン決済まで4ステップ。',
+      hs1_t: 'KOL登録', hs1_d: 'Twitter＆Telegram連携。ニッチ、料金、ポートフォリオを設定。即座に公開。',
+      hs2_t: 'プロジェクト検索', hs2_d: 'フォロワー、ニッチ、エンゲージメント、価格、言語でフィルター。',
+      hs3_t: 'トークンルーム開設', hs3_d: 'プロジェクトがエスクロー資金投入。KOLが条件を承認しプロモーション開始。',
+      hs4_t: '自動決済', hs4_d: 'KPIオンチェーン検証。報酬自動配布。双方がレビュー。',
+      dual_eye: '// 双方向', dual_title: '<span class="lime">KOL</span>と<span class="purple">プロジェクト</span>のために',
+      dual_desc: '真の双方向マーケットプレイス。売り手には最大限の自由を、買い手には最大限の透明性を。',
+      roster_eye: '// KOLディレクトリ', roster_title: 'KOLリスト',
+      roster_desc: '認証済みKOLを閲覧するか、Telegram＆Twitter DMで未登録KOLに直接連絡。',
+      rooms_eye: '// ライブキャンペーン', rooms_title: 'トークンルーム',
+      rooms_desc: 'リアルタイムキャンペーン状況。エスクロー資金、検証済みKPI、透明な決済。',
+      bnb_title: 'Binance KOLプログラム <span style="color:#f3ba2f;">適格</span>',
+      bnb_desc: 'BinanceアフィリエイトプログラムのKOLリストを自動スクリーニングします。',
+      bnb_req_title: 'Binance KOL要件', bnb_req_desc: 'Binance KOL/アフィリエイトプログラムの資格を得るには：',
+      bnb_r1: 'SNSフォロワー5,000人以上', bnb_r2: 'コミュニティメンバー500人以上',
+      bnb_r3: '活発な暗号資産コンテンツ制作実績', bnb_r4: '現物41~50%＋先物30~40%コミッション',
+      bnb_r5: '四半期パフォーマンスレビュー', bnb_apply: 'Binance KOLプログラム申請 →',
+      bnb_eligible_title: '適格KOLリスト',
+      trust_eye: '// 信頼レイヤー', trust_title: '透明な設計',
+      trust_desc: 'ラグプルキャンペーンやゴーストKOLはもうありません。',
+      road_eye: '// ロードマップ', road_title: '次のステップ', road_desc: 'マーケットプレイスからフルスタックKOLインフラへ。',
+      price_eye: '// 料金', price_title: 'シンプルで透明な手数料', price_desc: '参加無料。価値が提供された時のみ料金発生。',
+      cta_eye: '// 始める', cta_title: 'ポストKaito<br><span class="lime">KOLマーケットプレイス</span>登場',
+      cta_desc: 'KOLが価格を決め、プロジェクトがアルファを選び、スマートコントラクトが残りを処理。',
+      wm_title: 'ウォレット接続', wm_desc: 'ウォレットを接続してKOL登録、報酬受取、オンチェーン評判管理を行います。',
+      wm_mm_desc: 'ブラウザ拡張ウォレット', wm_rw_desc: 'Reddit Vault / Web3ウォレット', wm_wc_desc: 'モバイルウォレットでQRスキャン',
+      wm_popular: '人気', wm_connected: '接続済み:', wm_register: 'KOL登録 →',
+      wm_no_mm: 'MetaMaskがインストールされていません。', wm_no_rw: 'Web3ウォレットが検出されません。',
+      wm_wc_soon: 'WalletConnect連携は準備中です。',
+      reg_title: 'KOL登録', reg_s1_desc: 'まずウォレットを接続してオンチェーンKOL IDを作成します。',
+      reg_s1_btn: 'ウォレット接続', reg_next: '次へ →',
+      reg_s2_desc: 'KOLプロフィールを設定。プロジェクトに公開されます。',
+      reg_name: '表示名', reg_tg: 'Telegramハンドル', reg_twitter: 'Twitter / Xハンドル',
+      reg_niche: 'ニッチ/セクター', reg_followers: 'フォロワー数', reg_rate: '基本料金 (USD/投稿)',
+      reg_s3_desc: '情報を確認してKOL登録を提出してください。',
+      reg_agree: 'SHILL VAULT利用規約及びプライバシーポリシーに同意します',
+      reg_agree_alert: '利用規約に同意してください。', reg_submit: '登録提出',
+      reg_done_title: '登録完了！', reg_done_desc: 'KOLプロフィールが公開されました。',
+      reg_done_btn: 'ダッシュボードへ'
+    },
+    zh: {
+      nav_how: '使用方法', nav_roster: 'KOL名单', nav_rooms: '代币房间',
+      nav_binance: 'Binance KOL', nav_pricing: '价格', nav_wallet: '连接钱包',
+      hero_tag: '后Kaito KOL基础设施',
+      hero_h1: 'KOL定价。<br><span class="lime">项目选择Alpha。</span>',
+      hero_desc: 'Web3 KOL自主定价，项目方运行基于托管的绩效营销活动的开放市场。没有中间商，没有信任问题。',
+      hero_btn1: '启动营销活动', hero_btn2: '注册KOL',
+      hm1: '认证KOL', hm2: '已分配奖励', hm3: '平均活动ROI',
+      how_eye: '// 流程', how_title: '使用方法', how_desc: '从活动简报到链上验证结算，四个步骤。',
+      hs1_t: 'KOL注册', hs1_d: '关联Twitter和Telegram。设置领域、费率、作品集。即时上线。',
+      hs2_t: '项目搜索', hs2_d: '按粉丝数、领域、互动率、价格、语言筛选。',
+      hs3_t: '代币房间开启', hs3_d: '项目方托管资金。KOL接受条款后开始推广。',
+      hs4_t: '自动结算', hs4_d: 'KPI链上验证。奖励自动分配。双方互评。',
+      dual_eye: '// 双边市场', dual_title: '为<span class="lime">KOL</span>和<span class="purple">项目</span>打造',
+      dual_desc: '真正的双边市场。卖方最大自由，买方最大透明。',
+      roster_eye: '// KOL目录', roster_title: 'KOL名单',
+      roster_desc: '浏览认证KOL或通过Telegram和Twitter DM直接联系未注册KOL。',
+      rooms_eye: '// 实时活动', rooms_title: '代币房间',
+      rooms_desc: '实时活动状态。托管资金，验证KPI，透明结算。',
+      bnb_title: 'Binance KOL项目 <span style="color:#f3ba2f;">合格</span>',
+      bnb_desc: '自动根据Binance附属计划要求筛选KOL名单。',
+      bnb_req_title: 'Binance KOL要求', bnb_req_desc: '要获得Binance KOL/附属计划资格，需满足以下条件之一：',
+      bnb_r1: '社交媒体粉丝5,000+', bnb_r2: '社群成员500+',
+      bnb_r3: '活跃的加密内容创作历史', bnb_r4: '现货41~50%+期货30~40%佣金',
+      bnb_r5: '季度绩效审核', bnb_apply: '申请Binance KOL项目 →',
+      bnb_eligible_title: '合格KOL列表',
+      trust_eye: '// 信任层', trust_title: '透明设计',
+      trust_desc: '不再有跑路活动或幽灵KOL。每次互动都可验证。',
+      road_eye: '// 路线图', road_title: '下一步', road_desc: '从市场到全栈KOL基础设施。',
+      price_eye: '// 价格', price_title: '简单透明的费用', price_desc: '免费加入。仅在价值交付时付费。',
+      cta_eye: '// 开始', cta_title: '后Kaito<br><span class="lime">KOL市场</span>已到来',
+      cta_desc: 'KOL定价，项目选Alpha，智能合约处理其余。',
+      wm_title: '连接钱包', wm_desc: '连接钱包以注册KOL、接收活动奖励并管理链上声誉。',
+      wm_mm_desc: '浏览器扩展钱包', wm_rw_desc: 'Reddit Vault / Web3钱包', wm_wc_desc: '用手机钱包扫码',
+      wm_popular: '热门', wm_connected: '已连接:', wm_register: '注册为KOL →',
+      wm_no_mm: '未安装MetaMask。请安装MetaMask扩展。', wm_no_rw: '未检测到Web3钱包。',
+      wm_wc_soon: 'WalletConnect集成即将上线。',
+      reg_title: 'KOL注册', reg_s1_desc: '首先连接钱包以创建链上KOL身份。',
+      reg_s1_btn: '连接钱包', reg_next: '下一步 →',
+      reg_s2_desc: '设置KOL个人资料。将对寻找推广者的项目方可见。',
+      reg_name: '显示名称', reg_tg: 'Telegram用户名', reg_twitter: 'Twitter / X用户名',
+      reg_niche: '领域/赛道', reg_followers: '粉丝数', reg_rate: '基础费率 (USD/帖)',
+      reg_s3_desc: '确认信息并提交KOL注册。',
+      reg_agree: '我同意SHILL VAULT服务条款和隐私政策',
+      reg_agree_alert: '请同意服务条款。', reg_submit: '提交注册',
+      reg_done_title: '注册完成！', reg_done_desc: 'KOL资料已上线。项目方可以在名单中找到您。',
+      reg_done_btn: '前往仪表板'
+    }
+  };
+
+  // Map selectors to i18n keys (for elements without data-i18n)
+  const selectorMap = [
+    { sel: '.hero-tag', key: 'hero_tag', after: '<span class="td"></span>' },
+    { sel: '.hero h1', key: 'hero_h1', html: true },
+    { sel: '.hero-desc', key: 'hero_desc' },
+    { sel: '.hero-actions .btn-lime', key: 'hero_btn1', html: true,
+      prefix: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>' },
+    { sel: '.hero-actions .btn-ghost', key: 'hero_btn2' },
+  ];
+
+  function setLang(lang) {
+    currentLang = lang;
+    const L = i18n[lang];
+    const labels = { en: 'EN', ko: 'KR', ja: 'JP', zh: 'ZH' };
+    document.getElementById('langLabel').textContent = labels[lang];
+
+    // Update all data-i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (L[key]) {
+        if (el.tagName === 'INPUT' || el.tagName === 'SELECT') return;
+        // Check if translation contains HTML
+        if (L[key].includes('<')) el.innerHTML = L[key];
+        else el.textContent = L[key];
+      }
+    });
+
+    // Update selector-mapped elements
+    selectorMap.forEach(m => {
+      const el = document.querySelector(m.sel);
+      if (el && L[m.key]) {
+        if (m.html || L[m.key].includes('<')) {
+          el.innerHTML = (m.prefix || '') + (m.after || '') + L[m.key];
+        } else {
+          el.textContent = L[m.key];
+        }
+      }
+    });
+
+    // Update lang dropdown active state
+    document.querySelectorAll('.lang-opt').forEach(o => o.classList.remove('active'));
+    document.querySelector('.lang-opt[onclick*="' + lang + '"]')?.classList.add('active');
+    document.querySelector('.lang-drop')?.classList.remove('open');
+
+    // Update wallet button if not connected
+    if (!connectedAddr) {
+      document.getElementById('walletBtn').textContent = L.nav_wallet;
+    }
+
+    // Update reg wallet status if connected
+    if (connectedAddr) updateRegWalletStatus();
+  }
+</script>
+</body>
+</html>
