@@ -221,23 +221,41 @@ nav.scrolled {
 
 /* === FOR PROJECTS === */
 .for-projects-section {
-  padding: 4rem 2rem;
-  background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 5rem 2rem;
+  background: #0F172A;
 }
+.for-projects-section .stitle { color: #FFFFFF; }
+.for-projects-section .sdesc { color: rgba(255,255,255,0.6); }
 .fp-features { display: flex; gap: 1.5rem; margin: 1.5rem 0 2rem; flex-wrap: wrap; }
 .fp-feat {
   flex: 1; min-width: 180px; display: flex; align-items: center; gap: 0.6rem;
-  font-size: 0.9rem; color: var(--text-2);
+  font-size: 0.9rem; color: rgba(255,255,255,0.7);
 }
 .fp-feat-icon {
   width: 8px; height: 8px; min-width: 8px; border-radius: 50%;
-  background: var(--purple);
+  background: var(--blue);
 }
+.for-projects-section .btn-purple {
+  background: var(--blue); box-shadow: 0 2px 12px rgba(49,130,246,0.3);
+}
+.for-projects-section .btn-purple:hover { box-shadow: 0 4px 20px rgba(49,130,246,0.4); }
 
 /* === CTA === */
 .cta-section { text-align: center; padding: 6rem 2rem; }
 .cta-section .stitle { max-width: 600px; margin: 0 auto 1.25rem; }
 .cta-section .sdesc { margin: 0 auto 2.5rem; }
+.cta-counter {
+  font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--blue);
+  letter-spacing: -0.03em; margin-bottom: 0.5rem;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.cta-counter.vis { opacity: 1; transform: translateY(0); }
+.cta-section .stitle.cta-fade {
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+.cta-section .stitle.cta-fade.vis { opacity: 1; transform: translateY(0); }
 
 /* === FOOTER === */
 footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }

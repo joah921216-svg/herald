@@ -241,27 +241,28 @@
   </div>
 </section>
 
-<!-- ==================== FOR PROJECTS ==================== -->
-<section class="for-projects-section" id="for-projects">
-  <div class="container">
-    <h2 class="stitle rv" data-i18n="fp_title" style="font-size:clamp(1.4rem,3vw,1.85rem);">프로젝트라면, 여기에 캠페인을 올리세요</h2>
-    <p class="sdesc rv" data-i18n="fp_desc">마케팅 예산을 예치하고, 유저가 퍼뜨립니다.</p>
-    <div class="fp-features rv">
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f1">캠페인 생성 및 예산 예치</span></div>
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f2">채널 직접 선택하거나, 추천 세팅으로 한 번에 시작</span></div>
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f3">실시간 성과 대시보드</span></div>
-    </div>
-    <a href="javascript:openModal('campModal')" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
-  </div>
-</section>
-
 <!-- ==================== CTA ==================== -->
 <section class="cta-section" id="cta">
   <div class="container">
-    <h2 class="stitle rv" data-i18n="cta_title">당신의 보상이 쌓이고 있습니다.</h2>
-    <div class="rv rv-d1">
+    <div class="cta-counter" id="ctaCounter">$0</div>
+    <h2 class="stitle cta-fade" data-i18n="cta_title">당신의 보상이 쌓이고 있습니다.</h2>
+    <div style="opacity:0;transform:translateY(20px);transition:opacity 0.8s ease 0.4s,transform 0.8s ease 0.4s;" class="cta-anim">
       <a href="#quests" class="btn btn-blue" data-i18n="cta_btn">퀘스트 둘러보기</a>
     </div>
+  </div>
+</section>
+
+<!-- ==================== FOR PROJECTS ==================== -->
+<section class="for-projects-section" id="for-projects">
+  <div class="container">
+    <h2 class="stitle rv" data-i18n="fp_title" style="font-size:clamp(1.4rem,3vw,1.85rem);">더 많은 유저가 필요하신가요?</h2>
+    <p class="sdesc rv" data-i18n="fp_desc">쉽고 빠르게, 프로젝트를 알리세요.</p>
+    <div class="fp-features rv">
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f1">캠페인 생성 및 보상 설정</span></div>
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f2">직접 설정하거나, 추천 세팅으로 바로 시작</span></div>
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f3">실시간 성과 대시보드</span></div>
+    </div>
+    <a href="javascript:openModal('campModal')" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
   </div>
 </section>
 

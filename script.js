@@ -109,8 +109,8 @@ const i18n = {
     why1_title: '클릭 몇 번이면 끝', why1_desc: '복잡한 절차 없이, 참여하고 보상받으세요. 어려운 작업은 없습니다.',
     why2_title: '투명한 보상', why2_desc: '안전결제 기반 자동 정산. 조건 달성하면 보상이 자동 지급됩니다.',
     why3_title: '모든 기여 추적', why3_desc: '소셜 활동부터 온체인 활동까지 자동 검증. 당신의 기여는 기록으로 남습니다.',
-    fp_title: '프로젝트라면, 여기에 캠페인을 올리세요', fp_desc: '마케팅 예산을 예치하고, 유저가 퍼뜨립니다.',
-    fp_f1: '캠페인 생성 및 예산 예치', fp_f2: '채널 직접 선택하거나, 추천 세팅으로 한 번에 시작', fp_f3: '실시간 성과 대시보드',
+    fp_title: '더 많은 유저가 필요하신가요?', fp_desc: '쉽고 빠르게, 프로젝트를 알리세요.',
+    fp_f1: '캠페인 생성 및 보상 설정', fp_f2: '직접 설정하거나, 추천 세팅으로 바로 시작', fp_f3: '실시간 성과 대시보드',
     fp_cta: '캠페인 시작하기',
     cta_title: '당신의 보상이 쌓이고 있습니다.', cta_btn: '퀘스트 둘러보기',
     wm_title: '지갑 연결', wm_desc: '지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.',
@@ -145,8 +145,8 @@ const i18n = {
     why1_title: 'Just a few clicks', why1_desc: 'No complicated process. Just participate and earn. No difficult tasks.',
     why2_title: 'Transparent Rewards', why2_desc: 'Escrow-based auto-settlement. Rewards are paid automatically when conditions are met.',
     why3_title: 'Every Contribution Tracked', why3_desc: 'From social activity to on-chain activity, everything is auto-verified. Your contributions are recorded.',
-    fp_title: 'Got a project? List your campaign here', fp_desc: 'Deposit your marketing budget and let users spread the word.',
-    fp_f1: 'Create campaigns & deposit budget', fp_f2: 'Pick channels directly or start with recommended settings', fp_f3: 'Real-time performance dashboard',
+    fp_title: 'Need more users?', fp_desc: 'Promote your project, quickly and easily.',
+    fp_f1: 'Create campaigns & set rewards', fp_f2: 'Configure manually or start instantly with recommended settings', fp_f3: 'Real-time performance dashboard',
     fp_cta: 'Start a Campaign',
     cta_title: 'Your rewards are stacking up.', cta_btn: 'Browse Quests',
     wm_title: 'Connect Wallet', wm_desc: 'Connect your wallet to join quests and earn rewards.',
@@ -187,6 +187,35 @@ function setLang(lang) {
     document.getElementById('walletBtn').textContent = L.nav_wallet;
   }
 }
+
+// ==================== CTA COUNT-UP ANIMATION ====================
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  const update = (now) => {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    const val = Math.round(target * ease);
+    el.textContent = '$' + val.toLocaleString();
+    if (t < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+const ctaObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const counter = document.getElementById('ctaCounter');
+    const title = e.target.querySelector('.cta-fade');
+    const btnWrap = e.target.querySelector('.cta-anim');
+    counter.classList.add('vis');
+    if (title) title.classList.add('vis');
+    if (btnWrap) { btnWrap.style.opacity = '1'; btnWrap.style.transform = 'translateY(0)'; }
+    animateCounter(counter, 150000, 2000);
+    ctaObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const ctaEl = document.getElementById('cta');
+if (ctaEl) ctaObs.observe(ctaEl);
 
 // Init
 setLang('ko');
