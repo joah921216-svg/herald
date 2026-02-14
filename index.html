@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -317,6 +317,8 @@
     .kc-btn-profile:hover { opacity: 0.85; }
     .kc-btn-tg { background: rgba(0,136,204,0.1); color: #29b6f6; border: 1px solid rgba(0,136,204,0.15); }
     .kc-btn-tg:hover { background: rgba(0,136,204,0.18); }
+    .kc-btn-tw { background: rgba(29,155,240,0.1); color: #1d9bf0; border: 1px solid rgba(29,155,240,0.15); }
+    .kc-btn-tw:hover { background: rgba(29,155,240,0.18); }
     .kc-btn-tw { background: rgba(255,255,255,0.04); color: var(--text-2); border: 1px solid var(--border); }
     .kc-btn-tw:hover { background: rgba(255,255,255,0.07); color: var(--text); }
     .kc-unreg-label { font-size: 0.65rem; color: var(--text-3); text-align: center; margin-bottom: 0.5rem; font-style: italic; }
@@ -640,17 +642,17 @@
       <li><a href="#how" data-i18n="nav_how">How it Works</a></li>
       <li><a href="#roster" data-i18n="nav_roster">KOL Roster</a></li>
       <li><a href="#rooms" data-i18n="nav_rooms">Token Rooms</a></li>
-      <li><a href="#binance" data-i18n="nav_binance">Binance KOL</a></li>
+      <li><a href="#global" data-i18n="nav_global">Global KOL</a></li>
       <li><a href="#pricing" data-i18n="nav_pricing">Pricing</a></li>
       <li>
         <div class="lang-sw">
           <button class="lang-btn" onclick="document.querySelector('.lang-drop').classList.toggle('open')">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-            <span id="langLabel">EN</span>
+            <span id="langLabel">KR</span>
           </button>
           <div class="lang-drop">
-            <button class="lang-opt active" onclick="setLang('en')">English</button>
-            <button class="lang-opt" onclick="setLang('ko')">한국어</button>
+            <button class="lang-opt active" onclick="setLang('ko')">한국어</button>
+            <button class="lang-opt" onclick="setLang('en')">English</button>
             <button class="lang-opt" onclick="setLang('ja')">日本語</button>
             <button class="lang-opt" onclick="setLang('zh')">中文</button>
           </div>
@@ -813,151 +815,130 @@
       <h2 class="stitle rv" data-i18n="roster_title">KOL Roster</h2>
       <p class="sdesc rv" data-i18n="roster_desc">Browse verified KOLs or reach unregistered ones directly via Telegram &amp; Twitter DM.</p>
     </div>
-    <div class="roster-grid">
-      <!-- KOL 1 - Diamond (Tier 1) -->
-      <div class="kcard rv">
-        <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kcard-link"></a>
+    <div class="roster-grid" id="rosterGrid">
+      <div class="kcard rv" data-tg="mujammin123">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#127833;</div>
-          <div><div class="kc-name">&#51100;&#48124;123</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@mujammin123</div></div>
-          <span class="kc-tier t-diamond">Diamond</span>
+          <div><div class="kc-name">잼민123</div><div class="kc-handle">@mujammin123</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">23.9K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="23.9K">23.9K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-tags"><span class="kc-tag">소통</span><span class="kc-tag">공지</span><span class="kc-tag">광고</span></div>
         <div class="kc-actions">
           <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=잼민123+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 2 - Diamond (Tier 1) -->
-      <div class="kcard rv rv-d1">
-        <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d1" data-tg="airdrop_kor">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#9992;</div>
-          <div><div class="kc-name">&#50640;&#50612;&#46300;&#46989;&#53076;&#47532;&#50500;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@airdrop_kor</div></div>
-          <span class="kc-tier t-diamond">Diamond</span>
+          <div><div class="kc-name">에어드랍코리아</div><div class="kc-handle">@airdrop_kor</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">20.6K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="20.6K">20.6K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-tags"><span class="kc-tag">에어드랍</span><span class="kc-tag">뉴스</span><span class="kc-tag">광고</span></div>
         <div class="kc-actions">
           <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=에어드랍코리아+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 3 - Gold (Tier 1) -->
-      <div class="kcard rv rv-d2">
-        <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d2" data-tg="yobeullyANN">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128293;</div>
-          <div><div class="kc-name">&#50836;&#48660;&#51060; &#49464;&#49345;&#49332;&#51060;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@yobeullyANN</div></div>
-          <span class="kc-tier t-gold">Gold</span>
+          <div><div class="kc-name">요블이 세상살이</div><div class="kc-handle">@yobeullyANN</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">21.0K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="21.0K">21.0K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-tags"><span class="kc-tag">소통</span><span class="kc-tag">공지</span><span class="kc-tag">광고</span></div>
         <div class="kc-actions">
           <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=요블이+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 4 - Gold (Tier 1) -->
-      <div class="kcard rv rv-d3">
-        <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d3" data-tg="murphybus">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128188;</div>
-          <div><div class="kc-name">30&#45824; &#51008;&#53748;&#48264;&#48373; &#47672;&#54588;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@murphybus</div></div>
-          <span class="kc-tier t-gold">Gold</span>
+          <div><div class="kc-name">30대 은퇴번복 머피</div><div class="kc-handle">@murphybus</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">16.5K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 1</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="16.5K">16.5K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#50976;&#47672;</span><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-tags"><span class="kc-tag">유머</span><span class="kc-tag">공지</span><span class="kc-tag">뉴스</span></div>
         <div class="kc-actions">
           <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=머피+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 5 - Silver (Tier 2.5) -->
-      <div class="kcard rv">
-        <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv" data-tg="twitchoong">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">&#128038;</div>
-          <div><div class="kc-name">&#50864;&#47532;&#45716; &#53944;&#50967;&#52649;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@twitchoong</div></div>
-          <span class="kc-tier t-silver">Silver</span>
+          <div><div class="kc-name">우리는 트윗충</div><div class="kc-handle">@twitchoong</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">44.0K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="44.0K">44.0K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-tags"><span class="kc-tag">소통</span><span class="kc-tag">에어드랍</span><span class="kc-tag">뉴스</span></div>
         <div class="kc-actions">
           <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=트윗충+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 6 - Silver (Tier 2.5) -->
-      <div class="kcard rv rv-d1">
-        <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d1" data-tg="MBMweb3">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">M</div>
-          <div><div class="kc-name">MBM ALPHA</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@MBMweb3</div></div>
-          <span class="kc-tier t-silver">Silver</span>
+          <div><div class="kc-name">MBM ALPHA</div><div class="kc-handle">@MBMweb3</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">25.8K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="25.8K">25.8K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#44305;&#44256;</span></div>
+        <div class="kc-tags"><span class="kc-tag">소통</span><span class="kc-tag">에어드랍</span><span class="kc-tag">광고</span></div>
         <div class="kc-actions">
           <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 7 - Silver (Tier 2.5) -->
-      <div class="kcard rv rv-d2">
-        <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d2" data-tg="emperorcoin">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">&#128081;</div>
-          <div><div class="kc-name">&#53588;&#47112;&#44536;&#47016; CEN</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@emperorcoin</div></div>
-          <span class="kc-tier t-silver">Silver</span>
+          <div><div class="kc-name">텔레그램 CEN</div><div class="kc-handle">@emperorcoin</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">34.8K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 2.5</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="34.8K">34.8K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#44277;&#51648;</span><span class="kc-tag">&#49884;&#49324;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-tags"><span class="kc-tag">공지</span><span class="kc-tag">시사</span><span class="kc-tag">뉴스</span></div>
         <div class="kc-actions">
           <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=텔레그램CEN+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
-      <!-- KOL 8 - Bronze (Tier 3) -->
-      <div class="kcard rv rv-d3">
-        <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kcard-link"></a>
+      <div class="kcard rv rv-d3" data-tg="enjoymyhobby">
         <div class="kc-top">
           <div class="kc-av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">&#127912;</div>
-          <div><div class="kc-name">&#52712;&#48120;&#49373;&#54876;&#48169;</div><div class="kc-handle"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>@enjoymyhobby</div></div>
-          <span class="kc-tier t-unreg">Bronze</span>
+          <div><div class="kc-name">취미생활방</div><div class="kc-handle">@enjoymyhobby</div></div>
         </div>
         <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv">52.6K</div><div class="kc-ml">Followers</div></div>
-          <div class="kc-m"><div class="kc-mv">Tier 3</div><div class="kc-ml">Rating</div></div>
-          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml">Region</div></div>
+          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="52.6K">52.6K</div><div class="kc-ml" data-i18n="kc_followers">구독자</div></div>
+          <div class="kc-m"><div class="kc-mv">KR</div><div class="kc-ml" data-i18n="kc_region">지역</div></div>
         </div>
-        <div class="kc-tags"><span class="kc-tag">&#49548;&#53685;</span><span class="kc-tag">&#50640;&#50612;&#46300;&#46989;</span><span class="kc-tag">&#45684;&#49828;</span></div>
+        <div class="kc-tags"><span class="kc-tag">소통</span><span class="kc-tag">에어드랍</span><span class="kc-tag">뉴스</span></div>
         <div class="kc-actions">
           <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
+          <a href="https://x.com/search?q=취미생활방+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
         </div>
       </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="roster_register">KOL로 등록하기</button>
     </div>
   </div>
 </section>
@@ -1025,79 +1006,34 @@
   </div>
 </section>
 
-<!-- ==================== BINANCE KOL SCREENING ==================== -->
-<section class="s-bg" id="binance">
+<!-- ==================== GLOBAL KOL COMING SOON ==================== -->
+<section class="s-bg" id="global">
   <div class="container">
-    <div class="sheader">
-      <div class="eyebrow rv">// partner screening</div>
-      <h2 class="stitle rv" data-i18n="bnb_title">Binance KOL Program <span style="color:#f3ba2f;">Eligible</span></h2>
-      <p class="sdesc rv" data-i18n="bnb_desc">We automatically screen our KOL roster against Binance's affiliate program requirements. Verified KOLs get fast-tracked.</p>
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="global_eye">// global expansion</div>
+      <h2 class="stitle rv" data-i18n="global_title">글로벌 KOL <span class="cyan">Coming Soon</span></h2>
+      <p class="sdesc rv" data-i18n="global_desc">현재 한국 KOL 마켓을 중심으로 운영 중입니다. 해외 KOL 네트워크는 곧 오픈 예정입니다.</p>
     </div>
-    <div class="bnb-grid">
-      <div class="bnb-info rv">
-        <h3 data-i18n="bnb_req_title">Binance KOL Requirements</h3>
-        <p data-i18n="bnb_req_desc">To qualify for the Binance KOL/Affiliate program, influencers must meet at least one of the following criteria:</p>
-        <ul class="bnb-reqs">
-          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r1">5,000+ followers on social media (Twitter, YouTube, etc.)</span></li>
-          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r2">500+ members in community groups (Telegram, Discord)</span></li>
-          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r3">Active crypto content creation history</span></li>
-          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r4">41~50% spot commission + 30~40% futures commission</span></li>
-          <li><span class="bnb-ck">&#10003;</span><span data-i18n="bnb_r5">Quarterly performance review (10+ traders, 50+ BTC volume)</span></li>
-        </ul>
-        <a href="https://www.binance.com/en/activity/affiliate/register" target="_blank" rel="noopener" class="btn btn-ghost" style="border-color:rgba(243,186,47,0.3);color:#f3ba2f;" data-i18n="bnb_apply">Apply to Binance KOL Program &rarr;</a>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem;">
+      <div class="trust-card rv" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#127480;&#127472;</div>
+        <h4 style="color:var(--lime);" data-i18n="global_kr_title">한국 (라이브)</h4>
+        <p style="font-size:0.85rem;color:var(--text-2);" data-i18n="global_kr_desc">텔레그램 & 트위터 기반 한국 KOL 네트워크 운영 중</p>
       </div>
-      <div class="bnb-eligible rv rv-d1">
-        <h4 data-i18n="bnb_eligible_title">Eligible KOLs from Our Roster</h4>
-        <div class="bnb-kol-list">
-          <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">1</div>
-            <div class="bnb-kol-name">취미생활방</div>
-            <div class="bnb-kol-fol">52,698</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">2</div>
-            <div class="bnb-kol-name">우리는 트윗충</div>
-            <div class="bnb-kol-fol">44,048</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">3</div>
-            <div class="bnb-kol-name">텔레그램 CEN</div>
-            <div class="bnb-kol-fol">34,845</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">4</div>
-            <div class="bnb-kol-name">MBM ALPHA</div>
-            <div class="bnb-kol-fol">25,846</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">5</div>
-            <div class="bnb-kol-name">잼민123</div>
-            <div class="bnb-kol-fol">23,964</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">6</div>
-            <div class="bnb-kol-name">요블이 세상살이</div>
-            <div class="bnb-kol-fol">21,054</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">7</div>
-            <div class="bnb-kol-name">에어드랍코리아</div>
-            <div class="bnb-kol-fol">20,649</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-          <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="bnb-kol-row" style="text-decoration:none;color:inherit;">
-            <div class="bnb-kol-av">8</div>
-            <div class="bnb-kol-name">30대 은퇴번복 머피</div>
-            <div class="bnb-kol-fol">16,501</div>
-            <span class="bnb-kol-badge">ELIGIBLE</span>
-          </a>
-        </div>
+      <div class="trust-card rv rv-d1" style="text-align:center;opacity:0.5;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#127468;&#127463;</div>
+        <h4 data-i18n="global_en_title">영미권 (준비중)</h4>
+        <p style="font-size:0.85rem;color:var(--text-3);" data-i18n="global_en_desc">영어권 KOL 네트워크 2026 Q3 오픈 예정</p>
+      </div>
+      <div class="trust-card rv rv-d2" style="text-align:center;opacity:0.5;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#127471;&#127477;</div>
+        <h4 data-i18n="global_jp_title">일본 (준비중)</h4>
+        <p style="font-size:0.85rem;color:var(--text-3);" data-i18n="global_jp_desc">일본 KOL 네트워크 2026 Q4 오픈 예정</p>
+      </div>
+      <div class="trust-card rv rv-d3" style="text-align:center;opacity:0.5;">
+        <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#127464;&#127475;</div>
+        <h4 data-i18n="global_zh_title">중화권 (준비중)</h4>
+        <p style="font-size:0.85rem;color:var(--text-3);" data-i18n="global_zh_desc">중화권 KOL 네트워크 2027 오픈 예정</p>
       </div>
     </div>
   </div>
@@ -1116,22 +1052,22 @@
         <div class="tc-icon" style="background:var(--lime-soft);color:var(--lime);">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         </div>
-        <h4>Smart Contract Escrow</h4>
-        <p>Campaign funds locked in escrow. Released only when KPIs are cryptographically verified. No more "payment pending" limbo.</p>
+        <h4 data-i18n="tr1_title">Smart Contract Escrow</h4>
+        <p data-i18n="tr1_desc">Campaign funds locked in escrow. Released only when KPIs are cryptographically verified. No more "payment pending" limbo.</p>
       </div>
       <div class="trust-card rv rv-d1">
         <div class="tc-icon" style="background:var(--purple-soft);color:var(--purple);">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
-        <h4>On-Chain Records</h4>
-        <p>Every campaign, payout, and review is recorded on-chain. Full history accessible anytime. Auditable and immutable.</p>
+        <h4 data-i18n="tr2_title">On-Chain Records</h4>
+        <p data-i18n="tr2_desc">Every campaign, payout, and review is recorded on-chain. Full history accessible anytime. Auditable and immutable.</p>
       </div>
       <div class="trust-card rv rv-d2">
         <div class="tc-icon" style="background:var(--cyan-soft);color:var(--cyan);">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
-        <h4>Two-Way Reviews</h4>
-        <p>Both KOLs and projects rate each other post-campaign. Reputation builds over time. Bad actors get filtered out naturally.</p>
+        <h4 data-i18n="tr3_title">Two-Way Reviews</h4>
+        <p data-i18n="tr3_desc">Both KOLs and projects rate each other post-campaign. Reputation builds over time. Bad actors get filtered out naturally.</p>
       </div>
     </div>
   </div>
@@ -1147,36 +1083,36 @@
     </div>
     <div class="rm-timeline">
       <div class="rm-phase rv">
-        <div class="rm-label">Phase 1 &mdash; Now</div>
-        <h4>Marketplace</h4>
+        <div class="rm-label" data-i18n="rm1_label">Phase 1 &mdash; Now</div>
+        <h4 data-i18n="rm1_title">Marketplace</h4>
         <ul class="rm-list">
-          <li><span class="rm-dot"></span>KOL registration &amp; profile system</li>
-          <li><span class="rm-dot"></span>Token room creation &amp; escrow</li>
-          <li><span class="rm-dot"></span>DM outreach (Telegram &amp; Twitter)</li>
-          <li><span class="rm-dot"></span>Performance tracking dashboard</li>
-          <li><span class="rm-dot"></span>Two-way review system</li>
+          <li><span class="rm-dot"></span><span data-i18n="rm1_1">KOL registration &amp; profile system</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm1_2">Token room creation &amp; escrow</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm1_3">DM outreach (Telegram &amp; Twitter)</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm1_4">Performance tracking dashboard</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm1_5">Two-way review system</span></li>
         </ul>
       </div>
       <div class="rm-phase rv rv-d1">
-        <div class="rm-label">Phase 2 &mdash; Q3 2026</div>
-        <h4>Launchpad Integration</h4>
+        <div class="rm-label" data-i18n="rm2_label">Phase 2 &mdash; Q3 2026</div>
+        <h4 data-i18n="rm2_title">Launchpad Integration</h4>
         <ul class="rm-list">
-          <li><span class="rm-dot"></span>KOL-backed token launches</li>
-          <li><span class="rm-dot"></span>Pre-launch marketing bundles</li>
-          <li><span class="rm-dot"></span>Staking &amp; loyalty tiers</li>
-          <li><span class="rm-dot"></span>Cross-chain expansion</li>
-          <li><span class="rm-dot"></span>API for third-party integrations</li>
+          <li><span class="rm-dot"></span><span data-i18n="rm2_1">KOL-backed token launches</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm2_2">Pre-launch marketing bundles</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm2_3">Staking &amp; loyalty tiers</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm2_4">Cross-chain expansion</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm2_5">API for third-party integrations</span></li>
         </ul>
       </div>
       <div class="rm-phase rv rv-d2">
-        <div class="rm-label">Phase 3 &mdash; 2027</div>
-        <h4>Governance Token</h4>
+        <div class="rm-label" data-i18n="rm3_label">Phase 3 &mdash; 2027</div>
+        <h4 data-i18n="rm3_title">Governance Token</h4>
         <ul class="rm-list">
-          <li><span class="rm-dot"></span>$SHILL token launch</li>
-          <li><span class="rm-dot"></span>DAO governance for platform decisions</li>
-          <li><span class="rm-dot"></span>Revenue sharing for token holders</li>
-          <li><span class="rm-dot"></span>KOL index &amp; reputation NFTs</li>
-          <li><span class="rm-dot"></span>Decentralized dispute resolution</li>
+          <li><span class="rm-dot"></span><span data-i18n="rm3_1">$SHILL token launch</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm3_2">DAO governance for platform decisions</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm3_3">Revenue sharing for token holders</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm3_4">KOL index &amp; reputation NFTs</span></li>
+          <li><span class="rm-dot"></span><span data-i18n="rm3_5">Decentralized dispute resolution</span></li>
         </ul>
       </div>
     </div>
@@ -1272,13 +1208,13 @@
         </div>
         <span class="wallet-opt-badge" data-i18n="wm_popular">Popular</span>
       </button>
-      <button class="wallet-opt" onclick="connectRedditWallet()">
-        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#ff4500,#ff6634);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="10"/><circle cx="8.5" cy="11" r="1.5" fill="#ff4500"/><circle cx="15.5" cy="11" r="1.5" fill="#ff4500"/><path d="M8 14.5c0 0 1.5 2 4 2s4-2 4-2" fill="none" stroke="#ff4500" stroke-width="1.5"/></svg>
+      <button class="wallet-opt" onclick="connectRabby()">
+        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/></svg>
         </div>
         <div>
-          <div class="wallet-opt-name">Reddit Wallet</div>
-          <div class="wallet-opt-desc" data-i18n="wm_rw_desc">Reddit Vault / Web3 Wallet</div>
+          <div class="wallet-opt-name">Rabby Wallet</div>
+          <div class="wallet-opt-desc" data-i18n="wm_rw_desc">EVM 멀티체인 지갑</div>
         </div>
         <span class="wallet-opt-badge">Web3</span>
       </button>
@@ -1617,27 +1553,33 @@
     }
   }
 
-  async function connectRedditWallet() {
-    // Reddit Wallet uses ethereum-compatible provider
-    const provider = window.ethereum?.providers?.find(p => p.isReddit) || window.reddit?.ethereum;
-    if (provider) {
+  async function connectRabby() {
+    // Rabby injects as window.rabby or as an ethereum provider
+    const provider = window.rabby || window.ethereum?.providers?.find(p => p.isRabby) || window.ethereum;
+    if (provider && (window.rabby || provider.isRabby)) {
       try {
         const accounts = await provider.request({ method: 'eth_requestAccounts' });
-        if (accounts[0]) onWalletConnected(accounts[0], 'Reddit');
-      } catch(err) { console.error('Reddit Wallet error:', err); }
+        if (accounts[0]) onWalletConnected(accounts[0], 'Rabby');
+      } catch(err) { console.error('Rabby connection failed:', err); }
     } else if (typeof window.ethereum !== 'undefined') {
-      // Fallback: use default provider
       try {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (accounts[0]) onWalletConnected(accounts[0], 'Reddit Wallet');
+        if (accounts[0]) onWalletConnected(accounts[0], 'Rabby');
       } catch(err) { console.error(err); }
     } else {
-      alert(i18n[currentLang].wm_no_rw || 'No Web3 wallet detected. Please install a compatible wallet.');
+      window.open('https://rabby.io/', '_blank');
     }
   }
 
   async function connectWalletConnect() {
-    alert(i18n[currentLang].wm_wc_soon || 'WalletConnect integration coming soon. Use MetaMask or Reddit Wallet for now.');
+    // WalletConnect v2 - open walletconnect modal
+    if (typeof window.WalletConnectModal !== 'undefined') {
+      // If WalletConnect SDK loaded
+      alert('WalletConnect SDK loading...');
+    } else {
+      // Redirect to WalletConnect info
+      window.open('https://walletconnect.com/', '_blank');
+    }
   }
 
   function onWalletConnected(addr, walletName) {
@@ -1766,7 +1708,7 @@
   }
 
   // ==================== i18n ====================
-  let currentLang = 'en';
+  let currentLang = 'ko';
 
   const i18n = {
     en: {
@@ -1831,12 +1773,31 @@
       camp_kpi_clicks: 'Link clicks / Referrals', camp_kpi_onchain: 'On-chain conversions (swaps, mints)',
       camp_kpi_target: 'Target Numbers (optional)', camp_submit: 'Create Campaign →',
       camp_user_form_desc: 'Connect your accounts to start browsing campaigns and earning rewards.',
-      camp_connect_wallet: 'Connect Wallet', camp_connect_desc: 'MetaMask, Reddit Wallet, WalletConnect',
+      camp_connect_wallet: 'Connect Wallet', camp_connect_desc: 'MetaMask, Rabby Wallet, WalletConnect',
       camp_register_kol: 'Register as KOL', camp_register_desc: 'Full profile with verification',
       camp_done_title: 'Campaign Created!', camp_done_desc: 'Your Token Room is being set up. Browse KOLs and invite them.',
       camp_done_btn: 'Browse KOLs',
+      tr1_title: 'Smart Contract Escrow', tr1_desc: 'Campaign funds locked in escrow. Released only when KPIs are cryptographically verified. No more "payment pending" limbo.',
+      tr2_title: 'On-Chain Records', tr2_desc: 'Every campaign, payout, and review is recorded on-chain. Full history accessible anytime. Auditable and immutable.',
+      tr3_title: 'Two-Way Reviews', tr3_desc: 'Both KOLs and projects rate each other post-campaign. Reputation builds over time. Bad actors get filtered out naturally.',
+      rm1_label: 'Phase 1 — Now', rm1_title: 'Marketplace',
+      rm1_1: 'KOL registration & profile system', rm1_2: 'Token room creation & escrow',
+      rm1_3: 'DM outreach (Telegram & Twitter)', rm1_4: 'Performance tracking dashboard', rm1_5: 'Two-way review system',
+      rm2_label: 'Phase 2 — Q3 2026', rm2_title: 'Launchpad Integration',
+      rm2_1: 'KOL-backed token launches', rm2_2: 'Pre-launch marketing bundles',
+      rm2_3: 'Staking & loyalty tiers', rm2_4: 'Cross-chain expansion', rm2_5: 'API for third-party integrations',
+      rm3_label: 'Phase 3 — 2027', rm3_title: 'Governance Token',
+      rm3_1: '$SHILL token launch', rm3_2: 'DAO governance for platform decisions',
+      rm3_3: 'Revenue sharing for token holders', rm3_4: 'KOL index & reputation NFTs', rm3_5: 'Decentralized dispute resolution',
+      nav_global: 'Global KOL', global_eye: '// global expansion', global_title: 'Global KOL <span class="cyan">Coming Soon</span>',
+      global_desc: 'Currently focused on the Korean KOL market. International KOL networks will open soon.',
+      global_kr_title: 'Korea (Live)', global_kr_desc: 'Korean KOL network via Telegram & Twitter — now active',
+      global_en_title: 'English (Coming)', global_en_desc: 'English KOL network opening Q3 2026',
+      global_jp_title: 'Japan (Coming)', global_jp_desc: 'Japanese KOL network opening Q4 2026',
+      global_zh_title: 'China (Coming)', global_zh_desc: 'Chinese KOL network opening 2027',
+      kc_followers: 'Followers', kc_region: 'Region', roster_register: 'Register as KOL',
       wm_title: 'Connect Wallet', wm_desc: 'Connect your wallet to register as a KOL, receive campaign rewards, and manage your on-chain reputation.',
-      wm_mm_desc: 'Browser extension wallet', wm_rw_desc: 'Reddit Vault / Web3 Wallet', wm_wc_desc: 'Scan QR with mobile wallet',
+      wm_mm_desc: 'Browser extension wallet', wm_rw_desc: 'EVM multi-chain wallet', wm_wc_desc: 'Scan QR with mobile wallet',
       wm_popular: 'Popular', wm_connected: 'Connected:', wm_register: 'Register as KOL →',
       wm_no_mm: 'MetaMask is not installed. Please install MetaMask extension.',
       wm_no_rw: 'No Web3 wallet detected. Please install a compatible wallet.',
@@ -1935,10 +1896,30 @@
       camp_kpi_clicks: '링크 클릭 / 레퍼럴', camp_kpi_onchain: '온체인 전환 (스왑, 민트)',
       camp_kpi_target: '목표 수치 (선택사항)', camp_submit: '캠페인 생성 →',
       camp_user_form_desc: '계정을 연결하여 캠페인을 탐색하고 보상을 받으세요.',
-      camp_connect_wallet: '지갑 연결', camp_connect_desc: 'MetaMask, Reddit 지갑, WalletConnect',
+      camp_connect_wallet: '지갑 연결', camp_connect_desc: 'MetaMask, Rabby 지갑, WalletConnect',
       camp_register_kol: 'KOL로 등록', camp_register_desc: '인증이 포함된 전체 프로필',
       camp_done_title: '캠페인 생성 완료!', camp_done_desc: '토큰 룸이 설정되고 있습니다. KOL을 탐색하고 초대하세요.',
-      camp_done_btn: 'KOL 탐색'
+      camp_done_btn: 'KOL 탐색',
+      tr1_title: '스마트 컨트랙트 에스크로', tr1_desc: '캠페인 자금이 에스크로에 잠깁니다. KPI가 암호학적으로 검증된 경우에만 지급됩니다. 더 이상 "지급 대기" 상태는 없습니다.',
+      tr2_title: '온체인 기록', tr2_desc: '모든 캠페인, 정산, 리뷰가 온체인에 기록됩니다. 전체 이력을 언제든 확인 가능합니다.',
+      tr3_title: '양방향 리뷰', tr3_desc: 'KOL과 프로젝트 모두 캠페인 종료 후 상호 평가합니다. 시간이 지날수록 평판이 쌓입니다.',
+      rm1_label: 'Phase 1 — 현재', rm1_title: '마켓플레이스',
+      rm1_1: 'KOL 등록 & 프로필 시스템', rm1_2: '토큰 룸 생성 & 에스크로',
+      rm1_3: 'DM 아웃리치 (텔레그램 & 트위터)', rm1_4: '퍼포먼스 트래킹 대시보드', rm1_5: '양방향 리뷰 시스템',
+      rm2_label: 'Phase 2 — 2026 Q3', rm2_title: '런치패드 통합',
+      rm2_1: 'KOL 지원 토큰 런칭', rm2_2: '사전 론칭 마케팅 번들',
+      rm2_3: '스테이킹 & 로열티 티어', rm2_4: '크로스체인 확장', rm2_5: '써드파티 연동 API',
+      rm3_label: 'Phase 3 — 2027', rm3_title: '거버넌스 토큰',
+      rm3_1: '$SHILL 토큰 출시', rm3_2: 'DAO 거버넌스 플랫폼 의사결정',
+      rm3_3: '토큰 홀더 수익 배분', rm3_4: 'KOL 인덱스 & 평판 NFT', rm3_5: '탈중앙 분쟁 해결',
+      nav_global: '글로벌 KOL', global_eye: '// 글로벌 확장', global_title: '글로벌 KOL <span class="cyan">Coming Soon</span>',
+      global_desc: '현재 한국 KOL 마켓을 중심으로 운영 중입니다. 해외 KOL 네트워크는 곧 오픈 예정입니다.',
+      global_kr_title: '한국 (라이브)', global_kr_desc: '텔레그램 & 트위터 기반 한국 KOL 네트워크 운영 중',
+      global_en_title: '영미권 (준비중)', global_en_desc: '영어권 KOL 네트워크 2026 Q3 오픈 예정',
+      global_jp_title: '일본 (준비중)', global_jp_desc: '일본 KOL 네트워크 2026 Q4 오픈 예정',
+      global_zh_title: '중화권 (준비중)', global_zh_desc: '중화권 KOL 네트워크 2027 오픈 예정',
+      kc_followers: '구독자', kc_region: '지역', roster_register: 'KOL로 등록하기',
+      wm_rw_desc: 'EVM 멀티체인 지갑'
     },
     ja: {
       nav_how: '使い方', nav_roster: 'KOLリスト', nav_rooms: 'トークンルーム',
@@ -2014,10 +1995,30 @@
       camp_kpi_clicks: 'リンククリック / リファラル', camp_kpi_onchain: 'オンチェーン転換（スワップ、ミント）',
       camp_kpi_target: '目標数値（任意）', camp_submit: 'キャンペーン作成 →',
       camp_user_form_desc: 'アカウントを接続してキャンペーンを閲覧し報酬を獲得しましょう。',
-      camp_connect_wallet: 'ウォレット接続', camp_connect_desc: 'MetaMask、Reddit Wallet、WalletConnect',
+      camp_connect_wallet: 'ウォレット接続', camp_connect_desc: 'MetaMask、Rabby Wallet、WalletConnect',
       camp_register_kol: 'KOLとして登録', camp_register_desc: '認証付きフルプロフィール',
       camp_done_title: 'キャンペーン作成完了！', camp_done_desc: 'トークンルームを設定中です。KOLを閲覧して招待しましょう。',
-      camp_done_btn: 'KOLを閲覧'
+      camp_done_btn: 'KOLを閲覧',
+      tr1_title: 'スマートコントラクトエスクロー', tr1_desc: 'キャンペーン資金はエスクローにロック。KPIが暗号学的に検証された場合のみ支払い。',
+      tr2_title: 'オンチェーン記録', tr2_desc: 'すべてのキャンペーン、決済、レビューがオンチェーンに記録。完全な履歴をいつでも確認可能。',
+      tr3_title: '双方向レビュー', tr3_desc: 'KOLとプロジェクトの双方がキャンペーン後に相互評価。評判は時間とともに蓄積。',
+      rm1_label: 'Phase 1 — 現在', rm1_title: 'マーケットプレイス',
+      rm1_1: 'KOL登録＆プロフィールシステム', rm1_2: 'トークンルーム作成＆エスクロー',
+      rm1_3: 'DMアウトリーチ（Telegram＆Twitter）', rm1_4: 'パフォーマンス追跡ダッシュボード', rm1_5: '双方向レビューシステム',
+      rm2_label: 'Phase 2 — 2026 Q3', rm2_title: 'ローンチパッド統合',
+      rm2_1: 'KOL支援トークンローンチ', rm2_2: 'プレローンチマーケティングバンドル',
+      rm2_3: 'ステーキング＆ロイヤルティティア', rm2_4: 'クロスチェーン拡張', rm2_5: 'サードパーティAPI統合',
+      rm3_label: 'Phase 3 — 2027', rm3_title: 'ガバナンストークン',
+      rm3_1: '$SHILLトークンローンチ', rm3_2: 'DAOガバナンスによるプラットフォーム意思決定',
+      rm3_3: 'トークンホルダーへの収益シェア', rm3_4: 'KOLインデックス＆レピュテーションNFT', rm3_5: '分散型紛争解決',
+      nav_global: 'グローバルKOL', global_eye: '// グローバル展開', global_title: 'グローバルKOL <span class="cyan">Coming Soon</span>',
+      global_desc: '現在、韓国KOL市場を中心に運営中。海外KOLネットワークは近日オープン予定。',
+      global_kr_title: '韓国（ライブ）', global_kr_desc: 'Telegram＆Twitter基盤の韓国KOLネットワーク運営中',
+      global_en_title: '英語圏（準備中）', global_en_desc: '英語圏KOLネットワーク 2026 Q3オープン予定',
+      global_jp_title: '日本（準備中）', global_jp_desc: '日本KOLネットワーク 2026 Q4オープン予定',
+      global_zh_title: '中華圏（準備中）', global_zh_desc: '中華圏KOLネットワーク 2027オープン予定',
+      kc_followers: 'フォロワー', kc_region: '地域', roster_register: 'KOLとして登録',
+      wm_rw_desc: 'EVMマルチチェーンウォレット'
     },
     zh: {
       nav_how: '使用方法', nav_roster: 'KOL名单', nav_rooms: '代币房间',
@@ -2093,10 +2094,30 @@
       camp_kpi_clicks: '链接点击/推荐', camp_kpi_onchain: '链上转化（交换、铸造）',
       camp_kpi_target: '目标数值（可选）', camp_submit: '创建活动 →',
       camp_user_form_desc: '连接您的账户以浏览活动并获取奖励。',
-      camp_connect_wallet: '连接钱包', camp_connect_desc: 'MetaMask、Reddit钱包、WalletConnect',
+      camp_connect_wallet: '连接钱包', camp_connect_desc: 'MetaMask、Rabby钱包、WalletConnect',
       camp_register_kol: '注册为KOL', camp_register_desc: '含身份验证的完整资料',
       camp_done_title: '活动创建成功！', camp_done_desc: '代币房间正在设置中。浏览并邀请KOL。',
-      camp_done_btn: '浏览KOL'
+      camp_done_btn: '浏览KOL',
+      tr1_title: '智能合约托管', tr1_desc: '活动资金锁定在托管中。仅在KPI通过加密验证后才释放。不再有"等待支付"的状态。',
+      tr2_title: '链上记录', tr2_desc: '所有活动、结算和评价都记录在链上。完整历史随时可查。',
+      tr3_title: '双向评价', tr3_desc: 'KOL和项目方在活动结束后互相评价。信誉随时间积累。',
+      rm1_label: 'Phase 1 — 当前', rm1_title: '市场',
+      rm1_1: 'KOL注册和资料系统', rm1_2: '代币房间创建和托管',
+      rm1_3: 'DM推广（Telegram和Twitter）', rm1_4: '绩效追踪仪表板', rm1_5: '双向评价系统',
+      rm2_label: 'Phase 2 — 2026 Q3', rm2_title: '启动平台整合',
+      rm2_1: 'KOL支持代币发行', rm2_2: '预发布营销套装',
+      rm2_3: '质押和忠诚度等级', rm2_4: '跨链扩展', rm2_5: '第三方API集成',
+      rm3_label: 'Phase 3 — 2027', rm3_title: '治理代币',
+      rm3_1: '$SHILL代币发行', rm3_2: 'DAO治理平台决策',
+      rm3_3: '代币持有者收益分配', rm3_4: 'KOL指数和信誉NFT', rm3_5: '去中心化争议解决',
+      nav_global: '全球KOL', global_eye: '// 全球扩展', global_title: '全球KOL <span class="cyan">即将推出</span>',
+      global_desc: '目前专注于韩国KOL市场。国际KOL网络即将开放。',
+      global_kr_title: '韩国（已上线）', global_kr_desc: '基于Telegram和Twitter的韩国KOL网络运营中',
+      global_en_title: '英语区（筹备中）', global_en_desc: '英语区KOL网络计划2026 Q3开放',
+      global_jp_title: '日本（筹备中）', global_jp_desc: '日本KOL网络计划2026 Q4开放',
+      global_zh_title: '中华区（筹备中）', global_zh_desc: '中华区KOL网络计划2027开放',
+      kc_followers: '订阅者', kc_region: '地区', roster_register: '注册为KOL',
+      wm_rw_desc: 'EVM多链钱包'
     }
   };
 
@@ -2152,6 +2173,32 @@
     // Update reg wallet status if connected
     if (connectedAddr) updateRegWalletStatus();
   }
+
+  // ==================== TELEGRAM LIVE COUNT ====================
+  async function fetchTgCounts() {
+    const cards = document.querySelectorAll('[data-tg]');
+    for (const card of cards) {
+      const channel = card.getAttribute('data-tg');
+      const countEl = card.querySelector('.tg-count');
+      if (!countEl) continue;
+      try {
+        const resp = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://t.me/' + channel));
+        const html = await resp.text();
+        const match = html.match(/tgme_page_extra[^>]*>([^<]+)/);
+        if (match) {
+          const numStr = match[1].replace(/\s/g, '').replace(/members|subscribers|участник.*/gi, '').trim();
+          const num = parseInt(numStr.replace(/\D/g, ''));
+          if (num > 0) {
+            countEl.textContent = num >= 1000 ? (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K' : num.toString();
+          }
+        }
+      } catch(e) { /* keep fallback */ }
+    }
+  }
+
+  // Init: set Korean as default and fetch TG counts
+  setLang('ko');
+  fetchTgCounts();
 </script>
 </body>
 </html>
