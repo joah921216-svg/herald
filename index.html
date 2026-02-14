@@ -43,27 +43,72 @@
 <!-- ==================== HERO ==================== -->
 <section class="hero">
   <div class="container">
-    <h1 class="rv" data-i18n="hero_h1">암호화폐의 모든 기회,<br>한 곳에서.</h1>
-    <p class="hero-desc rv rv-d1" data-i18n="hero_desc">퀘스트에 참여하고, 보상을 받으세요.</p>
-    <div class="hero-actions rv rv-d2">
-      <a href="#quests" class="btn btn-blue" data-i18n="hero_btn">퀘스트 둘러보기</a>
+    <div class="hero-text">
+      <h1 class="rv" data-i18n="hero_h1">암호화폐의 모든 기회,<br>한 곳에서.</h1>
+      <p class="hero-desc rv rv-d1" data-i18n="hero_desc">퀘스트에 참여하고, 보상을 받으세요.</p>
+      <div class="hero-actions rv rv-d2">
+        <a href="#quests" class="btn btn-blue" data-i18n="hero_btn">퀘스트 둘러보기</a>
+      </div>
     </div>
-    <div class="hero-metrics rv rv-d3">
-      <div class="hm-item">
-        <div class="hm-num">4</div>
-        <div class="hm-lbl" data-i18n="hm_campaigns">활성 캠페인</div>
+    <div class="hero-mockup rv rv-d2">
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <h4 data-i18n="quest_active">참여 가능한 퀘스트</h4>
+          <div class="hero-card-live"><span class="dot"></span>Live</div>
+        </div>
+        <div class="hero-card-row">
+          <div class="hero-card-proj">
+            <div class="hero-card-icon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div>
+            <div><div class="hero-card-name">AxiomDEX</div><div class="hero-card-chain">Ethereum</div></div>
+          </div>
+          <div class="hero-card-reward">10 USDT</div>
+          <span class="hero-card-tag">Active</span>
+        </div>
+        <div class="hero-card-row">
+          <div class="hero-card-proj">
+            <div class="hero-card-icon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div>
+            <div><div class="hero-card-name">NovaChain</div><div class="hero-card-chain">Solana</div></div>
+          </div>
+          <div class="hero-card-reward">5 USDT</div>
+          <span class="hero-card-tag">Active</span>
+        </div>
+        <div class="hero-card-row">
+          <div class="hero-card-proj">
+            <div class="hero-card-icon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div>
+            <div><div class="hero-card-name">ZenFi</div><div class="hero-card-chain">Arbitrum</div></div>
+          </div>
+          <div class="hero-card-reward">15 USDT</div>
+          <span class="hero-card-tag" style="background:var(--orange-soft);color:var(--orange);">Filling</span>
+        </div>
       </div>
-      <div class="hm-item">
-        <div class="hm-num">1,602</div>
-        <div class="hm-lbl" data-i18n="hm_participants">총 참여자</div>
-      </div>
-      <div class="hm-item">
-        <div class="hm-num">$150,000</div>
-        <div class="hm-lbl" data-i18n="hm_rewards">누적 보상 지급</div>
+      <div class="hero-card-2">
+        <div class="hc2-label" data-i18n="hm_rewards">누적 보상 지급</div>
+        <div class="hc2-value" id="heroCounter">$0</div>
+        <div class="hc2-sub">+12.4% this month</div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stats-inner">
+      <div class="stat-item rv">
+        <div class="stat-num" data-count="4">0</div>
+        <div class="stat-lbl" data-i18n="hm_campaigns">활성 캠페인</div>
+      </div>
+      <div class="stat-item rv rv-d1">
+        <div class="stat-num" data-count="1602">0</div>
+        <div class="stat-lbl" data-i18n="hm_participants">총 참여자</div>
+      </div>
+      <div class="stat-item rv rv-d2">
+        <div class="stat-num" data-count="150000" data-prefix="$">$0</div>
+        <div class="stat-lbl" data-i18n="hm_rewards">누적 보상 지급</div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ==================== QUEST BOARD ==================== -->
 <section class="s-alt" id="quests">

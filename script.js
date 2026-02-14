@@ -188,19 +188,47 @@ function setLang(lang) {
   }
 }
 
-// ==================== CTA COUNT-UP ANIMATION ====================
-function animateCounter(el, target, duration) {
+// ==================== COUNT-UP ANIMATION ====================
+function countUp(el, target, duration, prefix) {
   const start = performance.now();
   const update = (now) => {
     const t = Math.min((now - start) / duration, 1);
-    const ease = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    const ease = 1 - Math.pow(1 - t, 3);
     const val = Math.round(target * ease);
-    el.textContent = '$' + val.toLocaleString();
+    el.textContent = (prefix || '') + val.toLocaleString();
     if (t < 1) requestAnimationFrame(update);
   };
   requestAnimationFrame(update);
 }
 
+// Hero counter (small card)
+const heroObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const el = document.getElementById('heroCounter');
+    if (el) countUp(el, 150000, 2000, '$');
+    heroObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const heroEl = document.querySelector('.hero');
+if (heroEl) heroObs.observe(heroEl);
+
+// Stats bar counters
+const statsObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.querySelectorAll('.stat-num[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const prefix = el.dataset.prefix || '';
+      countUp(el, target, 1800, prefix);
+    });
+    statsObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const statsEl = document.querySelector('.stats-bar');
+if (statsEl) statsObs.observe(statsEl);
+
+// CTA counter
 const ctaObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
@@ -212,7 +240,7 @@ const ctaObs = new IntersectionObserver(entries => {
     if (label) label.classList.add('vis');
     if (title) title.classList.add('vis');
     if (btnWrap) { btnWrap.style.opacity = '1'; btnWrap.style.transform = 'translateY(0)'; }
-    animateCounter(counter, 150000, 2000);
+    countUp(counter, 150000, 2000, '$');
     ctaObs.unobserve(e.target);
   });
 }, { threshold: 0.3 });
