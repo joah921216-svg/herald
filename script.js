@@ -28,56 +28,181 @@ document.querySelectorAll('.modal-overlay').forEach(m => {
 
 // ==================== WALLET CONNECTION ====================
 let connectedAddr = null;
+let connectedWallet = null;
+let activeProvider = null;
+
+const CHAINS = {
+  '0x1': 'Ethereum', '0x89': 'Polygon', '0xa4b1': 'Arbitrum', '0x2105': 'Base',
+  '0x38': 'BNB Chain', '0xa': 'Optimism', '0xa86a': 'Avalanche', '0xe708': 'Linea',
+  '0x144': 'zkSync Era', '0x82750': 'Scroll'
+};
+
+function showWalletError(msg) {
+  const el = document.getElementById('walletError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+function setOptLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  if (loading) btn.classList.add('loading');
+  else btn.classList.remove('loading');
+}
 
 async function connectMetaMask() {
   if (typeof window.ethereum === 'undefined') {
-    alert(i18n[currentLang].wm_no_mm || 'MetaMask is not installed. Please install MetaMask extension.');
-    window.open('https://metamask.io/download/', '_blank');
+    showWalletError(i18n[currentLang].wm_no_mm || 'MetaMask is not installed.');
+    setTimeout(() => window.open('https://metamask.io/download/', '_blank'), 1500);
     return;
   }
+  setOptLoading('mmBtn', true);
   try {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts[0]) onWalletConnected(accounts[0], 'MetaMask');
+    if (accounts[0]) {
+      activeProvider = window.ethereum;
+      await onWalletConnected(accounts[0], 'MetaMask');
+    }
   } catch (err) {
+    if (err.code === 4001) showWalletError(i18n[currentLang].wm_rejected || '사용자가 연결을 거부했습니다.');
+    else showWalletError(i18n[currentLang].wm_error || '연결에 실패했습니다. 다시 시도해주세요.');
     console.error('MetaMask connection failed:', err);
   }
+  setOptLoading('mmBtn', false);
 }
 
 async function connectRabby() {
   const provider = window.rabby || window.ethereum?.providers?.find(p => p.isRabby) || window.ethereum;
-  if (provider && (window.rabby || provider.isRabby)) {
-    try {
-      const accounts = await provider.request({ method: 'eth_requestAccounts' });
-      if (accounts[0]) onWalletConnected(accounts[0], 'Rabby');
-    } catch(err) { console.error('Rabby connection failed:', err); }
-  } else if (typeof window.ethereum !== 'undefined') {
-    try {
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      if (accounts[0]) onWalletConnected(accounts[0], 'Rabby');
-    } catch(err) { console.error(err); }
-  } else {
-    window.open('https://rabby.io/', '_blank');
+  if (!provider) {
+    showWalletError(i18n[currentLang].wm_no_wallet || 'Web3 지갑이 감지되지 않습니다.');
+    setTimeout(() => window.open('https://rabby.io/', '_blank'), 1500);
+    return;
   }
+  setOptLoading('rbBtn', true);
+  try {
+    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+    if (accounts[0]) {
+      activeProvider = provider;
+      await onWalletConnected(accounts[0], 'Rabby');
+    }
+  } catch (err) {
+    if (err.code === 4001) showWalletError(i18n[currentLang].wm_rejected || '사용자가 연결을 거부했습니다.');
+    else showWalletError(i18n[currentLang].wm_error || '연결에 실패했습니다. 다시 시도해주세요.');
+    console.error('Rabby connection failed:', err);
+  }
+  setOptLoading('rbBtn', false);
 }
 
-async function connectWalletConnect() {
-  if (typeof window.WalletConnectModal !== 'undefined') {
-    alert('WalletConnect SDK loading...');
-  } else {
-    window.open('https://walletconnect.com/', '_blank');
-  }
+function connectWalletConnect() {
+  showWalletError(i18n[currentLang].wm_wc_soon || 'WalletConnect는 준비 중입니다. MetaMask 또는 Rabby를 이용해주세요.');
 }
 
-function onWalletConnected(addr, walletName) {
+async function getChainName(provider) {
+  try {
+    const chainId = await provider.request({ method: 'eth_chainId' });
+    return CHAINS[chainId] || 'Chain ' + parseInt(chainId, 16);
+  } catch { return 'Unknown'; }
+}
+
+async function getBalance(provider, addr) {
+  try {
+    const raw = await provider.request({ method: 'eth_getBalance', params: [addr, 'latest'] });
+    const wei = parseInt(raw, 16);
+    const eth = wei / 1e18;
+    return eth < 0.0001 ? '0 ETH' : eth.toFixed(4) + ' ETH';
+  } catch { return '— ETH'; }
+}
+
+async function onWalletConnected(addr, walletName) {
   connectedAddr = addr;
-  const short = addr.slice(0,6) + '...' + addr.slice(-4);
+  connectedWallet = walletName;
+  const short = addr.slice(0, 6) + '...' + addr.slice(-4);
+  const provider = activeProvider || window.ethereum;
+
+  // Nav button
   const btn = document.getElementById('walletBtn');
   btn.classList.add('connected');
   btn.innerHTML = '<span class="wallet-addr">' + short + '</span>';
   btn.onclick = () => openModal('walletModal');
-  document.getElementById('walletStatus').style.display = 'block';
-  document.getElementById('walletAddr').textContent = short;
+
+  // Modal: hide connect, show info
+  document.getElementById('walletConnect').style.display = 'none';
+  document.getElementById('walletInfo').style.display = 'block';
+  document.getElementById('wiName').textContent = walletName;
+  document.getElementById('wiAddr').textContent = short;
+
+  // Chain & balance
+  const chain = await getChainName(provider);
+  document.getElementById('wiChain').textContent = chain;
+  const bal = await getBalance(provider, addr);
+  document.getElementById('wiBalance').textContent = bal;
+
+  // Persist
+  localStorage.setItem('sv_wallet_addr', addr);
+  localStorage.setItem('sv_wallet_name', walletName);
 }
+
+function disconnectWallet() {
+  connectedAddr = null;
+  connectedWallet = null;
+  activeProvider = null;
+  localStorage.removeItem('sv_wallet_addr');
+  localStorage.removeItem('sv_wallet_name');
+
+  // Nav button reset
+  const btn = document.getElementById('walletBtn');
+  btn.classList.remove('connected');
+  btn.textContent = i18n[currentLang].nav_wallet;
+  btn.onclick = () => openModal('walletModal');
+
+  // Modal: show connect, hide info
+  document.getElementById('walletConnect').style.display = 'block';
+  document.getElementById('walletInfo').style.display = 'none';
+
+  closeModal('walletModal');
+}
+
+function copyAddress() {
+  if (connectedAddr) {
+    navigator.clipboard.writeText(connectedAddr).then(() => {
+      const btn = document.querySelector('.wci-copy');
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(() => {
+        btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+      }, 1500);
+    });
+  }
+}
+
+// Listen for account/chain changes
+if (window.ethereum) {
+  window.ethereum.on?.('accountsChanged', (accounts) => {
+    if (accounts.length === 0) disconnectWallet();
+    else if (connectedAddr) onWalletConnected(accounts[0], connectedWallet || 'Wallet');
+  });
+  window.ethereum.on?.('chainChanged', () => {
+    if (connectedAddr) onWalletConnected(connectedAddr, connectedWallet || 'Wallet');
+  });
+}
+
+// Restore connection on page load
+async function restoreWallet() {
+  const saved = localStorage.getItem('sv_wallet_addr');
+  const name = localStorage.getItem('sv_wallet_name');
+  if (!saved || !window.ethereum) return;
+  try {
+    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    if (accounts.length > 0 && accounts.find(a => a.toLowerCase() === saved.toLowerCase())) {
+      activeProvider = window.ethereum;
+      await onWalletConnected(accounts[0], name || 'Wallet');
+    } else {
+      localStorage.removeItem('sv_wallet_addr');
+      localStorage.removeItem('sv_wallet_name');
+    }
+  } catch { /* silent */ }
+}
+restoreWallet();
 
 // ==================== CAMPAIGN MODAL ====================
 function submitCampaign() {
@@ -115,7 +240,10 @@ const i18n = {
     cta_label: '누적 보상 지급액', cta_title: '당신의 보상이 쌓이고 있습니다.', cta_btn: '퀘스트 둘러보기',
     wm_title: '지갑 연결', wm_desc: '지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.',
     wm_mm_desc: '브라우저 확장 지갑', wm_rw_desc: 'EVM 멀티체인 지갑', wm_wc_desc: '모바일 지갑으로 QR 스캔',
-    wm_popular: '인기', wm_connected: '연결됨:',
+    wm_popular: '인기', wm_soon: '준비중', wm_connected: '연결됨:',
+    wm_connected_title: '지갑 연결됨', wm_wallet_label: '지갑', wm_chain_label: '체인', wm_address_label: '주소',
+    wm_disconnect: '연결 해제', wm_rejected: '사용자가 연결을 거부했습니다.', wm_error: '연결에 실패했습니다. 다시 시도해주세요.',
+    wm_no_wallet: 'Web3 지갑이 감지되지 않습니다.', wm_wc_soon: 'WalletConnect는 준비 중입니다. MetaMask 또는 Rabby를 이용해주세요.',
     wm_no_mm: 'MetaMask가 설치되어 있지 않습니다. MetaMask 확장을 설치해주세요.',
     camp_modal_title: '캠페인 시작하기', camp_form_desc: '프로젝트와 캠페인 목표를 알려주세요.',
     camp_proj_name: '프로젝트 이름', camp_sector: '섹터 / 카테고리', camp_chain: '체인',
@@ -151,7 +279,10 @@ const i18n = {
     cta_label: 'Total Rewards Paid', cta_title: 'Your rewards are stacking up.', cta_btn: 'Browse Quests',
     wm_title: 'Connect Wallet', wm_desc: 'Connect your wallet to join quests and earn rewards.',
     wm_mm_desc: 'Browser extension wallet', wm_rw_desc: 'EVM multi-chain wallet', wm_wc_desc: 'Scan QR with mobile wallet',
-    wm_popular: 'Popular', wm_connected: 'Connected:',
+    wm_popular: 'Popular', wm_soon: 'Soon', wm_connected: 'Connected:',
+    wm_connected_title: 'Wallet Connected', wm_wallet_label: 'Wallet', wm_chain_label: 'Chain', wm_address_label: 'Address',
+    wm_disconnect: 'Disconnect', wm_rejected: 'Connection was rejected by user.', wm_error: 'Connection failed. Please try again.',
+    wm_no_wallet: 'No Web3 wallet detected.', wm_wc_soon: 'WalletConnect is coming soon. Please use MetaMask or Rabby.',
     wm_no_mm: 'MetaMask is not installed. Please install MetaMask extension.',
     camp_modal_title: 'Start a Campaign', camp_form_desc: 'Tell us about your project and campaign goals.',
     camp_proj_name: 'Project Name', camp_sector: 'Sector / Category', camp_chain: 'Chain',

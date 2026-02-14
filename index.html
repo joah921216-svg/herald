@@ -274,43 +274,69 @@
 <div class="modal-overlay" id="walletModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
-    <h3 data-i18n="wm_title">지갑 연결</h3>
-    <p class="modal-desc" data-i18n="wm_desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
-    <div class="wallet-options">
-      <button class="wallet-opt" onclick="connectMetaMask()">
-        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
-        </div>
-        <div>
-          <div class="wallet-opt-name">MetaMask</div>
-          <div class="wallet-opt-desc" data-i18n="wm_mm_desc">브라우저 확장 지갑</div>
-        </div>
-        <span class="wallet-opt-badge" data-i18n="wm_popular">인기</span>
-      </button>
-      <button class="wallet-opt" onclick="connectRabby()">
-        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/></svg>
-        </div>
-        <div>
-          <div class="wallet-opt-name">Rabby Wallet</div>
-          <div class="wallet-opt-desc" data-i18n="wm_rw_desc">EVM 멀티체인 지갑</div>
-        </div>
-      </button>
-      <button class="wallet-opt" onclick="connectWalletConnect()">
-        <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#3b99fc,#2d7dd2);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M6.1 8.5c3.3-3.2 8.5-3.2 11.8 0l.4.4c.2.2.2.4 0 .5l-1.3 1.3c-.1.1-.2.1-.3 0l-.5-.5c-2.3-2.2-5.9-2.2-8.2 0l-.6.5c-.1.1-.2.1-.3 0L5.8 9.4c-.1-.1-.1-.4 0-.5l.3-.4zm14.6 2.7l1.2 1.1c.2.2.2.4 0 .5l-5.2 5.1c-.2.2-.4.2-.6 0l-3.7-3.6c0-.1-.1-.1-.1 0l-3.7 3.6c-.2.2-.4.2-.6 0l-5.2-5.1c-.2-.1-.2-.4 0-.5l1.2-1.1c.2-.2.4-.2.6 0l3.7 3.6c.1 0 .1 0 .2 0l3.7-3.6c.2-.2.4-.2.6 0l3.7 3.6c0 0 .1 0 .1 0l3.7-3.6c.2-.2.5-.2.6 0z"/></svg>
-        </div>
-        <div>
-          <div class="wallet-opt-name">WalletConnect</div>
-          <div class="wallet-opt-desc" data-i18n="wm_wc_desc">모바일 지갑으로 QR 스캔</div>
-        </div>
-      </button>
-    </div>
-    <div id="walletStatus" style="display:none; margin-top:1rem;">
-      <div class="reg-wallet-status">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span data-i18n="wm_connected">연결됨:</span> <span class="addr" id="walletAddr"></span>
+
+    <!-- Connect State -->
+    <div id="walletConnect">
+      <h3 data-i18n="wm_title">지갑 연결</h3>
+      <p class="modal-desc" data-i18n="wm_desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
+      <div class="wallet-options">
+        <button class="wallet-opt" id="mmBtn" onclick="connectMetaMask()">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
+          </div>
+          <div>
+            <div class="wallet-opt-name">MetaMask</div>
+            <div class="wallet-opt-desc" data-i18n="wm_mm_desc">브라우저 확장 지갑</div>
+          </div>
+          <span class="wallet-opt-badge" data-i18n="wm_popular">인기</span>
+        </button>
+        <button class="wallet-opt" id="rbBtn" onclick="connectRabby()">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/></svg>
+          </div>
+          <div>
+            <div class="wallet-opt-name">Rabby Wallet</div>
+            <div class="wallet-opt-desc" data-i18n="wm_rw_desc">EVM 멀티체인 지갑</div>
+          </div>
+        </button>
+        <button class="wallet-opt wc-disabled" onclick="connectWalletConnect()">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#3b99fc,#2d7dd2);">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M6.1 8.5c3.3-3.2 8.5-3.2 11.8 0l.4.4c.2.2.2.4 0 .5l-1.3 1.3c-.1.1-.2.1-.3 0l-.5-.5c-2.3-2.2-5.9-2.2-8.2 0l-.6.5c-.1.1-.2.1-.3 0L5.8 9.4c-.1-.1-.1-.4 0-.5l.3-.4zm14.6 2.7l1.2 1.1c.2.2.2.4 0 .5l-5.2 5.1c-.2.2-.4.2-.6 0l-3.7-3.6c0-.1-.1-.1-.1 0l-3.7 3.6c-.2.2-.4.2-.6 0l-5.2-5.1c-.2-.1-.2-.4 0-.5l1.2-1.1c.2-.2.4-.2.6 0l3.7 3.6c.1 0 .1 0 .2 0l3.7-3.6c.2-.2.4-.2.6 0l3.7 3.6c0 0 .1 0 .1 0l3.7-3.6c.2-.2.5-.2.6 0z"/></svg>
+          </div>
+          <div>
+            <div class="wallet-opt-name">WalletConnect</div>
+            <div class="wallet-opt-desc" data-i18n="wm_wc_desc">모바일 지갑으로 QR 스캔</div>
+          </div>
+          <span class="wallet-opt-badge wc-soon" data-i18n="wm_soon">준비중</span>
+        </button>
       </div>
+      <div id="walletError" class="wallet-error" style="display:none;"></div>
+    </div>
+
+    <!-- Connected State -->
+    <div id="walletInfo" style="display:none;">
+      <h3 data-i18n="wm_connected_title">지갑 연결됨</h3>
+      <div class="wallet-connected-info">
+        <div class="wci-row">
+          <span class="wci-label" data-i18n="wm_wallet_label">지갑</span>
+          <span class="wci-value" id="wiName">MetaMask</span>
+        </div>
+        <div class="wci-row">
+          <span class="wci-label" data-i18n="wm_chain_label">체인</span>
+          <span class="wci-chain" id="wiChain">Ethereum</span>
+        </div>
+        <div class="wci-row">
+          <span class="wci-label" data-i18n="wm_address_label">주소</span>
+          <span class="wci-addr" id="wiAddr">0x1234...abcd</span>
+          <button class="wci-copy" onclick="copyAddress()" title="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          </button>
+        </div>
+        <div class="wci-balance-row">
+          <span class="wci-balance" id="wiBalance">0.00 ETH</span>
+        </div>
+      </div>
+      <button class="wallet-disconnect-btn" onclick="disconnectWallet()" data-i18n="wm_disconnect">연결 해제</button>
     </div>
   </div>
 </div>

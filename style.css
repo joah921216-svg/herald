@@ -361,6 +361,54 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   margin-left: auto; font-size: 0.6rem; padding: 0.15rem 0.5rem; border-radius: 100px;
   background: var(--blue-soft); color: var(--blue); font-weight: 600;
 }
+.wallet-opt-badge.wc-soon { background: var(--bg-3); color: var(--text-3); }
+.wallet-opt.wc-disabled { opacity: 0.55; cursor: default; }
+.wallet-opt.wc-disabled:hover { border-color: var(--border); background: var(--bg-2); }
+.wallet-opt.loading { pointer-events: none; opacity: 0.7; }
+.wallet-opt.loading .wallet-opt-name::after { content: '...'; animation: dots 1s steps(3) infinite; }
+@keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'} }
+.wallet-error {
+  margin-top: 0.75rem; padding: 0.6rem 0.85rem; border-radius: var(--r-xs);
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15);
+  color: var(--red); font-size: 0.8rem;
+}
+.wallet-connected-info {
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-sm);
+  padding: 1rem; margin: 1rem 0;
+}
+.wci-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+}
+.wci-row:last-of-type { border-bottom: none; }
+.wci-label { font-size: 0.75rem; color: var(--text-3); font-weight: 500; }
+.wci-value { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.wci-chain {
+  font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 100px;
+  background: var(--green-soft); color: var(--green);
+}
+.wci-addr {
+  font-size: 0.8rem; font-weight: 600; color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+}
+.wci-copy {
+  background: none; border: none; color: var(--text-3); cursor: pointer;
+  padding: 0.2rem; margin-left: 0.3rem; transition: color 0.2s;
+}
+.wci-copy:hover { color: var(--blue); }
+.wci-balance-row {
+  text-align: center; padding: 0.75rem 0 0.25rem;
+}
+.wci-balance {
+  font-size: 1.5rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em;
+}
+.wallet-disconnect-btn {
+  width: 100%; padding: 0.65rem; background: none; color: var(--red);
+  border: 1px solid rgba(239,68,68,0.2); border-radius: var(--r-sm);
+  font-family: inherit; font-size: 0.82rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.wallet-disconnect-btn:hover { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); }
 
 /* === REGISTRATION FORM (campaign modal) === */
 .reg-field { margin-bottom: 0.85rem; }
