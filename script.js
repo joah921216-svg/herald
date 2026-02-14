@@ -240,46 +240,128 @@ function toggleReferral() {
   document.getElementById('referralRewardField').style.display = document.getElementById('referralToggle').checked ? 'flex' : 'none';
 }
 
-function buildReview() {
+function buildStep3() {
+  // Build dynamic quest reward inputs
+  const container = document.getElementById('questRewardInputs');
+  const quests = [];
+  document.querySelectorAll('.wiz-quest-cb:checked').forEach(cb => {
+    const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+    if (name) quests.push({ id: cb.dataset.qid, name: name });
+  });
+  if (document.getElementById('referralToggle').checked) {
+    quests.push({ id: 'q_referral', name: '레퍼럴 링크 공유' });
+  }
+  let html = '';
+  quests.forEach(q => {
+    html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span>' +
+      '<div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-qid="' + q.id + '" oninput="updateEstimate()"></div></div>';
+  });
+  if (!html) html = '<p style="color:var(--text-3);font-size:0.82rem;">선택된 퀘스트가 없습니다.</p>';
+  container.innerHTML = html;
+
+  // Show/hide influencer tier table
+  const ptype = document.querySelector('.wiz-ptype.selected')?.dataset.ptype;
+  document.getElementById('tierTableField').style.display = (ptype === 'influencer' || ptype === 'mix') ? 'block' : 'none';
+
+  // Build summary
+  buildSummary();
+  updateEstimate();
+}
+
+function buildSummary() {
   const name = document.getElementById('cwProjName').value || '-';
-  const sector = document.getElementById('cwSector').selectedOptions[0]?.text || '-';
-  const chain = document.getElementById('cwChain').selectedOptions[0]?.text || '-';
   const startD = document.getElementById('cwStart').value || '-';
   const endD = document.getElementById('cwEnd').value || '-';
   const goals = [];
   document.querySelectorAll('#wizStep1 .wiz-goal.selected .wiz-goal-name').forEach(el => goals.push(el.textContent));
   const ptype = document.querySelector('.wiz-ptype.selected .wiz-ptype-name')?.textContent || '-';
-  const quests = [];
+  const questNames = [];
   document.querySelectorAll('.wiz-quest-cb:checked').forEach(cb => {
-    const label = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
-    if (label) quests.push(label);
+    const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+    if (n) questNames.push(n);
   });
-  if (document.getElementById('referralToggle').checked) quests.push('레퍼럴 링크 공유');
+  if (document.getElementById('referralToggle').checked) questNames.push('레퍼럴 링크 공유');
   const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
-  const budget = document.getElementById('cwBudget').value || '-';
-  const perQ = document.getElementById('cwPerQuest').value || '-';
-  const maxP = document.getElementById('cwMaxPart').value || '-';
+  const budget = document.getElementById('cwBudget').value;
 
   const r = (l, v) => '<div class="wr-row"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
   document.getElementById('wizReview').innerHTML =
-    r('프로젝트', name) + r('카테고리', sector) + r('체인', chain) +
-    r('기간', startD + ' ~ ' + endD) + r('목표', goals.join(', ') || '-') +
-    r('참여자', ptype) + r('퀘스트', quests.length + '개') +
-    r('보상 토큰', token) + r('총 예산', '$' + Number(budget || 0).toLocaleString()) +
-    r('퀘스트당 보상', perQ) + r('최대 참여자', Number(maxP || 0).toLocaleString() + '명');
+    r('프로젝트', name) +
+    r('기간', startD + ' ~ ' + endD) +
+    r('목표', goals.join(', ') || '-') +
+    r('참여자', ptype) +
+    r('퀘스트', questNames.map(n => '<span class="wr-quest-tag">' + n + '</span>').join(' ')) +
+    r('보상 토큰', token) +
+    r('총 예산', '$' + Number(budget || 0).toLocaleString());
+}
+
+function updateEstimate() {
+  const budget = Number(document.getElementById('cwBudget').value) || 0;
+  let totalPerPerson = 0;
+  document.querySelectorAll('.wiz-qr-input input').forEach(inp => { totalPerPerson += Number(inp.value) || 0; });
+
+  // Update tier table prices
+  if (totalPerPerson > 0) {
+    const base = totalPerPerson;
+    document.getElementById('tierPrice1').textContent = '$' + base.toLocaleString();
+    document.getElementById('tierPrice2').textContent = '$' + Math.round(base * 1.5).toLocaleString();
+    document.getElementById('tierPrice3').textContent = '$' + Math.round(base * 2.5).toLocaleString();
+  } else {
+    document.getElementById('tierPrice1').textContent = '-';
+    document.getElementById('tierPrice2').textContent = '-';
+    document.getElementById('tierPrice3').textContent = '-';
+  }
+
+  // Estimated participants
+  let est = '~350명';
+  if (budget > 0 && totalPerPerson > 0) {
+    est = '~' + Math.floor(budget / totalPerPerson).toLocaleString() + '명';
+  }
+  document.getElementById('estParticipants').textContent = est;
+
+  // Update summary budget
+  buildSummary();
+}
+
+// ==================== CONFETTI ====================
+function launchConfetti() {
+  const colors = ['#3182F6', '#20C997', '#8B5CF6', '#F59E0B', '#EC4899', '#6366F1', '#22D3EE'];
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDelay = Math.random() * 0.6 + 's';
+    p.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
+    p.style.width = (Math.random() * 8 + 4) + 'px';
+    p.style.height = (Math.random() * 14 + 6) + 'px';
+    p.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+    container.appendChild(p);
+  }
+  setTimeout(() => container.remove(), 4000);
 }
 
 function wizGo(dir) {
   const next = wizStep + dir;
   if (next < 1 || next > WIZ_TOTAL + 1) return;
   if (next === 2 && dir === 1) applyQuestRecommendations();
-  if (next === 3 && dir === 1) buildReview();
+  if (next === 3 && dir === 1) buildStep3();
   if (next === WIZ_TOTAL + 1) {
+    // Populate done stats
+    const budget = Number(document.getElementById('cwBudget').value) || 0;
+    document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
+    const qCount = document.querySelectorAll('.wiz-quest-cb:checked').length + (document.getElementById('referralToggle').checked ? 1 : 0);
+    document.getElementById('doneQuests').textContent = qCount + '개';
+    document.getElementById('doneEst').textContent = document.getElementById('estParticipants').textContent;
     for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
     document.getElementById('wizDone').style.display = 'block';
     document.getElementById('wizNav').style.display = 'none';
     document.getElementById('wizBar').style.width = '100%';
     updateStepDots(0);
+    launchConfetti();
     return;
   }
   document.getElementById('wizStep' + wizStep).style.display = 'none';

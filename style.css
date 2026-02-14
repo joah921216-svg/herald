@@ -505,6 +505,51 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   font-family: inherit; outline: none; color: var(--text);
 }
 .wiz-referral-reward input:focus { border-color: var(--blue); }
+/* Quest reward inputs */
+.wiz-qr-list { display: flex; flex-direction: column; gap: 0.35rem; }
+.wiz-qr-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.5rem 0.7rem; background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+}
+.wiz-qr-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+.wiz-qr-input {
+  display: flex; align-items: center; gap: 0.3rem;
+  background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xs);
+  padding: 0 0.5rem; transition: border-color 0.2s;
+}
+.wiz-qr-input:focus-within { border-color: var(--blue); }
+.wiz-qr-input span { font-size: 0.78rem; color: var(--text-3); font-weight: 600; }
+.wiz-qr-input input {
+  width: 70px; padding: 0.4rem 0.2rem; border: none; background: none;
+  font-family: inherit; font-size: 0.82rem; color: var(--text);
+  outline: none; text-align: right; font-weight: 600;
+}
+/* Tier table */
+.wiz-tier-table {
+  border: 1px solid var(--border); border-radius: var(--r-sm); overflow: hidden;
+}
+.wiz-tier-row {
+  display: grid; grid-template-columns: 1fr 0.6fr 0.8fr; padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid var(--border); font-size: 0.8rem; align-items: center;
+}
+.wiz-tier-row:last-child { border-bottom: none; }
+.wiz-tier-header {
+  background: var(--bg-2); font-size: 0.68rem; font-weight: 700; color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.04em; padding: 0.45rem 0.75rem;
+}
+.wiz-tier-range { font-weight: 600; color: var(--text); }
+.wiz-tier-mult { font-weight: 700; color: var(--purple); text-align: center; }
+.wiz-tier-price { font-weight: 700; color: var(--blue); text-align: right; }
+/* Divider */
+.wiz-divider { height: 1px; background: var(--border); margin: 1rem 0; }
+/* Estimated participants */
+.wiz-est {
+  display: flex; align-items: center; gap: 0.45rem; padding: 0.6rem 0.75rem;
+  background: var(--blue-soft); border-radius: var(--r-xs); margin-top: 0.5rem;
+}
+.wiz-est span { font-size: 0.8rem; color: var(--text-2); }
+.wiz-est strong { color: var(--blue); font-weight: 700; }
 /* Review */
 .wiz-review {
   background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-sm);
@@ -512,11 +557,37 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 }
 .wiz-review .wr-row {
   display: flex; justify-content: space-between; padding: 0.45rem 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border); gap: 0.5rem;
 }
 .wiz-review .wr-row:last-child { border-bottom: none; }
-.wiz-review .wr-label { color: var(--text-3); font-size: 0.78rem; }
-.wiz-review .wr-value { font-weight: 600; color: var(--text); font-size: 0.82rem; text-align: right; }
+.wiz-review .wr-label { color: var(--text-3); font-size: 0.78rem; white-space: nowrap; }
+.wiz-review .wr-value { font-weight: 600; color: var(--text); font-size: 0.82rem; text-align: right; flex-wrap: wrap; display: flex; gap: 0.25rem; justify-content: flex-end; }
+.wr-quest-tag {
+  display: inline-block; font-size: 0.68rem; padding: 0.12rem 0.4rem;
+  background: var(--blue-soft); color: var(--blue); border-radius: 100px; font-weight: 600;
+}
+/* Done screen */
+.wiz-done-icon { font-size: 3.5rem; margin-bottom: 0.5rem; animation: done-pop 0.5s cubic-bezier(.16,1,.3,1); }
+@keyframes done-pop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+.wiz-done-title { color: var(--blue); font-size: 1.25rem; margin-bottom: 0.3rem; }
+.wiz-done-stats {
+  display: flex; justify-content: center; gap: 2rem; margin: 1.25rem 0;
+  padding: 1rem; background: var(--bg-2); border-radius: var(--r-sm);
+}
+.wiz-done-stat { text-align: center; }
+.wiz-done-stat-num { display: block; font-size: 1.2rem; font-weight: 800; color: var(--text); }
+.wiz-done-stat-lbl { font-size: 0.68rem; color: var(--text-3); font-weight: 500; }
+/* Confetti */
+.confetti-container { position: fixed; inset: 0; z-index: 9999; pointer-events: none; overflow: hidden; }
+.confetti-piece {
+  position: absolute; top: -20px; border-radius: 2px;
+  animation: confetti-fall linear forwards;
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0deg) scale(1); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg) scale(0.5); opacity: 0; }
+}
 /* Nav */
 .wiz-nav { display: flex; justify-content: space-between; gap: 0.75rem; margin-top: 1.25rem; }
 .wiz-btn-prev {

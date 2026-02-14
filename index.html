@@ -496,45 +496,85 @@
       </div>
     </div>
 
-    <!-- Step 3: 보상 + 검토 -->
+    <!-- Step 3: 보상 + 검토 & 시작 -->
     <div class="wiz-step" id="wizStep3" style="display:none;">
       <div class="wiz-row-2">
         <div class="reg-field">
           <label>보상 토큰</label>
           <select id="cwToken">
             <option value="usdt">USDT</option>
-            <option value="usdc">USDC</option>
-            <option value="eth">ETH</option>
-            <option value="custom">프로젝트 토큰</option>
+            <option value="token">자체 토큰</option>
+            <option value="nft">NFT</option>
+            <option value="point">포인트</option>
           </select>
         </div>
         <div class="reg-field">
           <label>총 예산 (USD)</label>
-          <input type="number" id="cwBudget" placeholder="예: 10,000">
+          <input type="number" id="cwBudget" placeholder="예: 10,000" oninput="updateEstimate()">
         </div>
       </div>
-      <div class="wiz-row-2">
-        <div class="reg-field">
-          <label>퀘스트당 보상</label>
-          <input type="text" id="cwPerQuest" placeholder="예: 5 USDT">
-        </div>
-        <div class="reg-field">
-          <label>최대 참여자 수</label>
-          <input type="number" id="cwMaxPart" placeholder="예: 500">
-        </div>
-      </div>
+
       <div class="reg-field">
-        <label>캠페인 요약</label>
+        <label>퀘스트별 보상 단가</label>
+        <div class="wiz-qr-list" id="questRewardInputs"></div>
+      </div>
+
+      <div class="reg-field" id="tierTableField" style="display:none;">
+        <label>팔로워 구간별 차등 보상 <span class="field-hint">기본 단가 대비 배율</span></label>
+        <div class="wiz-tier-table">
+          <div class="wiz-tier-row wiz-tier-header">
+            <span>팔로워 구간</span><span>배율</span><span>예상 단가</span>
+          </div>
+          <div class="wiz-tier-row">
+            <span class="wiz-tier-range">5K ~ 10K</span>
+            <span class="wiz-tier-mult">x1.0</span>
+            <span class="wiz-tier-price" id="tierPrice1">-</span>
+          </div>
+          <div class="wiz-tier-row">
+            <span class="wiz-tier-range">10K ~ 50K</span>
+            <span class="wiz-tier-mult">x1.5</span>
+            <span class="wiz-tier-price" id="tierPrice2">-</span>
+          </div>
+          <div class="wiz-tier-row">
+            <span class="wiz-tier-range">50K+</span>
+            <span class="wiz-tier-mult">x2.5</span>
+            <span class="wiz-tier-price" id="tierPrice3">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wiz-divider"></div>
+
+      <div class="reg-field" style="margin-bottom:0.5rem;">
+        <label>전체 요약</label>
         <div class="wiz-review" id="wizReview"></div>
+      </div>
+      <div class="wiz-est">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/><path d="M12 8v4l3 3"/></svg>
+        <span>예상 참여자 <strong id="estParticipants">~350명</strong></span>
       </div>
     </div>
 
     <!-- Done -->
-    <div class="wiz-step" id="wizDone" style="display:none;text-align:center;padding:2rem 0;">
-      <div style="font-size:3rem;margin-bottom:0.75rem;">&#9989;</div>
-      <h3 style="color:var(--blue);margin-bottom:0.4rem;">캠페인 생성 완료!</h3>
-      <p class="modal-desc">캠페인이 설정되었습니다. 대시보드에서 관리하세요.</p>
-      <button class="reg-btn" onclick="closeCampWizard()">확인</button>
+    <div class="wiz-step" id="wizDone" style="display:none;text-align:center;padding:2.5rem 0;">
+      <div class="wiz-done-icon">&#127881;</div>
+      <h3 class="wiz-done-title">캠페인이 시작되었습니다!</h3>
+      <p class="modal-desc">대시보드에서 실시간으로 성과를 확인하세요.</p>
+      <div class="wiz-done-stats">
+        <div class="wiz-done-stat">
+          <span class="wiz-done-stat-num" id="doneBudget">$0</span>
+          <span class="wiz-done-stat-lbl">총 예산</span>
+        </div>
+        <div class="wiz-done-stat">
+          <span class="wiz-done-stat-num" id="doneQuests">0개</span>
+          <span class="wiz-done-stat-lbl">퀘스트</span>
+        </div>
+        <div class="wiz-done-stat">
+          <span class="wiz-done-stat-num" id="doneEst">~0명</span>
+          <span class="wiz-done-stat-lbl">예상 참여자</span>
+        </div>
+      </div>
+      <button class="reg-btn" onclick="closeCampWizard()">대시보드로 이동</button>
     </div>
 
     <!-- Nav Buttons -->
