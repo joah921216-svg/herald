@@ -291,13 +291,92 @@ const i18n = {
     camp_kpi_clicks: 'Link clicks / Referrals', camp_kpi_onchain: 'On-chain conversions (swaps, mints)',
     camp_submit: 'Create Campaign →',
     camp_done_title: 'Campaign Created!', camp_done_desc: 'Your campaign is set up. Manage it from the dashboard.', camp_done_btn: 'OK'
+  },
+  ja: {
+    nav_quests: 'クエスト', nav_campaigns: 'キャンペーン', nav_projects: 'プロジェクト向け', nav_wallet: 'ウォレット接続',
+    hero_h1: '暗号資産のすべての機会を、<br>ひとつの場所で。', hero_desc: 'クエストに参加して、報酬を受け取りましょう。', hero_btn: 'クエストを見る',
+    hm_campaigns: 'アクティブキャンペーン', hm_participants: '総参加者', hm_rewards: '累計報酬支給',
+    quest_title: '今参加できるクエスト', quest_active: '参加可能なクエスト',
+    qt_project: 'プロジェクト', qt_quest: 'クエスト', qt_reward: '報酬', qt_participants: '参加者', qt_status: 'ステータス',
+    qt_live: '進行中', qt_recruiting: '募集中',
+    qq1_quest: '初回スワップ体験', qq2_quest: '利用レビュー執筆', qq3_quest: '友達3人招待',
+    qq4_quest: 'テストネット参加＆フィードバック', qq4_reward: 'TGEエアドロップ',
+    quest_btn: 'すべてのクエストを見る',
+    how_title: '3ステップで始めよう',
+    step1_title: '探す', step1_desc: 'キャンペーンやクエストを閲覧。興味のあるプロジェクトを見つけましょう。',
+    step2_title: '参加する', step2_desc: 'クエストを選んでミッションを実行。ツイート、フォロー、アプリインストールなど。',
+    step3_title: '報酬を受け取る', step3_desc: '条件達成で報酬が自動支給。トークン、USDT、NFT、ポイントなど。',
+    camp_title: '進行中のキャンペーン', camp_active: 'アクティブキャンペーン',
+    ct_project: 'プロジェクト', ct_participants: '参加者', ct_pool: '報酬プール', ct_progress: '進捗', ct_status: 'ステータス',
+    why_title: 'なぜSHILL VAULTなのか',
+    why1_title: '数クリックで完了', why1_desc: '複雑な手続きなし。参加して報酬を獲得。難しい作業はありません。',
+    why2_title: '透明な報酬', why2_desc: 'エスクロー基盤の自動精算。条件達成で報酬が自動支給されます。',
+    why3_title: 'すべての貢献を追跡', why3_desc: 'ソーシャル活動からオンチェーン活動まで自動検証。貢献は記録に残ります。',
+    fp_title: 'もっとユーザーが必要ですか？', fp_desc: '簡単かつ迅速に、プロジェクトを広めましょう。',
+    fp_f1: 'キャンペーン作成＆報酬設定', fp_f2: '直接設定、またはおすすめ設定ですぐ開始', fp_f3: 'リアルタイム成果ダッシュボード',
+    fp_cta: 'キャンペーンを始める',
+    cta_label: '累計報酬支給額', cta_title: 'あなたの報酬が積み上がっています。', cta_btn: 'クエストを見る',
+    wm_title: 'ウォレット接続', wm_desc: 'ウォレットを接続してクエストに参加し報酬を受け取りましょう。',
+    wm_mm_desc: 'ブラウザ拡張ウォレット', wm_rw_desc: 'EVMマルチチェーンウォレット', wm_wc_desc: 'モバイルウォレットでQRスキャン',
+    wm_popular: '人気', wm_soon: '準備中', wm_connected: '接続済み:',
+    wm_connected_title: 'ウォレット接続済み', wm_wallet_label: 'ウォレット', wm_chain_label: 'チェーン', wm_address_label: 'アドレス',
+    wm_disconnect: '接続解除', wm_rejected: 'ユーザーが接続を拒否しました。', wm_error: '接続に失敗しました。もう一度お試しください。',
+    wm_no_wallet: 'Web3ウォレットが検出されません。', wm_wc_soon: 'WalletConnectは準備中です。MetaMaskまたはRabbyをご利用ください。',
+    wm_no_mm: 'MetaMaskがインストールされていません。',
+    camp_modal_title: 'キャンペーンを始める', camp_form_desc: 'プロジェクトとキャンペーン目標を教えてください。',
+    camp_proj_name: 'プロジェクト名', camp_sector: 'セクター / カテゴリー', camp_chain: 'チェーン',
+    camp_budget: '予算（USD）', camp_kpi: 'パフォーマンスKPI',
+    camp_kpi_views: 'ビュー / インプレッション', camp_kpi_eng: 'エンゲージメント（いいね、RT、リプライ）',
+    camp_kpi_clicks: 'リンククリック / リファラル', camp_kpi_onchain: 'オンチェーン転換（スワップ、ミント）',
+    camp_submit: 'キャンペーン作成 →',
+    camp_done_title: 'キャンペーン作成完了！', camp_done_desc: 'キャンペーンが設定されました。ダッシュボードで管理してください。', camp_done_btn: '確認'
+  },
+  zh: {
+    nav_quests: '任务', nav_campaigns: '活动', nav_projects: '项目方', nav_wallet: '连接钱包',
+    hero_h1: '加密货币的所有机会，<br>汇聚一处。', hero_desc: '参与任务，获得奖励。', hero_btn: '浏览任务',
+    hm_campaigns: '活跃活动', hm_participants: '总参与者', hm_rewards: '累计奖励发放',
+    quest_title: '现在可以参加的任务', quest_active: '可参与的任务',
+    qt_project: '项目', qt_quest: '任务', qt_reward: '奖励', qt_participants: '参与者', qt_status: '状态',
+    qt_live: '进行中', qt_recruiting: '招募中',
+    qq1_quest: '首次兑换体验', qq2_quest: '撰写使用评价', qq3_quest: '邀请3位朋友',
+    qq4_quest: '参与测试网并反馈', qq4_reward: 'TGE空投',
+    quest_btn: '查看全部任务',
+    how_title: '3步开始',
+    step1_title: '探索', step1_desc: '浏览活动和任务，找到感兴趣的项目。',
+    step2_title: '参与', step2_desc: '选择任务并完成。发推、关注、安装应用等。',
+    step3_title: '获得奖励', step3_desc: '达成条件后奖励自动发放。代币、USDT、NFT、积分等。',
+    camp_title: '进行中的活动', camp_active: '活跃活动',
+    ct_project: '项目', ct_participants: '参与者', ct_pool: '奖励池', ct_progress: '进度', ct_status: '状态',
+    why_title: '为什么选择 SHILL VAULT',
+    why1_title: '几次点击即可完成', why1_desc: '无需复杂流程，参与即可获得奖励。没有困难的任务。',
+    why2_title: '透明的奖励', why2_desc: '基于托管的自动结算。达成条件后奖励自动发放。',
+    why3_title: '追踪所有贡献', why3_desc: '从社交活动到链上活动，自动验证。您的贡献将被记录。',
+    fp_title: '需要更多用户？', fp_desc: '快速简单地推广您的项目。',
+    fp_f1: '创建活动并设置奖励', fp_f2: '手动配置或使用推荐设置快速开始', fp_f3: '实时绩效仪表板',
+    fp_cta: '开始活动',
+    cta_label: '累计奖励发放额', cta_title: '您的奖励正在累积。', cta_btn: '浏览任务',
+    wm_title: '连接钱包', wm_desc: '连接钱包参与任务并获得奖励。',
+    wm_mm_desc: '浏览器扩展钱包', wm_rw_desc: 'EVM多链钱包', wm_wc_desc: '手机钱包扫码',
+    wm_popular: '热门', wm_soon: '即将上线', wm_connected: '已连接:',
+    wm_connected_title: '钱包已连接', wm_wallet_label: '钱包', wm_chain_label: '链', wm_address_label: '地址',
+    wm_disconnect: '断开连接', wm_rejected: '用户拒绝了连接。', wm_error: '连接失败，请重试。',
+    wm_no_wallet: '未检测到Web3钱包。', wm_wc_soon: 'WalletConnect即将上线，请使用MetaMask或Rabby。',
+    wm_no_mm: '未安装MetaMask，请安装MetaMask扩展。',
+    camp_modal_title: '开始活动', camp_form_desc: '告诉我们您的项目和活动目标。',
+    camp_proj_name: '项目名称', camp_sector: '赛道 / 类别', camp_chain: '链',
+    camp_budget: '预算（USD）', camp_kpi: '绩效KPI',
+    camp_kpi_views: '浏览量 / 曝光', camp_kpi_eng: '互动（点赞、转发、评论）',
+    camp_kpi_clicks: '链接点击 / 推荐', camp_kpi_onchain: '链上转化（兑换、铸造）',
+    camp_submit: '创建活动 →',
+    camp_done_title: '活动创建成功！', camp_done_desc: '活动已设置。请在仪表板中管理。', camp_done_btn: '确认'
   }
 };
 
 function setLang(lang) {
   currentLang = lang;
   const L = i18n[lang];
-  document.getElementById('langLabel').textContent = lang === 'ko' ? 'KR' : 'EN';
+  const labels = { ko: 'KR', en: 'EN', ja: 'JP', zh: 'ZH' };
+  document.getElementById('langLabel').textContent = labels[lang] || lang.toUpperCase();
 
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
