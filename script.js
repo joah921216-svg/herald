@@ -112,7 +112,7 @@ const i18n = {
     fp_title: '더 많은 유저가 필요하신가요?', fp_desc: '쉽고 빠르게, 프로젝트를 알리세요.',
     fp_f1: '캠페인 생성 및 보상 설정', fp_f2: '직접 설정하거나, 추천 세팅으로 바로 시작', fp_f3: '실시간 성과 대시보드',
     fp_cta: '캠페인 시작하기',
-    cta_title: '당신의 보상이 쌓이고 있습니다.', cta_btn: '퀘스트 둘러보기',
+    cta_label: '누적 보상 지급액', cta_title: '당신의 보상이 쌓이고 있습니다.', cta_btn: '퀘스트 둘러보기',
     wm_title: '지갑 연결', wm_desc: '지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.',
     wm_mm_desc: '브라우저 확장 지갑', wm_rw_desc: 'EVM 멀티체인 지갑', wm_wc_desc: '모바일 지갑으로 QR 스캔',
     wm_popular: '인기', wm_connected: '연결됨:',
@@ -148,7 +148,7 @@ const i18n = {
     fp_title: 'Need more users?', fp_desc: 'Promote your project, quickly and easily.',
     fp_f1: 'Create campaigns & set rewards', fp_f2: 'Configure manually or start instantly with recommended settings', fp_f3: 'Real-time performance dashboard',
     fp_cta: 'Start a Campaign',
-    cta_title: 'Your rewards are stacking up.', cta_btn: 'Browse Quests',
+    cta_label: 'Total Rewards Paid', cta_title: 'Your rewards are stacking up.', cta_btn: 'Browse Quests',
     wm_title: 'Connect Wallet', wm_desc: 'Connect your wallet to join quests and earn rewards.',
     wm_mm_desc: 'Browser extension wallet', wm_rw_desc: 'EVM multi-chain wallet', wm_wc_desc: 'Scan QR with mobile wallet',
     wm_popular: 'Popular', wm_connected: 'Connected:',
@@ -205,9 +205,11 @@ const ctaObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
     const counter = document.getElementById('ctaCounter');
+    const label = e.target.querySelector('.cta-label');
     const title = e.target.querySelector('.cta-fade');
     const btnWrap = e.target.querySelector('.cta-anim');
     counter.classList.add('vis');
+    if (label) label.classList.add('vis');
     if (title) title.classList.add('vis');
     if (btnWrap) { btnWrap.style.opacity = '1'; btnWrap.style.transform = 'translateY(0)'; }
     animateCounter(counter, 150000, 2000);

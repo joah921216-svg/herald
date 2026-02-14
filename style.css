@@ -241,19 +241,38 @@ nav.scrolled {
 .for-projects-section .btn-purple:hover { box-shadow: 0 4px 20px rgba(49,130,246,0.4); }
 
 /* === CTA === */
-.cta-section { text-align: center; padding: 6rem 2rem; }
-.cta-section .stitle { max-width: 600px; margin: 0 auto 1.25rem; }
-.cta-section .sdesc { margin: 0 auto 2.5rem; }
+.cta-section {
+  text-align: center; padding: 7rem 2rem; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #1a6df0 0%, #3182F6 30%, #6366f1 100%);
+}
+.cta-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(255,255,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section .stitle { max-width: 600px; margin: 0 auto 1.5rem; color: #FFFFFF; }
+.cta-section .sdesc { margin: 0 auto 2.5rem; color: rgba(255,255,255,0.7); }
+.cta-section .btn-blue {
+  background: #FFFFFF; color: var(--blue); box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.cta-section .btn-blue:hover { box-shadow: 0 6px 28px rgba(0,0,0,0.2); transform: translateY(-2px); }
 .cta-counter {
-  font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; color: var(--blue);
-  letter-spacing: -0.03em; margin-bottom: 0.5rem;
+  font-size: clamp(3rem, 8vw, 5rem); font-weight: 800; color: #FFFFFF;
+  letter-spacing: -0.03em; margin-bottom: 0.25rem;
+  text-shadow: 0 0 40px rgba(255,255,255,0.3), 0 0 80px rgba(255,255,255,0.1);
   opacity: 0; transform: translateY(20px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
 .cta-counter.vis { opacity: 1; transform: translateY(0); }
+.cta-label {
+  font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.5);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2rem;
+  opacity: 0; transition: opacity 0.8s ease 0.15s;
+}
+.cta-label.vis { opacity: 1; }
 .cta-section .stitle.cta-fade {
   opacity: 0; transform: translateY(20px);
-  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  transition: opacity 0.8s ease 0.25s, transform 0.8s ease 0.25s;
 }
 .cta-section .stitle.cta-fade.vis { opacity: 1; transform: translateY(0); }
 
