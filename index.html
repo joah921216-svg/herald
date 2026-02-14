@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SHILL VAULT | Web3 Contributor Platform</title>
+  <title>SHILL VAULT | 암호화폐 퀘스트 플랫폼</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="bg-grid"></div>
-<div class="bg-noise"></div>
-<div class="bg-glow"><span></span><span></span><span></span></div>
 
 <!-- NAV -->
 <nav id="nav">
@@ -21,9 +17,9 @@
     <a href="#" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
     <button class="mob-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menu">&#9776;</button>
     <ul class="nav-links">
-      <li><a href="#roster" data-i18n="nav_roster">기여자</a></li>
-      <li><a href="#rooms" data-i18n="nav_rooms">캠페인 현황</a></li>
-      <li><a href="#quests" data-i18n="nav_quest">퀘스트</a></li>
+      <li><a href="#quests" data-i18n="nav_quests">Quests</a></li>
+      <li><a href="#campaigns" data-i18n="nav_campaigns">Campaigns</a></li>
+      <li><a href="#for-projects" data-i18n="nav_projects">For Projects</a></li>
       <li>
         <div class="lang-sw">
           <button class="lang-btn" onclick="document.querySelector('.lang-drop').classList.toggle('open')">
@@ -33,12 +29,10 @@
           <div class="lang-drop">
             <button class="lang-opt active" onclick="setLang('ko')">한국어</button>
             <button class="lang-opt" onclick="setLang('en')">English</button>
-            <button class="lang-opt" onclick="setLang('ja')">日本語</button>
-            <button class="lang-opt" onclick="setLang('zh')">中文</button>
           </div>
         </div>
       </li>
-      <li><button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')" data-i18n="nav_wallet">Connect Wallet</button></li>
+      <li><button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')" data-i18n="nav_wallet">지갑 연결</button></li>
     </ul>
   </div>
 </nav>
@@ -46,365 +40,138 @@
 <!-- ==================== HERO ==================== -->
 <section class="hero">
   <div class="container">
-    <div class="hero-left">
-      <div class="hero-tag"><span class="td"></span><span data-i18n="hero_tag">Web3 기여자 플랫폼</span></div>
-      <h1 data-i18n="hero_h1">활동하면, 보상이 따라옵니다.</h1>
-      <p class="hero-desc" data-i18n="hero_desc">트윗 하나, 리뷰 하나, 테스트넷 참여 하나. 당신의 모든 Web3 활동에 보상이 붙습니다.</p>
-      <div class="hero-actions">
-        <a href="javascript:openModal('regModal')" class="btn btn-lime" data-i18n="hero_btn1">시작하기</a>
-        <a href="#quests" class="btn btn-ghost" data-i18n="hero_btn2">퀘스트 보기</a>
-      </div>
+    <h1 class="rv" data-i18n="hero_h1">암호화폐의 모든 기회,<br>한 곳에서.</h1>
+    <p class="hero-desc rv rv-d1" data-i18n="hero_desc">퀘스트에 참여하고, 보상을 받으세요.</p>
+    <div class="hero-actions rv rv-d2">
+      <a href="#quests" class="btn btn-blue" data-i18n="hero_btn">퀘스트 둘러보기</a>
     </div>
-
-    <div class="hero-vis">
-      <div class="hcard-stack">
-        <div class="hcard c1">
-          <div class="hc-head">
-            <div class="hc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">NK</div>
-            <div><div class="hc-name">NeonKrypt</div><div class="hc-handle">@neonkrypt</div></div>
-            <span class="hc-badge t-diamond">Diamond</span>
-          </div>
-          <div class="hc-row">
-            <div class="hc-stat"><div class="hc-sv">2,840</div><div class="hc-sl">기여 점수</div></div>
-            <div class="hc-stat"><div class="hc-sv">$3.2K</div><div class="hc-sl">활동 보상</div></div>
-          </div>
-          <div class="hc-tags"><span class="hc-tag">DeFi</span><span class="hc-tag">Layer 2</span><span class="hc-tag">Infra</span></div>
-        </div>
-
-        <div class="hcard c2">
-          <div class="hc-head">
-            <div class="hc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">OM</div>
-            <div><div class="hc-name">OxMaxi</div><div class="hc-handle">@oxmaxi_ct</div></div>
-            <span class="hc-badge t-gold">Gold</span>
-          </div>
-          <div class="hc-row">
-            <div class="hc-stat"><div class="hc-sv">1,520</div><div class="hc-sl">기여 점수</div></div>
-            <div class="hc-stat"><div class="hc-sv">$1.8K</div><div class="hc-sl">활동 보상</div></div>
-          </div>
-          <div class="hc-tags"><span class="hc-tag">NFT</span><span class="hc-tag">Gaming</span></div>
-        </div>
-
-        <div class="hcard c3">
-          <div class="hc-head">
-            <div class="hc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">DQ</div>
-            <div><div class="hc-name">DegenQueen</div><div class="hc-handle">@degenqueen_</div></div>
-          </div>
-          <div class="hc-row">
-            <div class="hc-stat"><div class="hc-sv">980</div><div class="hc-sl">기여 점수</div></div>
-            <div class="hc-stat"><div class="hc-sv">$920</div><div class="hc-sl">활동 보상</div></div>
-          </div>
-        </div>
+    <div class="hero-metrics rv rv-d3">
+      <div class="hm-item">
+        <div class="hm-num">4</div>
+        <div class="hm-lbl" data-i18n="hm_campaigns">활성 캠페인</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== PROBLEM ==================== -->
-<section class="s-border" id="problem">
-  <div class="container">
-    <div class="sheader center">
-      <div class="eyebrow rv" data-i18n="prob_eye">// why shill vault</div>
-      <h2 class="stitle rv" data-i18n="prob_title">Web3 참여, 아직도 어렵기만 한가요?</h2>
-      <p class="sdesc rv" data-i18n="prob_desc" style="margin:0 auto;">SHILL VAULT가 해결합니다.</p>
-    </div>
-    <div class="problem-grid">
-      <div class="problem-card rv">
-        <div class="pc-role" data-i18n="prob_role1">흩어진 정보</div>
-        <div class="pc-block">
-          <div class="pc-block-label before">&#10005; <span data-i18n="prob_lbl_problem">Problem</span></div>
-          <p data-i18n="prob_before1">에어드랍, 퀘스트, 이벤트 정보가 여기저기 흩어져 있어 어디서 뭘 해야 할지 모르겠다</p>
-        </div>
-        <div class="pc-block">
-          <div class="pc-block-label after">&#10003; SHILL VAULT</div>
-          <p data-i18n="prob_after1">퀘스트 보드 하나에서 모든 프로젝트의 참여 기회를 한눈에 확인</p>
-        </div>
+      <div class="hm-item">
+        <div class="hm-num">1,602</div>
+        <div class="hm-lbl" data-i18n="hm_participants">총 참여자</div>
       </div>
-      <div class="problem-card rv rv-d1">
-        <div class="pc-role" data-i18n="prob_role2">불확실한 보상</div>
-        <div class="pc-block">
-          <div class="pc-block-label before">&#10005; <span data-i18n="prob_lbl_problem">Problem</span></div>
-          <p data-i18n="prob_before2">참여했는데 보상이 올지 안 올지 모르겠고, 기준도 불투명하다</p>
-        </div>
-        <div class="pc-block">
-          <div class="pc-block-label after">&#10003; SHILL VAULT</div>
-          <p data-i18n="prob_after2">에스크로 기반 보상. 조건 달성하면 자동 지급. 투명한 구조</p>
-        </div>
+      <div class="hm-item">
+        <div class="hm-num">$150,000</div>
+        <div class="hm-lbl" data-i18n="hm_rewards">누적 보상 지급</div>
       </div>
-      <div class="problem-card rv rv-d2">
-        <div class="pc-role" data-i18n="prob_role3">진입 장벽</div>
-        <div class="pc-block">
-          <div class="pc-block-label before">&#10005; <span data-i18n="prob_lbl_problem">Problem</span></div>
-          <p data-i18n="prob_before3">대형 채널이 없으면 Web3에서 수익을 내기 어렵다</p>
-        </div>
-        <div class="pc-block">
-          <div class="pc-block-label after">&#10003; SHILL VAULT</div>
-          <p data-i18n="prob_after3">채널 규모 상관없이 누구나 퀘스트, 리뷰, 추천으로 보상을 받을 수 있다</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== FEATURES: HOW TO PARTICIPATE ==================== -->
-<section id="features">
-  <div class="container">
-    <div class="sheader center">
-      <div class="eyebrow rv" data-i18n="feat_eye">// how to participate</div>
-      <h2 class="stitle rv" data-i18n="feat_title">이렇게 참여하세요</h2>
-      <p class="sdesc rv" data-i18n="feat_desc">다양한 방법으로 Web3 프로젝트에 기여하고 보상을 받으세요.</p>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-item rv">
-        <div class="fi-icon" style="background:var(--lime-soft);color:var(--lime);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-        <div>
-          <h4 data-i18n="feat1_title">퀘스트 참여</h4>
-          <p data-i18n="feat1_desc">프로젝트가 등록한 퀘스트를 수행하고 보상을 받으세요. 테스트넷, 스왑 체험, 가입 등 다양한 미션.</p>
-        </div>
-      </div>
-      <div class="feature-item rv rv-d1">
-        <div class="fi-icon" style="background:var(--purple-soft);color:var(--purple);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        </div>
-        <div>
-          <h4 data-i18n="feat2_title">리뷰 작성</h4>
-          <p data-i18n="feat2_desc">프로젝트를 직접 사용하고 솔직한 리뷰를 작성하세요. 프로젝트가 리뷰당 보상을 지급합니다.</p>
-        </div>
-      </div>
-      <div class="feature-item rv rv-d2">
-        <div class="fi-icon" style="background:var(--cyan-soft);color:var(--cyan);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <div>
-          <h4 data-i18n="feat3_title">콘텐츠 제작</h4>
-          <p data-i18n="feat3_desc">트윗, 쓰레드, 영상을 만들어 프로젝트를 알리세요. 프로젝트로부터 직접 보상을 받습니다.</p>
-        </div>
-      </div>
-      <div class="feature-item rv rv-d3">
-        <div class="fi-icon" style="background:rgba(251,191,36,0.1);color:var(--gold);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-        </div>
-        <div>
-          <h4 data-i18n="feat4_title">커뮤니티 기여</h4>
-          <p data-i18n="feat4_desc">친구 추천, 커뮤니티 운영, 프로젝트 소개. 네트워크를 활용한 기여도 보상 대상입니다.</p>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:2.5rem;">
-      <a href="javascript:openModal('regModal')" class="btn btn-lime rv" data-i18n="feat_cta">참여자 등록</a>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== CONTRIBUTOR ROSTER ==================== -->
-<section class="s-bg" id="roster">
-  <div class="container">
-    <div class="sheader">
-      <div class="eyebrow rv" data-i18n="roster_eye">// contributor directory</div>
-      <h2 class="stitle rv" data-i18n="roster_title">활동 중인 기여자</h2>
-      <p class="sdesc rv" data-i18n="roster_desc">검증된 기여자를 탐색하거나 텔레그램 &amp; 트위터 DM으로 직접 연락하세요.</p>
-    </div>
-    <div class="roster-grid" id="rosterGrid">
-      <div class="kcard rv" data-tg="enjoymyhobby">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#f472b6,#ec4899);">&#127912;</div>
-          <div><div class="kc-name">취미생활방</div><div class="kc-handle">@enjoymyhobby</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="52.6K">52.6K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=취미생활방+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d1" data-tg="twitchoong">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">&#128038;</div>
-          <div><div class="kc-name">우리는 트윗충</div><div class="kc-handle">@twitchoong</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="44.0K">44.0K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=트윗충+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d2" data-tg="emperorcoin">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#fbbf24,#f59e0b);">&#128081;</div>
-          <div><div class="kc-name">텔레그램 CEN</div><div class="kc-handle">@emperorcoin</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="34.8K">34.8K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=텔레그램CEN+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d3" data-tg="MBMweb3">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">M</div>
-          <div><div class="kc-name">MBM ALPHA</div><div class="kc-handle">@MBMweb3</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="25.8K">25.8K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv" data-tg="mujammin123">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#127833;</div>
-          <div><div class="kc-name">잼민123</div><div class="kc-handle">@mujammin123</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="23.9K">23.9K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=잼민123+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d1" data-tg="yobeullyANN">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128293;</div>
-          <div><div class="kc-name">요블이 세상살이</div><div class="kc-handle">@yobeullyANN</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="21.0K">21.0K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=요블이+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d2" data-tg="airdrop_kor">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#c8ff2e,#a3d624);">&#9992;</div>
-          <div><div class="kc-name">에어드랍코리아</div><div class="kc-handle">@airdrop_kor</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="20.6K">20.6K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=에어드랍코리아+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-      <div class="kcard rv rv-d3" data-tg="murphybus">
-        <div class="kc-top">
-          <div class="kc-av" style="background:linear-gradient(135deg,#8b5cf6,#a78bfa);">&#128188;</div>
-          <div><div class="kc-name">30대 은퇴번복 머피</div><div class="kc-handle">@murphybus</div></div>
-        </div>
-        <div class="kc-metrics">
-          <div class="kc-m"><div class="kc-mv tg-count" data-fallback="16.5K">16.5K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-        </div>
-        <div class="kc-actions">
-          <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
-          <a href="https://x.com/search?q=머피+crypto" target="_blank" rel="noopener" class="kc-btn kc-btn-tw"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Twitter</a>
-        </div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:2rem;">
-      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="roster_register">기여자로 등록하기</button>
     </div>
   </div>
 </section>
 
 <!-- ==================== QUEST BOARD ==================== -->
-<section id="quests">
+<section class="s-alt" id="quests">
   <div class="container">
     <div class="sheader">
-      <div class="eyebrow rv" data-i18n="quest_eye">// quest board</div>
-      <h2 class="stitle rv" data-i18n="quest_title">Quest Board</h2>
-      <p class="sdesc rv" data-i18n="quest_desc">Complete quests, write reviews, refer friends. No channel needed — anyone can earn rewards.</p>
+      <h2 class="stitle rv" data-i18n="quest_title">지금 참여할 수 있는 퀘스트</h2>
     </div>
     <div class="troom-wrap rv">
       <div class="troom-header">
-        <h4 data-i18n="quest_active">Available Quests</h4>
+        <h4 data-i18n="quest_active">참여 가능한 퀘스트</h4>
         <div class="troom-live"><span class="dot"></span>Live</div>
       </div>
       <table class="troom-table">
         <thead>
           <tr>
-            <th data-i18n="qt_project">Project</th>
-            <th data-i18n="qt_quest">Quest</th>
-            <th data-i18n="qt_type">Type</th>
-            <th data-i18n="qt_reward">Reward</th>
-            <th data-i18n="qt_participants">Participants</th>
-            <th data-i18n="qt_status">Status</th>
+            <th data-i18n="qt_project">프로젝트</th>
+            <th data-i18n="qt_quest">퀘스트</th>
+            <th data-i18n="qt_reward">보상</th>
+            <th data-i18n="qt_participants">참여자</th>
+            <th data-i18n="qt_status">상태</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
-            <td data-i18n="qq1_quest">First swap experience</td>
-            <td><span class="qt-badge qt-exp" data-i18n="qt_exp">Experience</span></td>
-            <td class="tr-mono">10 USDT + Airdrop</td>
+            <td data-i18n="qq1_quest">첫 스왑 체험</td>
+            <td class="tr-mono">10 USDT + 참여보상</td>
             <td class="tr-mono">234 / 500</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
-            <td data-i18n="qq2_quest">Write usage review</td>
-            <td><span class="qt-badge qt-review" data-i18n="qt_review">Review</span></td>
+            <td data-i18n="qq2_quest">사용 리뷰 작성</td>
             <td class="tr-mono">5 USDT</td>
             <td class="tr-mono">89 / 200</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
-            <td data-i18n="qq3_quest">Invite 3 friends</td>
-            <td><span class="qt-badge qt-referral" data-i18n="qt_referral">Referral</span></td>
+            <td data-i18n="qq3_quest">친구 3명 초대</td>
             <td class="tr-mono">15 USDT + NFT</td>
             <td class="tr-mono">45 / 100</td>
-            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span><span data-i18n="qt_recruiting">Recruiting</span></span></td>
+            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--orange);"></span><span data-i18n="qt_recruiting">모집중</span></span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
-            <td data-i18n="qq4_quest">Join testnet &amp; give feedback</td>
-            <td><span class="qt-badge qt-airdrop" data-i18n="qt_airdrop">Airdrop</span></td>
-            <td class="tr-mono" data-i18n="qq4_reward">TGE Airdrop</td>
+            <td data-i18n="qq4_quest">테스트넷 참여 &amp; 피드백</td>
+            <td class="tr-mono" data-i18n="qq4_reward">TGE 참여보상</td>
             <td class="tr-mono">1.2K</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
           </tr>
         </tbody>
       </table>
     </div>
     <div style="text-align:center;margin-top:2rem;">
-      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="quest_btn">퀘스트 참여하기</button>
+      <a href="#" class="btn btn-ghost rv" data-i18n="quest_btn">전체 퀘스트 보기</a>
     </div>
   </div>
 </section>
 
-<!-- ==================== CAMPAIGN STATUS ==================== -->
-<section class="s-bg" id="rooms">
+<!-- ==================== HOW TO PARTICIPATE ==================== -->
+<section id="how">
+  <div class="container">
+    <div class="sheader center">
+      <h2 class="stitle rv" data-i18n="how_title">3단계로 시작하세요</h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card rv">
+        <div class="step-num" style="background:var(--blue-soft);color:var(--blue);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <h4 data-i18n="step1_title">탐색하기</h4>
+        <p data-i18n="step1_desc">캠페인과 퀘스트를 둘러보세요. 관심 있는 프로젝트를 찾아보세요.</p>
+      </div>
+      <div class="step-card rv rv-d1">
+        <div class="step-num" style="background:var(--purple-soft);color:var(--purple);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
+        <h4 data-i18n="step2_title">참여하기</h4>
+        <p data-i18n="step2_desc">퀘스트를 선택하고 미션을 수행하세요. 트윗, 팔로우, 앱 설치 등.</p>
+      </div>
+      <div class="step-card rv rv-d2">
+        <div class="step-num" style="background:var(--green-soft);color:var(--green);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h4 data-i18n="step3_title">보상받기</h4>
+        <p data-i18n="step3_desc">조건 달성 시 보상이 자동 지급됩니다. 토큰, USDT, NFT, 참여보상 포인트 등.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CAMPAIGNS ==================== -->
+<section class="s-alt" id="campaigns">
   <div class="container">
     <div class="sheader">
-      <div class="eyebrow rv" data-i18n="rooms_eye">// campaign status</div>
-      <h2 class="stitle rv" data-i18n="rooms_title">Campaign Status</h2>
-      <p class="sdesc rv" data-i18n="rooms_desc">Real-time campaign status. Escrowed funds, verified KPIs, transparent payouts.</p>
+      <h2 class="stitle rv" data-i18n="camp_title">진행 중인 캠페인</h2>
     </div>
     <div class="troom-wrap rv">
       <div class="troom-header">
-        <h4 data-i18n="rooms_active">Active Campaigns</h4>
+        <h4 data-i18n="camp_active">활성 캠페인</h4>
         <div class="troom-live"><span class="dot"></span>Live</div>
       </div>
       <table class="troom-table">
         <thead>
           <tr>
-            <th data-i18n="camp_th_project">Project</th>
-            <th data-i18n="camp_th_contributors">Contributors</th>
-            <th data-i18n="camp_th_pool">Pool Size</th>
-            <th data-i18n="camp_th_distributed">Distributed</th>
-            <th data-i18n="camp_th_progress">Progress</th>
-            <th data-i18n="camp_th_status">Status</th>
+            <th data-i18n="ct_project">프로젝트</th>
+            <th data-i18n="ct_participants">참여자</th>
+            <th data-i18n="ct_pool">보상 풀</th>
+            <th data-i18n="ct_progress">진행률</th>
+            <th data-i18n="ct_status">상태</th>
           </tr>
         </thead>
         <tbody>
@@ -412,32 +179,28 @@
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
             <td class="tr-mono">12</td>
             <td class="tr-mono">$48,000</td>
-            <td class="tr-mono">$31,200</td>
             <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:65%"></div></div></td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>Active</span></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span>Active</span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
             <td class="tr-mono">8</td>
             <td class="tr-mono">$25,000</td>
-            <td class="tr-mono">$18,750</td>
             <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:75%"></div></div></td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span>Active</span></td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span>Active</span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
             <td class="tr-mono">5</td>
             <td class="tr-mono">$15,000</td>
-            <td class="tr-mono">$6,000</td>
             <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:40%"></div></div></td>
-            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span>Filling</span></td>
+            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--orange);"></span>Filling</span></td>
           </tr>
           <tr>
             <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
             <td class="tr-mono">15</td>
             <td class="tr-mono">$62,000</td>
-            <td class="tr-mono">$62,000</td>
-            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:100%; background: var(--text-3);"></div></div></td>
+            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:100%;background:var(--text-3);"></div></div></td>
             <td><span class="tr-status tr-completed">Completed</span></td>
           </tr>
         </tbody>
@@ -446,48 +209,58 @@
   </div>
 </section>
 
-<!-- ==================== TRUST ==================== -->
-<section class="s-bg" id="trust">
+<!-- ==================== WHY SHILL VAULT ==================== -->
+<section id="why">
   <div class="container">
     <div class="sheader center">
-      <div class="eyebrow rv" data-i18n="trust_eye">// trust layer</div>
-      <h2 class="stitle rv" data-i18n="trust_title">Transparent by Design</h2>
-      <p class="sdesc rv" data-i18n="trust_desc">러그풀 캠페인이나 유령 기여자는 더 이상 없습니다. 모든 상호작용이 검증 가능합니다.</p>
+      <h2 class="stitle rv" data-i18n="why_title">왜 SHILL VAULT인가</h2>
     </div>
-    <div class="trust-grid">
-      <div class="trust-card rv">
-        <div class="tc-icon" style="background:var(--lime-soft);color:var(--lime);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    <div class="why-grid">
+      <div class="why-card rv">
+        <div class="why-icon" style="background:var(--blue-soft);color:var(--blue);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
         </div>
-        <h4 data-i18n="tr1_title">Smart Contract Escrow</h4>
-        <p data-i18n="tr1_desc">캠페인 자금이 에스크로에 잠깁니다. KPI가 검증된 경우에만 지급됩니다.</p>
+        <h4 data-i18n="why1_title">클릭 몇 번이면 끝</h4>
+        <p data-i18n="why1_desc">복잡한 절차 없이, 참여하고 보상받으세요. 어려운 작업은 없습니다.</p>
       </div>
-      <div class="trust-card rv rv-d1">
-        <div class="tc-icon" style="background:var(--purple-soft);color:var(--purple);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div class="why-card rv rv-d1">
+        <div class="why-icon" style="background:var(--green-soft);color:var(--green);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
         </div>
-        <h4 data-i18n="tr2_title">Instant Proof Log</h4>
-        <p data-i18n="tr2_desc">모든 캠페인, 정산, 리뷰가 암호학적 해시로 즉시 기록됩니다. 위변조 불가.</p>
+        <h4 data-i18n="why2_title">투명한 보상</h4>
+        <p data-i18n="why2_desc">안전결제 기반 자동 정산. 조건 달성하면 보상이 자동 지급됩니다.</p>
       </div>
-      <div class="trust-card rv rv-d2">
-        <div class="tc-icon" style="background:var(--cyan-soft);color:var(--cyan);">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      <div class="why-card rv rv-d2">
+        <div class="why-icon" style="background:var(--purple-soft);color:var(--purple);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <h4 data-i18n="tr3_title">Two-Way Reviews</h4>
-        <p data-i18n="tr3_desc">기여자와 프로젝트 모두 캠페인 후 상호 평가합니다. 시간이 지날수록 평판이 쌓입니다.</p>
+        <h4 data-i18n="why3_title">모든 기여 추적</h4>
+        <p data-i18n="why3_desc">소셜 활동부터 온체인 활동까지 자동 검증. 당신의 기여는 기록으로 남습니다.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ==================== CTA ==================== -->
-<section class="cta-section s-border" id="cta">
+<!-- ==================== FOR PROJECTS ==================== -->
+<section class="for-projects-section" id="for-projects">
   <div class="container">
-    <div class="eyebrow rv" data-i18n="cta_eye">// get started</div>
-    <h2 class="stitle rv" data-i18n="cta_title" style="max-width:650px;margin:0 auto 1rem;">지금 시작하세요.</h2>
-    <p class="sdesc rv" data-i18n="cta_desc" style="margin:0 auto 2.5rem;text-align:center;">가입만 하면 바로 퀘스트에 참여할 수 있습니다.</p>
-    <div class="cta-actions rv">
-      <a href="javascript:openModal('regModal')" class="btn btn-lime" data-i18n="cta_btn">무료로 시작하기</a>
+    <h2 class="stitle rv" data-i18n="fp_title" style="font-size:clamp(1.4rem,3vw,1.85rem);">프로젝트라면, 여기에 캠페인을 올리세요</h2>
+    <p class="sdesc rv" data-i18n="fp_desc">마케팅 예산을 예치하고, 유저가 퍼뜨립니다.</p>
+    <div class="fp-features rv">
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f1">캠페인 생성 및 예산 예치</span></div>
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f2">채널 직접 선택하거나, 추천 세팅으로 한 번에 시작</span></div>
+      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f3">실시간 성과 대시보드</span></div>
+    </div>
+    <a href="javascript:openModal('campModal')" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <h2 class="stitle rv" data-i18n="cta_title">당신의 보상이 쌓이고 있습니다.</h2>
+    <div class="rv rv-d1">
+      <a href="#quests" class="btn btn-blue" data-i18n="cta_btn">퀘스트 둘러보기</a>
     </div>
   </div>
 </section>
@@ -496,8 +269,8 @@
 <div class="modal-overlay" id="walletModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
-    <h3 data-i18n="wm_title">Connect Wallet</h3>
-    <p class="modal-desc" data-i18n="wm_desc">지갑을 연결하여 기여자로 등록하고, 보상을 받고, 온체인 평판을 관리하세요.</p>
+    <h3 data-i18n="wm_title">지갑 연결</h3>
+    <p class="modal-desc" data-i18n="wm_desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
     <div class="wallet-options">
       <button class="wallet-opt" onclick="connectMetaMask()">
         <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
@@ -505,9 +278,9 @@
         </div>
         <div>
           <div class="wallet-opt-name">MetaMask</div>
-          <div class="wallet-opt-desc" data-i18n="wm_mm_desc">Browser extension wallet</div>
+          <div class="wallet-opt-desc" data-i18n="wm_mm_desc">브라우저 확장 지갑</div>
         </div>
-        <span class="wallet-opt-badge" data-i18n="wm_popular">Popular</span>
+        <span class="wallet-opt-badge" data-i18n="wm_popular">인기</span>
       </button>
       <button class="wallet-opt" onclick="connectRabby()">
         <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
@@ -517,7 +290,6 @@
           <div class="wallet-opt-name">Rabby Wallet</div>
           <div class="wallet-opt-desc" data-i18n="wm_rw_desc">EVM 멀티체인 지갑</div>
         </div>
-        <span class="wallet-opt-badge">Web3</span>
       </button>
       <button class="wallet-opt" onclick="connectWalletConnect()">
         <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#3b99fc,#2d7dd2);">
@@ -525,143 +297,15 @@
         </div>
         <div>
           <div class="wallet-opt-name">WalletConnect</div>
-          <div class="wallet-opt-desc" data-i18n="wm_wc_desc">Scan QR with mobile wallet</div>
+          <div class="wallet-opt-desc" data-i18n="wm_wc_desc">모바일 지갑으로 QR 스캔</div>
         </div>
       </button>
     </div>
-    <div id="walletStatus" style="display:none; margin-top:1.25rem;">
+    <div id="walletStatus" style="display:none; margin-top:1rem;">
       <div class="reg-wallet-status">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--lime)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-        <span data-i18n="wm_connected">Connected:</span> <span class="addr" id="walletAddr"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        <span data-i18n="wm_connected">연결됨:</span> <span class="addr" id="walletAddr"></span>
       </div>
-      <button class="reg-btn secondary" style="margin-top:0.75rem;" onclick="closeModal('walletModal');openModal('regModal')" data-i18n="wm_register">기여자로 등록 &rarr;</button>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== CONTRIBUTOR REGISTRATION MODAL ==================== -->
-<div class="modal-overlay" id="regModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('regModal')">&times;</button>
-    <h3 data-i18n="reg_title">기여자 등록</h3>
-    <div class="reg-steps">
-      <div class="reg-step-dot active" id="rs1"></div>
-      <div class="reg-step-dot" id="rs2"></div>
-      <div class="reg-step-dot" id="rs3"></div>
-      <div class="reg-step-dot" id="rs4"></div>
-    </div>
-
-    <!-- Step 1: Wallet (with Skip) -->
-    <div id="regStep1">
-      <p class="modal-desc" data-i18n="reg_s1_desc">지갑을 연결하여 온체인 기여자 신원을 생성하세요. 나중에 연결할 수도 있습니다.</p>
-      <div id="regWalletCheck"></div>
-      <button class="reg-btn" id="regWalletBtn" onclick="regConnectWallet()" data-i18n="reg_s1_btn">Connect Wallet</button>
-      <button class="reg-btn" id="regNextBtn1" style="display:none;" onclick="regGoStep(2)" data-i18n="reg_next">Next &rarr;</button>
-      <button class="reg-btn secondary" style="margin-top:0.5rem;background:transparent;border:1px solid var(--border);color:var(--text-2);" onclick="regGoStep(2)" data-i18n="reg_skip">Skip for now &rarr;</button>
-    </div>
-
-    <!-- Step 2: Identity Verification -->
-    <div id="regStep2" style="display:none;">
-      <p class="modal-desc" data-i18n="reg_s2_desc">신원을 인증하여 신뢰 배지를 획득하세요. 아래 방법 중 하나를 선택하세요.</p>
-      <div class="wallet-options" style="margin-bottom:1rem;">
-        <button class="wallet-opt" onclick="selectVerify('worldcoin')" id="vOpt1">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#000,#333);">&#127760;</div>
-          <div><div class="wallet-opt-name">Worldcoin (World ID)</div><div class="wallet-opt-desc" data-i18n="v_wc_desc">Orb-verified proof of personhood</div></div>
-        </button>
-        <button class="wallet-opt" onclick="selectVerify('humanity')" id="vOpt2">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#4fc3f7,#0288d1);">&#129302;</div>
-          <div><div class="wallet-opt-name">Humanity Protocol</div><div class="wallet-opt-desc" data-i18n="v_hp_desc">Palm-scan identity verification</div></div>
-        </button>
-        <button class="wallet-opt" onclick="selectVerify('telegram')" id="vOpt3">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#0088cc,#229ed9);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          </div>
-          <div><div class="wallet-opt-name" data-i18n="v_tg_name">Telegram Verification</div><div class="wallet-opt-desc" data-i18n="v_tg_desc">Send code to your Telegram</div></div>
-        </button>
-        <button class="wallet-opt" onclick="selectVerify('twitter')" id="vOpt4">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#1d9bf0,#1a8cd8);">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </div>
-          <div><div class="wallet-opt-name" data-i18n="v_tw_name">Twitter / X Verification</div><div class="wallet-opt-desc" data-i18n="v_tw_desc">Verify via tweet or DM code</div></div>
-        </button>
-      </div>
-      <div id="verifyCodeBox" style="display:none;">
-        <div class="reg-field">
-          <label data-i18n="v_code_label">Verification Code</label>
-          <div style="display:flex;gap:0.5rem;">
-            <input type="text" id="verifyCode" placeholder="Enter 6-digit code" style="flex:1;">
-            <button class="reg-btn" style="width:auto;padding:0.7rem 1rem;margin:0;font-size:0.8rem;" onclick="verifyCodeSubmit()" data-i18n="v_verify">Verify</button>
-          </div>
-        </div>
-      </div>
-      <div id="verifyStatus" style="display:none;margin-bottom:0.75rem;"></div>
-      <div style="display:flex;gap:0.5rem;">
-        <button class="reg-btn" onclick="regGoStep(3)" data-i18n="reg_next">Next &rarr;</button>
-        <button class="reg-btn" style="background:transparent;border:1px solid var(--border);color:var(--text-2);" onclick="regGoStep(3)" data-i18n="reg_skip">Skip &rarr;</button>
-      </div>
-    </div>
-
-    <!-- Step 3: Profile + Appeal Points -->
-    <div id="regStep3" style="display:none;">
-      <p class="modal-desc" data-i18n="reg_s3_desc">기여자 프로필을 설정하세요. 프로젝트에게 공개됩니다.</p>
-      <div class="reg-field">
-        <label data-i18n="reg_name">Display Name</label>
-        <input type="text" id="regName" placeholder="e.g. CryptoAlpha">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="reg_tg">Telegram Handle</label>
-        <input type="text" id="regTg" placeholder="@your_telegram">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="reg_twitter">Twitter / X Handle</label>
-        <input type="text" id="regTwitter" placeholder="@your_twitter">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="reg_niche">Niche / Sector</label>
-        <select id="regNiche">
-          <option value="defi">DeFi</option>
-          <option value="airdrop">Airdrop</option>
-          <option value="nft">NFT</option>
-          <option value="gaming">Gaming / P2E</option>
-          <option value="meme">Meme</option>
-          <option value="infra">Infra / L2</option>
-          <option value="research">Research</option>
-          <option value="trading">Trading</option>
-          <option value="news">News / Media</option>
-        </select>
-      </div>
-      <div class="reg-field">
-        <label data-i18n="reg_followers">Follower Count</label>
-        <input type="number" id="regFollowers" placeholder="e.g. 15000">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="reg_rate">Base Rate (USD / Post)</label>
-        <input type="number" id="regRate" placeholder="e.g. 500">
-      </div>
-      <div class="reg-field">
-        <label><span data-i18n="reg_appeal">Appeal Points</span> <span style="color:var(--text-3);font-size:0.65rem;font-weight:400;" data-i18n="reg_optional">(Optional)</span></label>
-        <textarea id="regAppeal" rows="3" placeholder="What makes you stand out? Past campaigns, unique audience, special skills..." style="width:100%;padding:0.7rem 1rem;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:var(--r-xs);color:var(--text);font-family:inherit;font-size:0.88rem;resize:vertical;outline:none;"></textarea>
-      </div>
-      <button class="reg-btn" onclick="regGoStep(4)" data-i18n="reg_next">Next &rarr;</button>
-    </div>
-
-    <!-- Step 4: Confirm -->
-    <div id="regStep4" style="display:none;">
-      <p class="modal-desc" data-i18n="reg_s4_desc">정보를 확인하고 기여자 등록을 제출하세요.</p>
-      <div id="regSummary" style="background:rgba(255,255,255,0.02);border-radius:var(--r-xs);padding:1.25rem;margin-bottom:1rem;font-size:0.88rem;"></div>
-      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;font-size:0.8rem;color:var(--text-2);">
-        <input type="checkbox" id="regAgree" style="accent-color:var(--lime);">
-        <label for="regAgree" data-i18n="reg_agree">I agree to the SHILL VAULT Terms of Service and Privacy Policy</label>
-      </div>
-      <button class="reg-btn" onclick="submitRegistration()" data-i18n="reg_submit">Submit Registration</button>
-    </div>
-
-    <!-- Step Done -->
-    <div id="regDone" style="display:none;text-align:center;padding:1.5rem 0;">
-      <div style="font-size:3rem;margin-bottom:1rem;">&#10003;</div>
-      <h3 style="color:var(--lime);margin-bottom:0.5rem;" data-i18n="reg_done_title">등록 완료!</h3>
-      <p class="modal-desc" data-i18n="reg_done_desc">기여자 프로필이 라이브 되었습니다. 프로젝트에서 당신을 찾아 캠페인에 초대할 수 있습니다.</p>
-      <button class="reg-btn" onclick="closeModal('regModal')" data-i18n="reg_done_btn">Go to Dashboard</button>
     </div>
   </div>
 </div>
@@ -670,42 +314,17 @@
 <div class="modal-overlay" id="campModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('campModal')">&times;</button>
-    <h3 data-i18n="camp_title">Get Started</h3>
-
-    <!-- Role Select -->
-    <div id="campRoleSelect">
-      <p class="modal-desc" data-i18n="camp_desc">프로모션을 원하는 프로젝트인가요, 기여를 통해 수익을 원하는 참여자인가요?</p>
-      <div class="wallet-options">
-        <button class="wallet-opt" onclick="campSelectRole('project')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,var(--purple),#6d28d9);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-          </div>
-          <div>
-            <div class="wallet-opt-name" data-i18n="camp_project">프로젝트입니다</div>
-            <div class="wallet-opt-desc" data-i18n="camp_proj_desc">캠페인을 시작하고 기여자를 모집하세요</div>
-          </div>
-        </button>
-        <button class="wallet-opt" onclick="campSelectRole('user')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,var(--lime),#a3d624);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div>
-            <div class="wallet-opt-name" data-i18n="camp_user">기여자입니다</div>
-            <div class="wallet-opt-desc" data-i18n="camp_user_desc">계정을 연결하고 수익을 시작하세요</div>
-          </div>
-        </button>
-      </div>
-    </div>
+    <h3 data-i18n="camp_modal_title">캠페인 시작하기</h3>
 
     <!-- Project Form -->
-    <div id="campProjectForm" style="display:none;">
-      <p class="modal-desc" data-i18n="camp_proj_form_desc">Tell us about your project and campaign goals.</p>
+    <div id="campProjectForm">
+      <p class="modal-desc" data-i18n="camp_form_desc">프로젝트와 캠페인 목표를 알려주세요.</p>
       <div class="reg-field">
-        <label data-i18n="camp_proj_name">Project Name</label>
+        <label data-i18n="camp_proj_name">프로젝트 이름</label>
         <input type="text" id="campProjName" placeholder="e.g. AxiomDEX">
       </div>
       <div class="reg-field">
-        <label data-i18n="camp_sector">Sector / Category</label>
+        <label data-i18n="camp_sector">섹터 / 카테고리</label>
         <select id="campSector">
           <option value="defi">DeFi</option>
           <option value="nft">NFT / Collectibles</option>
@@ -720,7 +339,7 @@
         </select>
       </div>
       <div class="reg-field">
-        <label data-i18n="camp_chain">Chain</label>
+        <label data-i18n="camp_chain">체인</label>
         <select id="campChain">
           <option value="ethereum">Ethereum</option>
           <option value="solana">Solana</option>
@@ -732,94 +351,34 @@
         </select>
       </div>
       <div class="reg-field">
-        <label data-i18n="camp_posts">Desired Posts (min)</label>
-        <input type="number" id="campPosts" placeholder="e.g. 20">
-      </div>
-      <div class="reg-field">
-        <label data-i18n="camp_budget">Budget (USD)</label>
+        <label data-i18n="camp_budget">예산 (USD)</label>
         <input type="number" id="campBudget" placeholder="e.g. 10000">
       </div>
       <div class="reg-field">
-        <label data-i18n="camp_kpi">Performance KPIs</label>
-        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.25rem;">
+        <label data-i18n="camp_kpi">성과 KPI</label>
+        <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.2rem;">
           <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" id="kpiViews" checked style="accent-color:var(--lime);"><span data-i18n="camp_kpi_views">Views / Impressions</span></label>
+            <input type="checkbox" checked style="accent-color:var(--blue);"><span data-i18n="camp_kpi_views">조회수 / 노출</span></label>
           <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" id="kpiEng" checked style="accent-color:var(--lime);"><span data-i18n="camp_kpi_eng">Engagement (likes, retweets, replies)</span></label>
+            <input type="checkbox" checked style="accent-color:var(--blue);"><span data-i18n="camp_kpi_eng">인게이지먼트 (좋아요, 리트윗, 댓글)</span></label>
           <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" id="kpiClicks" style="accent-color:var(--lime);"><span data-i18n="camp_kpi_clicks">Link clicks / Referrals</span></label>
+            <input type="checkbox" style="accent-color:var(--blue);"><span data-i18n="camp_kpi_clicks">링크 클릭 / 레퍼럴</span></label>
           <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;color:var(--text-2);cursor:pointer;">
-            <input type="checkbox" id="kpiOnchain" style="accent-color:var(--lime);"><span data-i18n="camp_kpi_onchain">On-chain conversions (swaps, mints)</span></label>
+            <input type="checkbox" style="accent-color:var(--blue);"><span data-i18n="camp_kpi_onchain">온체인 전환 (스왑, 민트)</span></label>
         </div>
       </div>
-      <div class="reg-field">
-        <label data-i18n="camp_kpi_target">Target Numbers (optional)</label>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
-          <input type="number" id="campTargetViews" placeholder="Min views per post" style="font-size:0.82rem;">
-          <input type="number" id="campTargetEng" placeholder="Min engagement rate %" style="font-size:0.82rem;">
-        </div>
-      </div>
-      <button class="reg-btn" onclick="submitCampaign()" data-i18n="camp_submit">Create Campaign &rarr;</button>
-    </div>
-
-    <!-- User (Contributor) simple connect -->
-    <div id="campUserForm" style="display:none;">
-      <p class="modal-desc" data-i18n="camp_user_form_desc">계정을 연결하여 캠페인을 탐색하고 보상을 받으세요.</p>
-      <div class="wallet-options" style="margin-bottom:1rem;">
-        <button class="wallet-opt" onclick="openModal('walletModal');closeModal('campModal');">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
-          </div>
-          <div><div class="wallet-opt-name" data-i18n="camp_connect_wallet">지갑 연결</div><div class="wallet-opt-desc" data-i18n="camp_connect_desc">MetaMask, Rabby 지갑, WalletConnect</div></div>
-        </button>
-        <button class="wallet-opt" onclick="closeModal('campModal');openModal('regModal');">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,var(--lime),#a3d624);">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--bg)" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div><div class="wallet-opt-name" data-i18n="camp_register_kol">기여자로 등록</div><div class="wallet-opt-desc" data-i18n="camp_register_desc">인증이 포함된 전체 프로필</div></div>
-        </button>
-      </div>
+      <button class="reg-btn" onclick="submitCampaign()" data-i18n="camp_submit">캠페인 생성 →</button>
     </div>
 
     <!-- Campaign Created -->
     <div id="campDone" style="display:none;text-align:center;padding:1.5rem 0;">
-      <div style="font-size:3rem;margin-bottom:1rem;">&#128640;</div>
-      <h3 style="color:var(--lime);margin-bottom:0.5rem;" data-i18n="camp_done_title">캠페인 생성 완료!</h3>
-      <p class="modal-desc" data-i18n="camp_done_desc">토큰 룸이 설정되고 있습니다. 기여자를 탐색하고 초대하세요.</p>
-      <button class="reg-btn" onclick="closeModal('campModal')" data-i18n="camp_done_btn">기여자 탐색</button>
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">&#9989;</div>
+      <h3 style="color:var(--blue);margin-bottom:0.4rem;" data-i18n="camp_done_title">캠페인 생성 완료!</h3>
+      <p class="modal-desc" data-i18n="camp_done_desc">캠페인이 설정되었습니다. 대시보드에서 관리하세요.</p>
+      <button class="reg-btn" onclick="closeModal('campModal')" data-i18n="camp_done_btn">확인</button>
     </div>
   </div>
 </div>
-
-<!-- ==================== FOR PROJECTS ==================== -->
-<section class="for-projects-section" id="for-projects">
-  <div class="container">
-    <div class="eyebrow rv" style="color:var(--purple);" data-i18n="fp_eye">// for projects</div>
-    <h2 class="stitle rv" data-i18n="fp_title" style="font-size:clamp(1.6rem,3.5vw,2.4rem);">프로젝트를 성장시키고 싶으신가요?</h2>
-    <p class="sdesc rv" data-i18n="fp_desc">검증된 기여자 네트워크를 활용해 프로젝트를 확산하세요. 에스크로 기반, 성과 연동, 투명한 구조.</p>
-    <div class="fp-features rv">
-      <div class="fp-feat">
-        <div class="fp-feat-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <span class="fp-feat-text" data-i18n="fp_f1">기여자 네트워크 접근</span>
-      </div>
-      <div class="fp-feat">
-        <div class="fp-feat-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        </div>
-        <span class="fp-feat-text" data-i18n="fp_f2">에스크로 결제</span>
-      </div>
-      <div class="fp-feat">
-        <div class="fp-feat-icon">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        </div>
-        <span class="fp-feat-text" data-i18n="fp_f3">실시간 성과 추적</span>
-      </div>
-    </div>
-    <a href="javascript:openModal('campModal')" class="btn btn-purple rv" data-i18n="fp_cta">프로젝트 등록하기</a>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
