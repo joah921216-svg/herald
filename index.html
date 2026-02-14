@@ -309,10 +309,10 @@
     .t-gold { background: rgba(251,191,36,0.1); color: var(--gold); border: 1px solid rgba(251,191,36,0.15); }
     .t-silver { background: rgba(139,92,246,0.1); color: var(--purple); border: 1px solid rgba(139,92,246,0.12); }
     .t-unreg { background: rgba(255,255,255,0.04); color: var(--text-3); border: 1px solid var(--border); }
-    .kc-metrics { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.4rem; margin-bottom: 1rem; }
-    .kc-m { background: rgba(255,255,255,0.02); border-radius: var(--r-xs); padding: 0.5rem 0.25rem; text-align: center; }
-    .kc-mv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; }
-    .kc-ml { font-size: 0.55rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.1rem; }
+    .kc-metrics { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+    .kc-m { background: rgba(255,255,255,0.02); border-radius: var(--r-xs); padding: 0.65rem 0.5rem; text-align: center; flex: 1; }
+    .kc-mv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.1rem; color: var(--lime); }
+    .kc-ml { font-size: 0.6rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.15rem; }
     .kc-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-bottom: 1rem; }
     .kc-tag {
       padding: 0.15rem 0.5rem; border-radius: 100px; font-size: 0.6rem; font-weight: 500;
@@ -554,6 +554,37 @@
       background: rgba(243,186,47,0.1); color: #f3ba2f; font-weight: 700; border: 1px solid rgba(243,186,47,0.15);
     }
 
+    /* === PROBLEM SECTION === */
+    .problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .problem-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+      padding: 2rem; backdrop-filter: blur(8px); transition: all 0.35s;
+    }
+    .problem-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+    .problem-card .pc-role {
+      font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em;
+      font-weight: 700; margin-bottom: 1rem;
+    }
+    .problem-card:nth-child(1) .pc-role { color: var(--purple); }
+    .problem-card:nth-child(2) .pc-role { color: var(--lime); }
+    .problem-card:nth-child(3) .pc-role { color: var(--cyan); }
+    .pc-block { margin-bottom: 1.25rem; }
+    .pc-block:last-child { margin-bottom: 0; }
+    .pc-block-label {
+      font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em;
+      font-weight: 700; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+    }
+    .pc-block-label.before { color: var(--red); }
+    .pc-block-label.after { color: var(--lime); }
+    .pc-block p { font-size: 0.88rem; color: var(--text-2); line-height: 1.65; }
+
+    /* === NAV BADGE === */
+    .nav-badge {
+      display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--lime); box-shadow: 0 0 6px var(--lime);
+      margin-left: 4px; vertical-align: super;
+    }
+
     /* === RESPONSIVE === */
     @media(max-width:1024px) {
       .hero .container { grid-template-columns: 1fr; text-align: center; }
@@ -565,6 +596,7 @@
       .roster-grid { grid-template-columns: repeat(2,1fr); }
       .how-steps { grid-template-columns: repeat(2,1fr); }
       .trust-grid { grid-template-columns: repeat(2,1fr); }
+      .problem-grid { grid-template-columns: 1fr; }
       .rm-timeline { grid-template-columns: 1fr; }
       .price-grid { grid-template-columns: 1fr; }
       .troom-table { font-size: 0.8rem; }
@@ -602,7 +634,7 @@
     <ul class="nav-links">
       <li><a href="#roster" data-i18n="nav_roster">KOL Roster</a></li>
       <li><a href="#rooms" data-i18n="nav_rooms">Campaigns</a></li>
-      <li><a href="#quests" data-i18n="nav_quest">Quests</a></li>
+      <li><a href="#quests" data-i18n="nav_quest">Quests</a><span class="nav-badge"></span></li>
       <li>
         <div class="lang-sw">
           <button class="lang-btn" onclick="document.querySelector('.lang-drop').classList.toggle('open')">
@@ -626,15 +658,16 @@
 <section class="hero">
   <div class="container">
     <div class="hero-left">
-      <div class="hero-tag"><span class="td"></span><span data-i18n="hero_tag">The Open KOL Layer for Web3</span></div>
-      <h1>KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span></h1>
-      <p class="hero-desc">The open marketplace where Web3 KOLs set their own price and projects run performance-based campaigns. No middlemen, no trust issues.</p>
+      <div class="hero-tag"><span class="td"></span><span data-i18n="hero_tag">Web3 Open Marketplace</span></div>
+      <h1>기여는 자유롭게. 보상은 투명하게.<br><span class="lime">성장은 함께.</span></h1>
+      <p class="hero-desc">참여자가 보상을 직접 정하고, 프로젝트가 더 빠르게 커지는 오픈 마켓플레이스. 중간 마진 없이, 모든 기여에 보상이 붙습니다.</p>
       <div class="hero-actions">
         <a href="javascript:openModal('campModal')" class="btn btn-lime">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          <span data-i18n="hero_btn1">Launch Campaign</span>
+          <span data-i18n="hero_btn1">캠페인 시작</span>
         </a>
-        <a href="javascript:openModal('regModal')" class="btn btn-ghost" data-i18n="hero_btn2">Join as KOL</a>
+        <a href="javascript:openModal('regModal')" class="btn btn-ghost" data-i18n="hero_btn2">KOL 등록</a>
+        <a href="#quests" class="btn btn-ghost" style="border-color:var(--cyan);color:var(--cyan);" data-i18n="hero_btn3">퀘스트 참여하기</a>
       </div>
       <div class="hero-metrics">
         <div><div class="hm-num">320<span class="u">+</span></div><div class="hm-lbl">Verified KOLs</div></div>
@@ -687,10 +720,104 @@
   </div>
 </section>
 
-<!-- ==================== TAGLINE ==================== -->
-<section>
+<!-- ==================== PROBLEM ==================== -->
+<section class="s-border" id="problem">
   <div class="container">
-    <p class="sdesc rv" data-i18n="dual_desc" style="text-align:center;max-width:700px;margin:0 auto;font-size:1.15rem;line-height:1.8;">누구나 기여하고, 누구나 보상받는 Web3 마켓플레이스.<br>트윗 한 줄이든, 커뮤니티 운영이든, 자본 투입이든 — 당신의 기여에 가격이 붙습니다.</p>
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="prob_eye">// why shill vault</div>
+      <h2 class="stitle rv" data-i18n="prob_title">지금 Web3 마케팅은 비효율적입니다</h2>
+      <p class="sdesc rv" data-i18n="prob_desc" style="margin:0 auto;"></p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card rv">
+        <div class="pc-role" data-i18n="prob_role1">Project</div>
+        <div class="pc-block">
+          <div class="pc-block-label before">&#10005; Problem</div>
+          <p data-i18n="prob_before1">에이전시에 30%+ 수수료를 내고, KOL 이너서클에 예산이 새고, 실제 성과는 불투명</p>
+        </div>
+        <div class="pc-block">
+          <div class="pc-block-label after">&#10003; Solution</div>
+          <p data-i18n="prob_after1">직접 KOL을 고르고, 에스크로로 성과 달성 시에만 지급. 마진 없는 투명한 구조</p>
+        </div>
+      </div>
+      <div class="problem-card rv rv-d1">
+        <div class="pc-role" data-i18n="prob_role2">KOL</div>
+        <div class="pc-block">
+          <div class="pc-block-label before">&#10005; Problem</div>
+          <p data-i18n="prob_before2">이너서클이 아니면 일감 접근이 어렵고, 중간에서 금액이 깎이고, 단가를 내가 못 정함</p>
+        </div>
+        <div class="pc-block">
+          <div class="pc-block-label after">&#10003; Solution</div>
+          <p data-i18n="prob_after2">누구나 등록하고, 직접 단가를 설정하고, 프로젝트와 다이렉트로 연결</p>
+        </div>
+      </div>
+      <div class="problem-card rv rv-d2">
+        <div class="pc-role" data-i18n="prob_role3">User</div>
+        <div class="pc-block">
+          <div class="pc-block-label before">&#10005; Problem</div>
+          <p data-i18n="prob_before3">에어드랍 정보가 파편화되어 있고, 어디서 뭘 해야 하는지 모르고, 참여해도 보상이 불확실</p>
+        </div>
+        <div class="pc-block">
+          <div class="pc-block-label after">&#10003; Solution</div>
+          <p data-i18n="prob_after3">퀘스트 보드에서 원클릭 참여. 조건 달성하면 자동 보상 지급</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== DUAL: MARKETPLACE ==================== -->
+<section id="dual">
+  <div class="container">
+    <div class="sheader center">
+      <div class="eyebrow rv" data-i18n="dual_eye">// marketplace</div>
+      <h2 class="stitle rv" data-i18n="dual_title">모든 기여에 보상이 붙는 Web3 마켓플레이스.</h2>
+      <p class="sdesc rv" data-i18n="dual_desc">KOL은 단가를 정하고, 프로젝트는 인재를 고르고, 유저는 퀘스트로 참여합니다. 역할은 달라도 보상 구조는 하나.</p>
+    </div>
+    <div class="dual-grid">
+      <div class="dual-card for-kol rv">
+        <div class="dc-label" data-i18n="dk_label">KOL용</div>
+        <h3 data-i18n="dk_title">나의 가치. 내가 정한다.</h3>
+        <p data-i18n="dk_desc">중개자 없이 프로젝트와 직접 협상하세요. 모든 성과는 온체인에 기록되고, 평판은 당신의 자산이 됩니다.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f1">트위터 &amp; 텔레그램 ID 자동 연동</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f2">실시간으로 단가를 자유롭게 설정 &amp; 변경</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f3">맞춤 프로필: 전문분야, 포트폴리오, 캠페인 이력</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f4">보상 대시보드 (토큰 &amp; 스테이블코인)</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f5">자동 누적 성과 점수 &amp; 신뢰 등급</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dk_f6">캠페인 후 프로젝트 평가 &amp; 리뷰</span></li>
+        </ul>
+        <a href="javascript:openModal('regModal')" class="btn btn-lime" data-i18n="hero_btn2">KOL 등록</a>
+      </div>
+      <div class="dual-card for-proj rv rv-d1">
+        <div class="dc-label" data-i18n="dp_label">프로젝트용</div>
+        <h3 data-i18n="dp_title">타겟 도달, 검증된 결과</h3>
+        <p data-i18n="dp_desc">론칭에 적합한 인플루언서를 찾으세요. 데이터 기반 선택, 에스크로 결제, 실시간 퍼포먼스 트래킹.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f1">토큰 룸 생성 &amp; KOL 초대</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f2">검색/필터: 팔로워, 분야, 성과, 가격, 언어</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f3">TG/트위터 DM으로 미등록 KOL 자동 초대</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f4">스마트 컨트랙트 에스크로: 펀딩 &rarr; 검증 &rarr; 자동 정산</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f5">실시간 대시보드: 노출, 인게이지먼트, 온체인 전환</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="dp_f6">KOL 평가 &amp; ROI 분석 접근</span></li>
+        </ul>
+        <a href="javascript:openModal('campModal')" class="btn btn-purple" data-i18n="hero_btn1">캠페인 시작</a>
+      </div>
+      <div class="dual-card for-user rv rv-d2">
+        <div class="dc-label" data-i18n="du_label">일반 유저용</div>
+        <h3 data-i18n="du_title">참여만 해도 보상이 온다</h3>
+        <p data-i18n="du_desc">대형 채널이 없어도 괜찮습니다. 퀘스트 수행, 리뷰 작성, 친구 추천으로 실제 프로젝트에서 보상을 받으세요.</p>
+        <ul class="dc-list">
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f1">퀘스트 참여: 에어드랍, 가입, 테스트넷</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f2">프로젝트 리뷰 작성 (배민 리뷰처럼)</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f3">친구 추천으로 추가 보상</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f4">네트워크 &amp; 커뮤니티를 프로젝트에 소개</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f5">참여 이력 기반 신뢰 점수 적립</span></li>
+          <li><span class="dc-check">&#10003;</span><span data-i18n="du_f6">채널 없어도 누구나 참여 가능</span></li>
+        </ul>
+        <a href="#quests" class="btn btn-ghost" style="border-color:var(--cyan);color:var(--cyan);" data-i18n="du_btn">퀘스트 보드 참여</a>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -710,7 +837,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="52.6K">52.6K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/enjoymyhobby" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -724,7 +850,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="44.0K">44.0K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/twitchoong" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -738,7 +863,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="34.8K">34.8K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/emperorcoin" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -752,7 +876,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="25.8K">25.8K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/MBMweb3" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -766,7 +889,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="23.9K">23.9K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/mujammin123" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -780,7 +902,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="21.0K">21.0K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/yobeullyANN" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -794,7 +915,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="20.6K">20.6K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/airdrop_kor" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -808,7 +928,6 @@
         </div>
         <div class="kc-metrics">
           <div class="kc-m"><div class="kc-mv tg-count" data-fallback="16.5K">16.5K</div><div class="kc-ml" data-i18n="kc_tg">TG 구독자</div></div>
-          <div class="kc-m"><div class="kc-mv">—</div><div class="kc-ml" data-i18n="kc_tw">X 팔로워</div></div>
         </div>
         <div class="kc-actions">
           <a href="https://t.me/murphybus" target="_blank" rel="noopener" class="kc-btn kc-btn-tg"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram</a>
@@ -822,8 +941,75 @@
   </div>
 </section>
 
+<!-- ==================== QUEST BOARD ==================== -->
+<section id="quests">
+  <div class="container">
+    <div class="sheader">
+      <div class="eyebrow rv" data-i18n="quest_eye">// quest board</div>
+      <h2 class="stitle rv" data-i18n="quest_title">Quest Board</h2>
+      <p class="sdesc rv" data-i18n="quest_desc">Complete quests, write reviews, refer friends. No channel needed — anyone can earn rewards.</p>
+    </div>
+    <p class="rv" data-i18n="quest_highlight" style="text-align:center;color:var(--cyan);font-size:1rem;font-weight:600;margin:-2rem auto 2.5rem;max-width:600px;">KOL이 아니어도 괜찮습니다. 누구나 참여하고, 누구나 보상받습니다.</p>
+    <div class="troom-wrap rv">
+      <div class="troom-header">
+        <h4 data-i18n="quest_active">Available Quests</h4>
+        <div class="troom-live"><span class="dot"></span>Live</div>
+      </div>
+      <table class="troom-table">
+        <thead>
+          <tr>
+            <th data-i18n="qt_project">Project</th>
+            <th data-i18n="qt_quest">Quest</th>
+            <th data-i18n="qt_type">Type</th>
+            <th data-i18n="qt_reward">Reward</th>
+            <th data-i18n="qt_participants">Participants</th>
+            <th data-i18n="qt_status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
+            <td data-i18n="qq1_quest">First swap experience</td>
+            <td><span class="qt-badge qt-exp" data-i18n="qt_exp">Experience</span></td>
+            <td class="tr-mono">10 USDT + Airdrop</td>
+            <td class="tr-mono">234 / 500</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
+            <td data-i18n="qq2_quest">Write usage review</td>
+            <td><span class="qt-badge qt-review" data-i18n="qt_review">Review</span></td>
+            <td class="tr-mono">5 USDT</td>
+            <td class="tr-mono">89 / 200</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
+            <td data-i18n="qq3_quest">Invite 3 friends</td>
+            <td><span class="qt-badge qt-referral" data-i18n="qt_referral">Referral</span></td>
+            <td class="tr-mono">15 USDT + NFT</td>
+            <td class="tr-mono">45 / 100</td>
+            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span><span data-i18n="qt_recruiting">Recruiting</span></span></td>
+          </tr>
+          <tr>
+            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
+            <td data-i18n="qq4_quest">Join testnet &amp; give feedback</td>
+            <td><span class="qt-badge qt-airdrop" data-i18n="qt_airdrop">Airdrop</span></td>
+            <td class="tr-mono" data-i18n="qq4_reward">TGE Airdrop</td>
+            <td class="tr-mono">1.2K</td>
+            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="quest_btn">퀘스트 참여하기</button>
+    </div>
+  </div>
+</section>
+
 <!-- ==================== CAMPAIGN STATUS ==================== -->
-<section id="rooms">
+<section class="s-bg" id="rooms">
   <div class="container">
     <div class="sheader">
       <div class="eyebrow rv" data-i18n="rooms_eye">// campaign status</div>
@@ -885,72 +1071,6 @@
   </div>
 </section>
 
-<!-- ==================== QUEST BOARD ==================== -->
-<section class="s-bg" id="quests">
-  <div class="container">
-    <div class="sheader">
-      <div class="eyebrow rv" data-i18n="quest_eye">// quest board</div>
-      <h2 class="stitle rv" data-i18n="quest_title">Quest Board</h2>
-      <p class="sdesc rv" data-i18n="quest_desc">Complete quests, write reviews, refer friends. No channel needed — anyone can earn rewards.</p>
-    </div>
-    <div class="troom-wrap rv">
-      <div class="troom-header">
-        <h4 data-i18n="quest_active">Available Quests</h4>
-        <div class="troom-live"><span class="dot"></span>Live</div>
-      </div>
-      <table class="troom-table">
-        <thead>
-          <tr>
-            <th data-i18n="qt_project">Project</th>
-            <th data-i18n="qt_quest">Quest</th>
-            <th data-i18n="qt_type">Type</th>
-            <th data-i18n="qt_reward">Reward</th>
-            <th data-i18n="qt_participants">Participants</th>
-            <th data-i18n="qt_status">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
-            <td data-i18n="qq1_quest">First swap experience</td>
-            <td><span class="qt-badge qt-exp" data-i18n="qt_exp">Experience</span></td>
-            <td class="tr-mono">10 USDT + Airdrop</td>
-            <td class="tr-mono">234 / 500</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
-            <td data-i18n="qq2_quest">Write usage review</td>
-            <td><span class="qt-badge qt-review" data-i18n="qt_review">Review</span></td>
-            <td class="tr-mono">5 USDT</td>
-            <td class="tr-mono">89 / 200</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
-            <td data-i18n="qq3_quest">Invite 3 friends</td>
-            <td><span class="qt-badge qt-referral" data-i18n="qt_referral">Referral</span></td>
-            <td class="tr-mono">15 USDT + NFT</td>
-            <td class="tr-mono">45 / 100</td>
-            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--gold);"></span><span data-i18n="qt_recruiting">Recruiting</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
-            <td data-i18n="qq4_quest">Join testnet &amp; give feedback</td>
-            <td><span class="qt-badge qt-airdrop" data-i18n="qt_airdrop">Airdrop</span></td>
-            <td class="tr-mono" data-i18n="qq4_reward">TGE Airdrop</td>
-            <td class="tr-mono">1.2K</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--lime);"></span><span data-i18n="qt_live">Active</span></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="text-align:center;margin-top:2rem;">
-      <button class="btn btn-lime" onclick="openModal('regModal')" data-i18n="quest_btn">Join Quest Board</button>
-    </div>
-  </div>
-</section>
-
 <!-- ==================== TRUST ==================== -->
 <section class="s-bg" id="trust">
   <div class="container">
@@ -989,15 +1109,15 @@
 <section class="cta-section s-border" id="cta">
   <div class="container">
     <div class="eyebrow rv" data-i18n="cta_eye">// get started</div>
-    <h2 class="stitle rv" data-i18n="cta_title" style="max-width:650px;margin:0 auto 1rem;">The Middleman Is Dead.<br><span class="lime">Direct Shill</span> Era.</h2>
-    <p class="sdesc rv" data-i18n="cta_desc" style="margin:0 auto 2.5rem;text-align:center;">KOLs set their price. Projects pick their alpha. Smart contracts handle the rest. No middlemen, no trust issues, no rugs.</p>
+    <h2 class="stitle rv" data-i18n="cta_title" style="max-width:650px;margin:0 auto 1rem;">중개자 없이, <span class="lime">직접 연결</span>하세요.</h2>
+    <p class="sdesc rv" data-i18n="cta_desc" style="margin:0 auto 2.5rem;text-align:center;">프로젝트라면 캠페인을 만들고, KOL이라면 등록하고, 누구든 퀘스트에 참여하세요.</p>
     <div class="cta-actions rv">
       <a href="javascript:openModal('campModal')" class="btn btn-lime">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-        <span data-i18n="hero_btn1">Launch a Campaign</span>
+        <span data-i18n="hero_btn1">캠페인 시작</span>
       </a>
-      <a href="javascript:openModal('regModal')" class="btn btn-purple" data-i18n="hero_btn2">Join as KOL</a>
-      <a href="#" class="btn btn-ghost">Read Docs</a>
+      <a href="javascript:openModal('regModal')" class="btn btn-purple" data-i18n="hero_btn2">KOL 등록</a>
+      <a href="#quests" class="btn btn-ghost" style="border-color:var(--cyan);color:var(--cyan);" data-i18n="hero_btn3">퀘스트 참여</a>
     </div>
   </div>
 </section>
@@ -1525,18 +1645,18 @@
     en: {
       nav_roster: 'KOL Roster', nav_rooms: 'Campaigns',
       nav_binance: 'Binance KOL', nav_pricing: 'Pricing', nav_wallet: 'Connect Wallet',
-      hero_tag: 'The Open KOL Layer for Web3',
-      hero_h1: 'KOLs Set the Price.<br><span class="lime">Projects Pick the Alpha.</span>',
-      hero_desc: 'The open marketplace where Web3 KOLs set their own price and projects run performance-based campaigns. No middlemen, no trust issues.',
-      hero_btn1: 'Launch Campaign', hero_btn2: 'Join as KOL',
+      hero_tag: 'Web3 Open Marketplace',
+      hero_h1: 'Contribute Freely. Earn Transparently.<br><span class="lime">Grow Together.</span>',
+      hero_desc: 'An open marketplace where participants set their own rewards and projects grow faster. No middlemen, every contribution is rewarded.',
+      hero_btn1: 'Launch Campaign', hero_btn2: 'Join as KOL', hero_btn3: 'Join Quest Board',
       hm1: 'Verified KOLs', hm2: 'Rewards Distributed', hm3: 'Avg. Campaign ROI',
       how_eye: '// process', how_title: 'How It Works', how_desc: 'Four steps from campaign brief to verified, on-chain payouts.',
       hs1_t: 'KOLs Register', hs1_d: 'Link Twitter & Telegram. Set niche, rates, portfolio. Go live instantly.',
       hs2_t: 'Ping Projects', hs2_d: 'Browse projects and send promotion proposals. Or projects find you via search and filters.',
       hs3_t: 'Token Room Opens', hs3_d: 'Project funds escrow. KOLs accept terms, start promoting. KPIs tracked in real-time.',
       hs4_t: 'Auto Payout', hs4_d: 'KPI verified. Choose: receive project tokens or auto-swap to stablecoin via DEX. Both sides review.',
-      dual_eye: '// three sides', dual_title: 'Built for <span class="lime">KOLs</span>, <span class="purple">Projects</span> & <span class="cyan">Users</span>',
-      dual_desc: 'A true multi-sided marketplace. KOLs promote, projects fund, users participate. Everyone earns.',
+      dual_eye: '// marketplace', dual_title: 'A Web3 Marketplace Where Every Contribution Is Rewarded.',
+      dual_desc: 'KOLs set their rates, projects pick their talent, users join via quests. Different roles, one reward structure.',
       roster_eye: '// kol directory', roster_title: 'KOL Roster',
       roster_desc: 'Browse verified KOLs or reach unregistered ones directly via Telegram & Twitter DM.',
       rooms_eye: '// campaign status', rooms_title: 'Campaign Status',
@@ -1557,10 +1677,10 @@
       trust_desc: 'No more rug-pulled campaigns or ghost KOLs. Every interaction is verifiable.',
       road_eye: '// roadmap', road_title: 'What\'s Next', road_desc: 'From marketplace to full-stack KOL infrastructure.',
       price_eye: '// pricing', price_title: 'Simple, Transparent Fees', price_desc: 'Free to join. You only pay when value is delivered.',
-      cta_eye: '// get started', cta_title: 'The Middleman Is Dead.<br><span class="lime">Direct Shill</span> Era.',
-      cta_desc: 'KOLs set their price. Projects pick their alpha. Smart contracts handle the rest. No middlemen, no trust issues, no rugs.',
-      dk_label: 'For KOLs', dk_title: 'Your Influence, Your Price',
-      dk_desc: 'No agency taking cuts from your deals. Set your own rates, showcase your portfolio, build your on-chain reputation.',
+      cta_eye: '// get started', cta_title: 'Connect Directly,<br><span class="lime">No Middlemen.</span>',
+      cta_desc: 'If you\'re a project, create a campaign. If you\'re a KOL, register. Anyone can join quests.',
+      dk_label: 'For KOLs', dk_title: 'My Value. I Decide.',
+      dk_desc: 'Negotiate directly with projects, no middlemen. All performance is recorded on-chain, and your reputation becomes your asset.',
       dk_f1: 'Twitter & Telegram ID auto-linked', dk_f2: 'Freely set & update rates in real-time',
       dk_f3: 'Custom profile: specialties, portfolio, campaign history', dk_f4: 'Reward dashboard (tokens & stablecoins)',
       dk_f5: 'Auto-accumulated performance score & trust rating', dk_f6: 'Rate & review projects after campaigns',
@@ -1617,6 +1737,15 @@
       qt_live: 'Active', qt_recruiting: 'Recruiting',
       qq1_quest: 'First swap experience', qq2_quest: 'Write usage review',
       qq3_quest: 'Invite 3 friends', qq4_quest: 'Join testnet & give feedback', qq4_reward: 'TGE Airdrop',
+      quest_highlight: 'Not a KOL? No problem. Anyone can participate, anyone can earn.',
+      prob_eye: '// why shill vault', prob_title: 'Web3 Marketing Is Broken',
+      prob_role1: 'Project', prob_role2: 'KOL', prob_role3: 'User',
+      prob_before1: '30%+ agency fees, budget leaking to KOL inner circles, actual results are opaque',
+      prob_after1: 'Pick KOLs directly, escrow pays only on verified results. Transparent, zero-margin structure',
+      prob_before2: 'Hard to access deals outside inner circles, middlemen cut your pay, you can\'t set your own rate',
+      prob_after2: 'Anyone can register, set their own rate, and connect directly with projects',
+      prob_before3: 'Airdrop info is fragmented, no clear path, rewards are uncertain even after participation',
+      prob_after3: 'One-click participation via Quest Board. Automatic rewards on condition met',
       pc_starter_name: 'Starter', pc_starter_price: 'Free', pc_starter_sub: 'For KOLs & small projects',
       pc_s_f1: 'KOL profile & portfolio', pc_s_f2: 'Up to 3 active campaigns', pc_s_f3: 'Basic analytics',
       pc_s_f4: '3% matching fee', pc_s_f5: 'Priority KOL placement', pc_s_f6: 'DM auto-outreach',
@@ -1647,20 +1776,20 @@
     ko: {
       nav_roster: 'KOL 명단', nav_rooms: '캠페인 현황',
       nav_binance: '바이낸스 KOL', nav_pricing: '가격', nav_wallet: '지갑 연결',
-      hero_tag: 'Web3를 위한 오픈 KOL 레이어',
+      hero_tag: 'Web3 오픈 마켓플레이스',
       hero_h1: '기여는 자유롭게. 보상은 투명하게.<br><span class="lime">성장은 함께.</span>',
-      hero_desc: 'Web3 KOL이 자신의 가격을 직접 설정하고,<br>프로젝트가 성과 캠페인을 운영하는 오픈 마켓플레이스.<br>중개인 없이, 신뢰 문제 없이.',
-      hero_btn1: '캠페인 시작', hero_btn2: 'KOL 등록',
+      hero_desc: '참여자가 보상을 직접 정하고, 프로젝트가 더 빠르게 커지는 오픈 마켓플레이스.<br>중간 마진 없이, 모든 기여에 보상이 붙습니다.',
+      hero_btn1: '캠페인 시작', hero_btn2: 'KOL 등록', hero_btn3: '퀘스트 참여하기',
       hm1: '인증된 KOL', hm2: '보상 지급액', hm3: '평균 캠페인 ROI',
       how_eye: '// 프로세스', how_title: '이용 방법', how_desc: '캠페인 브리프부터 온체인 정산까지 4단계.',
       hs1_t: 'KOL 등록', hs1_d: '트위터 & 텔레그램 연동. 분야, 단가, 포트폴리오 설정. 즉시 라이브.',
       hs2_t: '프로젝트에 핑', hs2_d: '프로젝트를 탐색하고 홍보 제안을 보내세요. 또는 프로젝트가 검색과 필터로 당신을 찾습니다.',
       hs3_t: '토큰 룸 오픈', hs3_d: '프로젝트가 에스크로 펀딩. KOL이 조건 수락 후 홍보 시작. KPI 실시간 추적.',
       hs4_t: '자동 정산', hs4_d: 'KPI 검증 완료. 선택: 프로젝트 토큰 수령 또는 DEX에서 스테이블코인으로 즉시 스왑. 양측 리뷰.',
-      dual_eye: '// 삼면 마켓', dual_title: '<span class="lime">KOL</span>, <span class="purple">프로젝트</span>, <span class="cyan">유저</span>를 위해',
-      dual_desc: '누구나 기여하고, 누구나 보상받는 Web3 마켓플레이스.<br>트윗 한 줄이든, 커뮤니티 운영이든, 자본 투입이든 — 당신의 기여에 가격이 붙습니다.',
-      dk_label: 'KOL용', dk_title: '내 영향력, 내 가격',
-      dk_desc: '딜에서 수수료를 떼어가는 에이전시 없이. 직접 단가를 설정하고, 포트폴리오를 전시하고, 온체인 평판을 쌓으세요.',
+      dual_eye: '// 마켓플레이스', dual_title: '모든 기여에 보상이 붙는 Web3 마켓플레이스.',
+      dual_desc: 'KOL은 단가를 정하고, 프로젝트는 인재를 고르고, 유저는 퀘스트로 참여합니다. 역할은 달라도 보상 구조는 하나.',
+      dk_label: 'KOL용', dk_title: '나의 가치. 내가 정한다.',
+      dk_desc: '중개자 없이 프로젝트와 직접 협상하세요. 모든 성과는 온체인에 기록되고, 평판은 당신의 자산이 됩니다.',
       dk_f1: '트위터 & 텔레그램 ID 자동 연동', dk_f2: '실시간으로 단가를 자유롭게 설정 & 변경',
       dk_f3: '맞춤 프로필: 전문분야, 포트폴리오, 캠페인 이력', dk_f4: '보상 대시보드 (토큰 & 스테이블코인)',
       dk_f5: '자동 누적 성과 점수 & 신뢰 등급', dk_f6: '캠페인 후 프로젝트 평가 & 리뷰',
@@ -1689,8 +1818,8 @@
       trust_desc: '러그풀 캠페인이나 유령 KOL은 더 이상 없습니다. 모든 상호작용이 검증 가능합니다.',
       road_eye: '// 로드맵', road_title: '다음 단계', road_desc: '마켓플레이스에서 풀스택 KOL 인프라로.',
       price_eye: '// 가격', price_title: '심플하고 투명한 수수료', price_desc: '가입 무료. 가치가 전달될 때만 비용을 지불합니다.',
-      cta_eye: '// 시작하기', cta_title: '중개인은 끝났다.<br><span class="lime">다이렉트 쉴링</span>의 시대.',
-      cta_desc: 'KOL이 가격을 정하고, 프로젝트가 알파를 고르고, 스마트 컨트랙트가 나머지를 처리합니다. 중개인 없이, 신뢰 문제 없이.',
+      cta_eye: '// 시작하기', cta_title: '중개자 없이, <span class="lime">직접 연결</span>하세요.',
+      cta_desc: '프로젝트라면 캠페인을 만들고, KOL이라면 등록하고, 누구든 퀘스트에 참여하세요.',
       wm_title: '지갑 연결', wm_desc: '지갑을 연결하여 KOL로 등록하고, 캠페인 보상을 받고, 온체인 평판을 관리하세요.',
       wm_mm_desc: '브라우저 확장 지갑', wm_rw_desc: 'Reddit Vault / Web3 지갑', wm_wc_desc: '모바일 지갑으로 QR 스캔',
       wm_popular: '인기', wm_connected: '연결됨:', wm_register: 'KOL로 등록 →',
@@ -1766,25 +1895,34 @@
       qt_live: '진행중', qt_recruiting: '모집중',
       qq1_quest: '첫 스왑 체험', qq2_quest: '사용 리뷰 작성',
       qq3_quest: '친구 3명 초대', qq4_quest: '테스트넷 참여 & 피드백', qq4_reward: 'TGE 에어드랍',
+      quest_highlight: 'KOL이 아니어도 괜찮습니다. 누구나 참여하고, 누구나 보상받습니다.',
+      prob_eye: '// why shill vault', prob_title: '지금 Web3 마케팅은 비효율적입니다',
+      prob_role1: '프로젝트', prob_role2: 'KOL', prob_role3: '유저',
+      prob_before1: '에이전시에 30%+ 수수료를 내고, KOL 이너서클에 예산이 새고, 실제 성과는 불투명',
+      prob_after1: '직접 KOL을 고르고, 에스크로로 성과 달성 시에만 지급. 마진 없는 투명한 구조',
+      prob_before2: '이너서클이 아니면 일감 접근이 어렵고, 중간에서 금액이 깎이고, 단가를 내가 못 정함',
+      prob_after2: '누구나 등록하고, 직접 단가를 설정하고, 프로젝트와 다이렉트로 연결',
+      prob_before3: '에어드랍 정보가 파편화되어 있고, 어디서 뭘 해야 하는지 모르고, 참여해도 보상이 불확실',
+      prob_after3: '퀘스트 보드에서 원클릭 참여. 조건 달성하면 자동 보상 지급',
       wm_rw_desc: 'EVM 멀티체인 지갑'
     },
     ja: {
       nav_roster: 'KOLリスト', nav_rooms: 'キャンペーン',
       nav_binance: 'Binance KOL', nav_pricing: '料金', nav_wallet: 'ウォレット接続',
-      hero_tag: 'Web3のためのオープンKOLレイヤー',
-      hero_h1: 'KOLが価格を決める。<br><span class="lime">プロジェクトがアルファを選ぶ。</span>',
-      hero_desc: 'Web3 KOLが自分の価格を設定し、プロジェクトがパフォーマンスキャンペーンを運営するオープンマーケットプレイス。仲介者なし、信頼問題なし。',
-      hero_btn1: 'キャンペーン開始', hero_btn2: 'KOL登録',
+      hero_tag: 'Web3オープンマーケットプレイス',
+      hero_h1: '貢献は自由に。報酬は透明に。<br><span class="lime">成長は共に。</span>',
+      hero_desc: '参加者が報酬を直接設定し、プロジェクトがより速く成長するオープンマーケットプレイス。中間マージンなし、すべての貢献に報酬が付きます。',
+      hero_btn1: 'キャンペーン開始', hero_btn2: 'KOL登録', hero_btn3: 'クエスト参加',
       hm1: '認証済みKOL', hm2: '報酬配布額', hm3: '平均キャンペーンROI',
       how_eye: '// プロセス', how_title: '使い方', how_desc: 'キャンペーン概要からオンチェーン決済まで4ステップ。',
       hs1_t: 'KOL登録', hs1_d: 'Twitter＆Telegram連携。ニッチ、料金、ポートフォリオを設定。即座に公開。',
       hs2_t: 'プロジェクトにピン', hs2_d: 'プロジェクトを閲覧しプロモーション提案を送信。またはプロジェクトが検索とフィルターであなたを発見。',
       hs3_t: 'トークンルーム開設', hs3_d: 'プロジェクトがエスクロー資金投入。KOLが条件を承認しプロモーション開始。KPIリアルタイム追跡。',
       hs4_t: '自動決済', hs4_d: 'KPI検証完了。選択：プロジェクトトークン受取またはDEXでステーブルコインに即時スワップ。双方レビュー。',
-      dual_eye: '// 三方向', dual_title: '<span class="lime">KOL</span>、<span class="purple">プロジェクト</span>、<span class="cyan">ユーザー</span>のために',
-      dual_desc: '真のマルチサイドマーケットプレイス。KOLは宣伝、プロジェクトは資金提供、ユーザーは参加。全員が報酬を獲得。',
-      dk_label: 'KOL向け', dk_title: 'あなたの影響力、あなたの価格',
-      dk_desc: 'エージェンシーの手数料なし。自分でレートを設定し、ポートフォリオを展示し、オンチェーンの評判を構築。',
+      dual_eye: '// マーケットプレイス', dual_title: 'すべての貢献に報酬が付くWeb3マーケットプレイス。',
+      dual_desc: 'KOLは単価を設定し、プロジェクトは人材を選び、ユーザーはクエストで参加。役割は違っても報酬構造は一つ。',
+      dk_label: 'KOL向け', dk_title: '私の価値。私が決める。',
+      dk_desc: '仲介者なしでプロジェクトと直接交渉。すべての成果はオンチェーンに記録され、評判はあなたの資産になります。',
       dk_f1: 'Twitter＆Telegram ID自動連携', dk_f2: 'リアルタイムで料金を自由に設定＆変更',
       dk_f3: 'カスタムプロフィール：専門分野、ポートフォリオ、キャンペーン履歴', dk_f4: '報酬ダッシュボード（トークン＆ステーブルコイン）',
       dk_f5: '自動蓄積パフォーマンススコア＆信頼評価', dk_f6: 'キャンペーン後にプロジェクトを評価＆レビュー',
@@ -1809,8 +1947,17 @@
       trust_desc: 'ラグプルキャンペーンやゴーストKOLはもうありません。',
       road_eye: '// ロードマップ', road_title: '次のステップ', road_desc: 'マーケットプレイスからフルスタックKOLインフラへ。',
       price_eye: '// 料金', price_title: 'シンプルで透明な手数料', price_desc: '参加無料。価値が提供された時のみ料金発生。',
-      cta_eye: '// 始める', cta_title: '仲介者は終わった。<br><span class="lime">ダイレクトシル</span>の時代。',
-      cta_desc: 'KOLが価格を決め、プロジェクトがアルファを選び、スマートコントラクトが残りを処理。仲介者なし、信頼問題なし。',
+      cta_eye: '// 始める', cta_title: '仲介者なしで、<span class="lime">直接つながる。</span>',
+      cta_desc: 'プロジェクトならキャンペーンを作成、KOLなら登録、誰でもクエストに参加できます。',
+      quest_highlight: 'KOLでなくても大丈夫。誰でも参加でき、誰でも報酬を受け取れます。',
+      prob_eye: '// why shill vault', prob_title: '今のWeb3マーケティングは非効率的です',
+      prob_role1: 'プロジェクト', prob_role2: 'KOL', prob_role3: 'ユーザー',
+      prob_before1: 'エージェンシーに30%+の手数料、KOLインナーサークルに予算が流出、実際の成果は不透明',
+      prob_after1: 'KOLを直接選び、エスクローで成果達成時のみ支払い。マージンなしの透明な構造',
+      prob_before2: 'インナーサークル外では仕事へのアクセスが難しく、中間で金額が削られ、自分で単価を決められない',
+      prob_after2: '誰でも登録し、自分で単価を設定し、プロジェクトとダイレクトに接続',
+      prob_before3: 'エアドロップ情報が散在、何をすべきかわからない、参加しても報酬が不確実',
+      prob_after3: 'クエストボードでワンクリック参加。条件達成で自動報酬支給',
       wm_title: 'ウォレット接続', wm_desc: 'ウォレットを接続してKOL登録、報酬受取、オンチェーン評判管理を行います。',
       wm_mm_desc: 'ブラウザ拡張ウォレット', wm_rw_desc: 'Reddit Vault / Web3ウォレット', wm_wc_desc: 'モバイルウォレットでQRスキャン',
       wm_popular: '人気', wm_connected: '接続済み:', wm_register: 'KOL登録 →',
@@ -1888,20 +2035,20 @@
     zh: {
       nav_roster: 'KOL名单', nav_rooms: '活动状态',
       nav_binance: 'Binance KOL', nav_pricing: '价格', nav_wallet: '连接钱包',
-      hero_tag: 'Web3的开放KOL层',
-      hero_h1: 'KOL定价。<br><span class="lime">项目选择Alpha。</span>',
-      hero_desc: 'Web3 KOL自主定价，项目方运行绩效营销活动的开放市场。没有中间商，没有信任问题。',
-      hero_btn1: '启动营销活动', hero_btn2: '注册KOL',
+      hero_tag: 'Web3开放市场',
+      hero_h1: '贡献自由。奖励透明。<br><span class="lime">共同成长。</span>',
+      hero_desc: '参与者直接设定奖励，项目更快成长的开放市场。没有中间差价，每一份贡献都有回报。',
+      hero_btn1: '启动营销活动', hero_btn2: '注册KOL', hero_btn3: '参与任务',
       hm1: '认证KOL', hm2: '已分配奖励', hm3: '平均活动ROI',
       how_eye: '// 流程', how_title: '使用方法', how_desc: '从活动简报到链上验证结算，四个步骤。',
       hs1_t: 'KOL注册', hs1_d: '关联Twitter和Telegram。设置领域、费率、作品集。即时上线。',
       hs2_t: '向项目发送提案', hs2_d: '浏览项目并发送推广提案。或由项目方通过搜索和筛选找到你。',
       hs3_t: '代币房间开启', hs3_d: '项目方托管资金。KOL接受条款后开始推广。KPI实时追踪。',
       hs4_t: '自动结算', hs4_d: 'KPI验证完成。选择：接收项目代币或通过DEX即时兑换为稳定币。双方互评。',
-      dual_eye: '// 三方市场', dual_title: '为<span class="lime">KOL</span>、<span class="purple">项目</span>和<span class="cyan">用户</span>打造',
-      dual_desc: '真正的多方市场。KOL推广，项目资助，用户参与。人人获得奖励。',
-      dk_label: 'KOL专区', dk_title: '你的影响力，你的定价',
-      dk_desc: '没有中介抽成。自主设定费率，展示作品集，建立链上信誉。',
+      dual_eye: '// 市场', dual_title: '每一份贡献都有回报的Web3市场。',
+      dual_desc: 'KOL设定单价，项目选择人才，用户通过任务参与。角色不同，奖励结构统一。',
+      dk_label: 'KOL专区', dk_title: '我的价值。我来决定。',
+      dk_desc: '无需中介，直接与项目协商。所有成果记录在链上，声誉成为你的资产。',
       dk_f1: 'Twitter和Telegram ID自动关联', dk_f2: '实时自由设定和更新费率',
       dk_f3: '自定义资料：专业领域、作品集、活动历史', dk_f4: '奖励仪表板（代币和稳定币）',
       dk_f5: '自动累积绩效评分和信任等级', dk_f6: '活动结束后评价和审查项目',
@@ -1926,8 +2073,17 @@
       trust_desc: '不再有跑路活动或幽灵KOL。每次互动都可验证。',
       road_eye: '// 路线图', road_title: '下一步', road_desc: '从市场到全栈KOL基础设施。',
       price_eye: '// 价格', price_title: '简单透明的费用', price_desc: '免费加入。仅在价值交付时付费。',
-      cta_eye: '// 开始', cta_title: '中间人已死。<br><span class="lime">直接Shill</span>时代。',
-      cta_desc: 'KOL定价，项目选Alpha，智能合约处理其余。没有中间商，没有信任问题。',
+      cta_eye: '// 开始', cta_title: '无需中介，<span class="lime">直接连接。</span>',
+      cta_desc: '项目方创建营销活动，KOL注册，任何人都可以参与任务。',
+      quest_highlight: '不是KOL也没关系。人人可参与，人人可获得奖励。',
+      prob_eye: '// why shill vault', prob_title: '当前Web3营销效率低下',
+      prob_role1: '项目', prob_role2: 'KOL', prob_role3: '用户',
+      prob_before1: '向中介支付30%+佣金，预算流入KOL内部圈子，实际效果不透明',
+      prob_after1: '直接选择KOL，托管仅在成果达标时支付。无差价的透明结构',
+      prob_before2: '内部圈子外难以接触工作，中间被压价，无法自定单价',
+      prob_after2: '任何人都可以注册，自己设定单价，直接与项目连接',
+      prob_before3: '空投信息分散，不知道该做什么，参与后奖励不确定',
+      prob_after3: '在任务板一键参与。达标后自动发放奖励',
       wm_title: '连接钱包', wm_desc: '连接钱包以注册KOL、接收活动奖励并管理链上声誉。',
       wm_mm_desc: '浏览器扩展钱包', wm_rw_desc: 'Reddit Vault / Web3钱包', wm_wc_desc: '用手机钱包扫码',
       wm_popular: '热门', wm_connected: '已连接:', wm_register: '注册为KOL →',
