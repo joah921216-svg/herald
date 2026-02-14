@@ -455,11 +455,11 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   background: var(--orange-soft); color: var(--orange); font-weight: 700;
 }
 /* Quest builder groups */
-.wiz-quest-groups { display: flex; flex-direction: column; gap: 0.75rem; }
+.wiz-quest-groups { display: flex; flex-direction: column; gap: 0.5rem; }
 .wiz-qg-label {
   display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem;
   font-weight: 700; color: var(--text-3); text-transform: uppercase;
-  letter-spacing: 0.04em; margin-bottom: 0.35rem;
+  letter-spacing: 0.04em; margin-bottom: 0.1rem;
 }
 .wiz-qg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
 .wiz-qg-tag {
@@ -468,12 +468,11 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   text-transform: none; letter-spacing: 0;
 }
 .wiz-quest-item {
-  display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.7rem;
-  background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-xs);
-  margin-bottom: 0.3rem;
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.2rem;
+  height: 40px; box-sizing: border-box;
 }
-.wiz-quest-item input[type="checkbox"] { accent-color: var(--blue); flex-shrink: 0; }
-.wiz-quest-item .wq-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+.wiz-quest-item input[type="checkbox"] { accent-color: var(--blue); flex-shrink: 0; width: 16px; height: 16px; margin: 0; }
+.wiz-quest-item .wq-name { font-size: 0.82rem; font-weight: 500; color: var(--text); white-space: nowrap; }
 /* Referral */
 .wiz-referral-row {
   display: flex; align-items: center; justify-content: space-between;
