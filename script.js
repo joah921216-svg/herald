@@ -345,7 +345,6 @@ function addCampaignToQuestTable() {
     if (n) questNames.push(n);
   });
   const questLabel = questNames[0] || '퀘스트';
-  if (questNames.length > 1) questLabel;
 
   // Reward info
   const token = document.getElementById('cwToken').selectedOptions[0]?.text || 'USDT';
