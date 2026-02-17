@@ -532,15 +532,21 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 .wiz-review .wr-row {
   display: flex; align-items: center; padding: 0.5rem 0.4rem;
   border-bottom: 1px solid var(--border); gap: 0.5rem;
-  cursor: pointer; border-radius: 6px; transition: background 0.2s;
+  border-radius: 6px;
 }
 .wiz-review .wr-row:last-child { border-bottom: none; }
-.wiz-review .wr-row:hover { background: var(--bg-2); }
-.wiz-review .wr-row.confirmed { background: rgba(32,201,151,0.06); }
-.wr-check {
-  flex-shrink: 0; width: 16px; height: 16px; min-width: 16px;
-  accent-color: var(--green); cursor: pointer; margin: 0; pointer-events: none;
+.wr-confirm {
+  display: flex; align-items: center; gap: 0.5rem; cursor: pointer;
+  margin-top: 0.75rem; padding: 0.65rem 0.6rem; border-radius: var(--r-xs);
+  background: var(--bg); border: 1px solid var(--border); transition: border-color 0.2s;
 }
+.wr-confirm:hover { border-color: var(--blue-mid); }
+.wr-confirm:has(input:checked) { border-color: var(--green); background: rgba(32,201,151,0.06); }
+.wr-confirm input {
+  flex-shrink: 0; width: 16px; height: 16px; min-width: 16px;
+  accent-color: var(--green); cursor: pointer; margin: 0;
+}
+.wr-confirm span { font-size: 0.8rem; font-weight: 600; color: var(--text-2); }
 .wiz-review .wr-label { color: var(--text-3); font-size: 0.78rem; white-space: nowrap; }
 .wiz-review .wr-value { font-weight: 600; color: var(--text); font-size: 0.82rem; text-align: right; flex-wrap: wrap; display: flex; gap: 0.25rem; justify-content: flex-end; margin-left: auto; }
 .wiz-btn-next.disabled { opacity: 0.45; cursor: not-allowed; }

@@ -271,7 +271,7 @@ function buildSummary() {
   const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
   const budget = document.getElementById('cwBudget').value;
 
-  const r = (l, v) => '<div class="wr-row" onclick="toggleConfirm(this)"><input type="checkbox" class="wr-check"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
+  const r = (l, v) => '<div class="wr-row"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
   document.getElementById('wizReview').innerHTML =
     r('프로젝트', name) +
     r('기간', startD + ' ~ ' + endD) +
@@ -279,23 +279,16 @@ function buildSummary() {
     r('참여자', ptype) +
     r('퀘스트', questNames.map(n => '<span class="wr-quest-tag">' + n + '</span>').join(' ')) +
     r('보상 토큰', token) +
-    r('총 예산', '$' + Number(budget || 0).toLocaleString());
-  updateLaunchBtn();
-}
-
-function toggleConfirm(row) {
-  const cb = row.querySelector('.wr-check');
-  cb.checked = !cb.checked;
-  row.classList.toggle('confirmed', cb.checked);
+    r('총 예산', '$' + Number(budget || 0).toLocaleString()) +
+    '<label class="wr-confirm" onclick="event.stopPropagation()"><input type="checkbox" class="wr-confirm-check" onchange="updateLaunchBtn()"><span>위 내용을 확인했으며 캠페인을 제출합니다</span></label>';
   updateLaunchBtn();
 }
 
 function updateLaunchBtn() {
-  const allChecks = document.querySelectorAll('#wizReview .wr-check');
-  const allDone = allChecks.length > 0 && [...allChecks].every(c => c.checked);
+  const cb = document.querySelector('#wizReview .wr-confirm-check');
   const btn = document.getElementById('wizNext');
   if (wizStep === WIZ_TOTAL) {
-    btn.classList.toggle('disabled', !allDone);
+    btn.classList.toggle('disabled', !(cb && cb.checked));
   }
 }
 
@@ -396,10 +389,9 @@ function wizGo(dir) {
   if (next === 2 && dir === 1) applyQuestRecommendations();
   if (next === 3 && dir === 1) buildStep3();
   if (next === WIZ_TOTAL + 1) {
-    // Check all summary items confirmed
-    const allChecks = document.querySelectorAll('#wizReview .wr-check');
-    const allDone = allChecks.length > 0 && [...allChecks].every(c => c.checked);
-    if (!allDone) {
+    // Check confirmation checkbox
+    const confirmCb = document.querySelector('#wizReview .wr-confirm-check');
+    if (!(confirmCb && confirmCb.checked)) {
       document.getElementById('wizReview').classList.add('shake');
       setTimeout(() => document.getElementById('wizReview').classList.remove('shake'), 500);
       return;
