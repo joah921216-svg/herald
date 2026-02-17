@@ -51,16 +51,19 @@ function setOptLoading(btnId, loading) {
 }
 
 async function connectMetaMask() {
-  if (typeof window.ethereum === 'undefined') {
+  // Find MetaMask provider specifically (handles multiple wallet extensions)
+  const provider = window.ethereum?.providers?.find(p => p.isMetaMask)
+    || (window.ethereum?.isMetaMask ? window.ethereum : null);
+  if (!provider) {
     showWalletError('MetaMask가 설치되어 있지 않습니다. MetaMask 확장을 설치해주세요.');
     setTimeout(() => window.open('https://metamask.io/download/', '_blank'), 1500);
     return;
   }
   setOptLoading('mmBtn', true);
   try {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const accounts = await provider.request({ method: 'eth_requestAccounts' });
     if (accounts[0]) {
-      activeProvider = window.ethereum;
+      activeProvider = provider;
       await onWalletConnected(accounts[0], 'MetaMask');
     }
   } catch (err) {
@@ -533,6 +536,10 @@ if (ctaEl) ctaObs.observe(ctaEl);
 
 // ==================== BACKEND API INTEGRATION ====================
 async function submitCampaignToBackend() {
+  // If no token yet, try to authenticate first
+  if (!authToken && connectedAddr && activeProvider) {
+    await authenticateWithBackend(connectedAddr, activeProvider);
+  }
   if (!authToken) {
     console.warn('No auth token, skipping backend submission');
     return;
