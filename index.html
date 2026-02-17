@@ -150,7 +150,7 @@
       <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f2">직접 설정하거나, 추천 세팅으로 바로 시작</span></div>
       <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f3">실시간 성과 대시보드</span></div>
     </div>
-    <a href="javascript:openModal('campModal')" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
+    <a href="javascript:startCampaignOrLogin()" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
   </div>
 </section>
 
@@ -533,6 +533,12 @@ function updateWalletInfo() {
 }
 
 // doDisconnect and doLogout are defined in app.js
+
+// ==================== LOGIN GATE ====================
+function startCampaignOrLogin() {
+  if (!Auth.isLoggedIn) { openModal('walletModal'); return; }
+  openModal('campModal');
+}
 
 // ==================== LOAD LIVE CAMPAIGNS (Card Grid) ====================
 const GRADIENTS = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4','#10b981,#34d399','#8b5cf6,#a78bfa'];
