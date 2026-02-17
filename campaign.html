@@ -212,7 +212,7 @@
     };
   }
 
-  function doDisconnect() { Auth.clear(); closeModal('walletModal'); setupNav(); }
+  // doDisconnect and doLogout are defined in app.js
 
   // Init
   authRestore().then(() => { initCommon(); loadCampaign(); });

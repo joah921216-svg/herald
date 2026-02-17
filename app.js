@@ -281,6 +281,27 @@ window.addEventListener('eip6963:announceProvider', () => {
   buildWalletButtons('walletOptions');
 });
 
+// ==================== GLOBAL LOGOUT/DISCONNECT ====================
+function doLogout() {
+  Auth.clear();
+  location.href = location.pathname.includes('index') || location.pathname.endsWith('/') || location.pathname.endsWith('/herald/') ? location.href : 'index.html';
+  location.reload();
+}
+
+function doDisconnect() {
+  Auth.clear();
+  const modal = document.getElementById('walletModal');
+  if (modal) modal.classList.remove('open');
+  const wc = document.getElementById('walletConnect');
+  const wi = document.getElementById('walletInfo');
+  const wr = document.getElementById('walletRegister');
+  if (wc) wc.style.display = '';
+  if (wi) wi.style.display = 'none';
+  if (wr) wr.style.display = 'none';
+  setupNav();
+  location.reload();
+}
+
 // ==================== NAV SETUP ====================
 function setupNav() {
   const linksEl = $('.nav-links');

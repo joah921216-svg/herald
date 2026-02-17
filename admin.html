@@ -251,8 +251,7 @@
     } catch (e) { $('#walletError').textContent = e.message || '연결 실패'; show('#walletError'); }
   }
 
-  function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
-  function doLogout() { Auth.clear(); location.href = 'index.html'; }
+  // doDisconnect and doLogout are defined in app.js
 
   async function init() {
     await authRestore();
