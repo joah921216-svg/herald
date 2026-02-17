@@ -1,0 +1,151 @@
+/* ==================== DASHBOARD SHARED STYLES ==================== */
+
+/* Layout */
+.dash-wrap {
+  max-width: 1080px; margin: 0 auto; padding: 6rem 2rem 3rem;
+  min-height: 100vh;
+}
+.dash-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+}
+.dash-header h1 { font-size: 1.5rem; font-weight: 800; }
+.dash-header .dash-role {
+  font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.6rem;
+  border-radius: 100px; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.dash-role.role-admin { background: var(--purple-soft); color: var(--purple); }
+.dash-role.role-project { background: var(--blue-soft); color: var(--blue); }
+.dash-role.role-user { background: var(--green-soft); color: var(--green); }
+
+/* Stats row */
+.dash-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.dash-stat {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 1.25rem; box-shadow: var(--shadow);
+}
+.dash-stat-label { font-size: 0.72rem; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.04em; }
+.dash-stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-top: 0.25rem; }
+.dash-stat-sub { font-size: 0.75rem; color: var(--text-2); margin-top: 0.15rem; }
+
+/* Tabs */
+.dash-tabs {
+  display: flex; gap: 0.25rem; border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem; overflow-x: auto;
+}
+.dash-tab {
+  padding: 0.65rem 1.25rem; font-size: 0.85rem; font-weight: 600;
+  color: var(--text-3); background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent; font-family: inherit;
+  white-space: nowrap; transition: all 0.2s;
+}
+.dash-tab:hover { color: var(--text-2); }
+.dash-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* Card / Section */
+.dash-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 1.5rem; box-shadow: var(--shadow); margin-bottom: 1.5rem;
+}
+.dash-card-title {
+  font-size: 0.95rem; font-weight: 700; margin-bottom: 1rem;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dash-card-title .count {
+  font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 100px;
+  background: var(--bg-2); color: var(--text-3); font-weight: 600;
+}
+
+/* Table in dashboard */
+.dash-table { width: 100%; border-collapse: collapse; }
+.dash-table th {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--text-3); font-weight: 600; padding: 0.6rem 0.75rem;
+  text-align: left; border-bottom: 1px solid var(--border); background: var(--bg-2);
+}
+.dash-table td {
+  font-size: 0.85rem; padding: 0.75rem; border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.dash-table tr:hover td { background: var(--bg-2); }
+.dash-table tr:last-child td { border-bottom: none; }
+
+/* Action buttons in tables */
+.dash-action {
+  padding: 0.3rem 0.7rem; border-radius: var(--r-xs); font-size: 0.72rem;
+  font-weight: 600; border: none; cursor: pointer; font-family: inherit;
+  transition: all 0.2s;
+}
+.dash-action.approve { background: var(--green-soft); color: var(--green); }
+.dash-action.approve:hover { background: var(--green); color: white; }
+.dash-action.reject { background: rgba(239,68,68,0.08); color: var(--red); }
+.dash-action.reject:hover { background: var(--red); color: white; }
+.dash-action.view { background: var(--blue-soft); color: var(--blue); }
+.dash-action.view:hover { background: var(--blue); color: white; }
+
+/* Empty state */
+.dash-empty {
+  text-align: center; padding: 3rem 1rem; color: var(--text-3);
+}
+.dash-empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.5; }
+.dash-empty p { font-size: 0.9rem; }
+
+/* Detail page */
+.detail-wrap {
+  max-width: 800px; margin: 0 auto; padding: 6rem 2rem 3rem;
+  min-height: 100vh;
+}
+.detail-back {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.82rem; color: var(--text-3); text-decoration: none;
+  margin-bottom: 1.5rem; font-weight: 500;
+}
+.detail-back:hover { color: var(--text); }
+.detail-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+.detail-meta {
+  display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;
+  font-size: 0.82rem; color: var(--text-2);
+}
+.detail-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+/* Registration form in auth modal */
+.auth-reg { margin-top: 1rem; }
+.auth-reg-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; }
+.auth-role-picker {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.auth-role-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  padding: 1rem; background: var(--bg-2); border: 2px solid var(--border);
+  border-radius: var(--r-sm); cursor: pointer; transition: all 0.2s;
+  font-family: inherit; color: var(--text);
+}
+.auth-role-opt:hover { border-color: var(--blue-mid); }
+.auth-role-opt.selected { border-color: var(--blue); background: var(--blue-soft); }
+.auth-role-icon { font-size: 1.5rem; }
+.auth-role-name { font-size: 0.85rem; font-weight: 700; }
+.auth-role-desc { font-size: 0.68rem; color: var(--text-3); text-align: center; }
+
+/* Loading spinner */
+.dash-loading {
+  display: flex; justify-content: center; padding: 3rem;
+}
+.spinner {
+  width: 32px; height: 32px; border: 3px solid var(--border);
+  border-top-color: var(--blue); border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media(max-width:768px) {
+  .dash-stats { grid-template-columns: 1fr 1fr; }
+  .dash-table { font-size: 0.8rem; }
+  .dash-wrap { padding: 5rem 1rem 2rem; }
+  .detail-wrap { padding: 5rem 1rem 2rem; }
+  .auth-role-picker { grid-template-columns: 1fr; }
+}

@@ -18,14 +18,8 @@
 <nav id="nav">
   <div class="nav-inner">
     <a href="#" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
-    <button class="mob-toggle" onclick="document.querySelector('.nav-links').classList.toggle('active')" aria-label="Menu">&#9776;</button>
-    <ul class="nav-links">
-      <li><a href="#quests" data-i18n="nav_quests">Quests</a></li>
-      <li><a href="#campaigns" data-i18n="nav_campaigns">Campaigns</a></li>
-      <li><a href="#for-projects" data-i18n="nav_projects">For Projects</a></li>
-      <li><a href="dashboard.html" data-i18n="nav_dashboard">Dashboard</a></li>
-      <li><button class="wallet-btn" id="walletBtn" onclick="openModal('walletModal')" data-i18n="nav_wallet">지갑 연결</button></li>
-    </ul>
+    <button class="mob-toggle" onclick="document.querySelector('.nav-links')?.classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links"></ul>
   </div>
 </nav>
 
@@ -266,66 +260,53 @@
 
     <!-- Connect State -->
     <div id="walletConnect">
-      <h3 data-i18n="wm_title">지갑 연결</h3>
-      <p class="modal-desc" data-i18n="wm_desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
+      <h3>지갑 연결</h3>
+      <p class="modal-desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
       <div class="wallet-options">
-        <button class="wallet-opt" id="mmBtn" onclick="connectMetaMask()">
+        <button class="wallet-opt" onclick="connectWallet('metamask')">
           <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
           </div>
           <div>
             <div class="wallet-opt-name">MetaMask</div>
-            <div class="wallet-opt-desc" data-i18n="wm_mm_desc">브라우저 확장 지갑</div>
+            <div class="wallet-opt-desc">브라우저 확장 지갑</div>
           </div>
-          <span class="wallet-opt-badge" data-i18n="wm_popular">인기</span>
+          <span class="wallet-opt-badge">인기</span>
         </button>
-        <button class="wallet-opt" id="rbBtn" onclick="connectRabby()">
+        <button class="wallet-opt" onclick="connectWallet('rabby')">
           <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/></svg>
           </div>
           <div>
             <div class="wallet-opt-name">Rabby Wallet</div>
-            <div class="wallet-opt-desc" data-i18n="wm_rw_desc">EVM 멀티체인 지갑</div>
+            <div class="wallet-opt-desc">EVM 멀티체인 지갑</div>
           </div>
-        </button>
-        <button class="wallet-opt wc-disabled" onclick="connectWalletConnect()">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#3b99fc,#2d7dd2);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M6.1 8.5c3.3-3.2 8.5-3.2 11.8 0l.4.4c.2.2.2.4 0 .5l-1.3 1.3c-.1.1-.2.1-.3 0l-.5-.5c-2.3-2.2-5.9-2.2-8.2 0l-.6.5c-.1.1-.2.1-.3 0L5.8 9.4c-.1-.1-.1-.4 0-.5l.3-.4zm14.6 2.7l1.2 1.1c.2.2.2.4 0 .5l-5.2 5.1c-.2.2-.4.2-.6 0l-3.7-3.6c0-.1-.1-.1-.1 0l-3.7 3.6c-.2.2-.4.2-.6 0l-5.2-5.1c-.2-.1-.2-.4 0-.5l1.2-1.1c.2-.2.4-.2.6 0l3.7 3.6c.1 0 .1 0 .2 0l3.7-3.6c.2-.2.4-.2.6 0l3.7 3.6c0 0 .1 0 .1 0l3.7-3.6c.2-.2.5-.2.6 0z"/></svg>
-          </div>
-          <div>
-            <div class="wallet-opt-name">WalletConnect</div>
-            <div class="wallet-opt-desc" data-i18n="wm_wc_desc">모바일 지갑으로 QR 스캔</div>
-          </div>
-          <span class="wallet-opt-badge wc-soon" data-i18n="wm_soon">준비중</span>
         </button>
       </div>
       <div id="walletError" class="wallet-error" style="display:none;"></div>
     </div>
 
+    <!-- Registration State -->
+    <div id="walletRegister" style="display:none;"></div>
+
     <!-- Connected State -->
     <div id="walletInfo" style="display:none;">
-      <h3 data-i18n="wm_connected_title">지갑 연결됨</h3>
+      <h3>지갑 연결됨</h3>
       <div class="wallet-connected-info">
         <div class="wci-row">
-          <span class="wci-label" data-i18n="wm_wallet_label">지갑</span>
-          <span class="wci-value" id="wiName">MetaMask</span>
+          <span class="wci-label">지갑</span>
+          <span class="wci-value" id="wiName">-</span>
         </div>
         <div class="wci-row">
-          <span class="wci-label" data-i18n="wm_chain_label">체인</span>
-          <span class="wci-chain" id="wiChain">Ethereum</span>
+          <span class="wci-label">주소</span>
+          <span class="wci-addr" id="wiAddr">-</span>
         </div>
         <div class="wci-row">
-          <span class="wci-label" data-i18n="wm_address_label">주소</span>
-          <span class="wci-addr" id="wiAddr">0x1234...abcd</span>
-          <button class="wci-copy" onclick="copyAddress()" title="Copy">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          </button>
-        </div>
-        <div class="wci-balance-row">
-          <span class="wci-balance" id="wiBalance">0.00 ETH</span>
+          <span class="wci-label">역할</span>
+          <span class="wci-value" id="wiRole">-</span>
         </div>
       </div>
-      <button class="wallet-disconnect-btn" onclick="disconnectWallet()" data-i18n="wm_disconnect">연결 해제</button>
+      <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
     </div>
   </div>
 </div>
@@ -555,7 +536,7 @@
           <span class="wiz-done-stat-lbl">예상 참여자</span>
         </div>
       </div>
-      <a href="dashboard.html" class="reg-btn" style="display:inline-block;text-decoration:none;text-align:center;" onclick="closeCampWizard()">대시보드로 이동</a>
+      <a href="project.html" class="reg-btn" style="display:inline-block;text-decoration:none;text-align:center;" onclick="closeCampWizard()">대시보드로 이동</a>
     </div>
 
     <!-- Nav Buttons -->
@@ -583,6 +564,386 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
+<link rel="stylesheet" href="dashboard.css">
+<script src="app.js"></script>
+<script>
+// ==================== WALLET CONNECTION ====================
+async function connectWallet(type) {
+  const provider = type === 'metamask' ? findMetaMask() : findRabby();
+  if (!provider) {
+    const el = document.getElementById('walletError');
+    el.textContent = type === 'metamask' ? 'MetaMask가 설치되어 있지 않습니다.' : '지갑이 감지되지 않습니다.';
+    el.style.display = 'block';
+    return;
+  }
+  try {
+    const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+    if (result.needsRegistration) {
+      showRegForm(result.nonce, result.addr, provider);
+    } else {
+      closeModal('walletModal');
+      setupNav();
+      updateWalletInfo();
+    }
+  } catch (e) {
+    const el = document.getElementById('walletError');
+    el.textContent = e.code === 4001 ? '사용자가 연결을 거부했습니다.' : (e.message || '연결 실패');
+    el.style.display = 'block';
+  }
+}
+
+function showRegForm(nonce, addr, provider) {
+  hide('#walletConnect');
+  let selectedRole = 'user';
+  $('#walletRegister').innerHTML = `
+    <h3>회원가입</h3>
+    <p class="modal-desc">${shortAddr(addr)} 지갑으로 가입합니다.</p>
+    <div class="auth-reg">
+      <div class="auth-role-picker">
+        <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)">
+          <span class="auth-role-icon">&#128100;</span>
+          <span class="auth-role-name">일반 유저</span>
+          <span class="auth-role-desc">퀘스트 참여 및 보상</span>
+        </button>
+        <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)">
+          <span class="auth-role-icon">&#128188;</span>
+          <span class="auth-role-name">프로젝트</span>
+          <span class="auth-role-desc">캠페인 생성 및 관리</span>
+        </button>
+      </div>
+      <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail" placeholder="name@example.com"></div>
+      <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName" placeholder="예: AxiomDEX"></div>
+      <button class="reg-btn" onclick="submitReg()">가입하기</button>
+    </div>
+  `;
+  show('#walletRegister');
+
+  window._regCtx = { nonce, addr, provider };
+  window.selectRegRole = function(el) {
+    $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedRole = el.dataset.role;
+    document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
+  };
+  window.submitReg = async function() {
+    try {
+      const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
+      if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
+      await authSign(addr, nonce, provider, regData);
+      closeModal('walletModal');
+      setupNav();
+      updateWalletInfo();
+    } catch (e) { alert(e.message || '가입 실패'); }
+  };
+}
+
+function updateWalletInfo() {
+  if (!Auth.isLoggedIn) return;
+  const wiName = document.getElementById('wiName');
+  const wiAddr = document.getElementById('wiAddr');
+  const wiRole = document.getElementById('wiRole');
+  if (wiName) wiName.textContent = Auth.walletName || '-';
+  if (wiAddr) wiAddr.textContent = shortAddr(Auth.wallet);
+  if (wiRole) wiRole.textContent = (Auth.role || '-').toUpperCase();
+  hide('#walletConnect');
+  hide('#walletRegister');
+  show('#walletInfo');
+}
+
+function doDisconnect() {
+  Auth.clear();
+  closeModal('walletModal');
+  show('#walletConnect');
+  hide('#walletInfo');
+  hide('#walletRegister');
+  setupNav();
+}
+
+// ==================== LOAD LIVE DATA ====================
+async function loadLiveQuests() {
+  try {
+    const quests = await api('/api/quests?status=active');
+    if (!Array.isArray(quests) || quests.length === 0) return;
+    const tbody = document.querySelector('#quests .troom-table tbody');
+    if (!tbody) return;
+    // Clear demo data and replace with real data
+    tbody.innerHTML = '';
+    quests.forEach(q => {
+      const camp = q.campaigns || {};
+      const abbr = (camp.project_name || '').slice(0, 2).toUpperCase();
+      const gradients = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4','#10b981,#34d399'];
+      const grad = gradients[(camp.project_name || '').length % gradients.length];
+      const tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      tr.onclick = () => location.href = 'quest.html?id=' + q.id;
+      tr.innerHTML = `
+        <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,${grad});">${abbr}</div><div><div class="tr-pname">${camp.project_name || '-'}</div><div class="tr-chain">${camp.chain || '-'}</div></div></div></td>
+        <td>${q.name}</td>
+        <td class="tr-mono">${q.reward_per_user ? '$' + q.reward_per_user : '-'}</td>
+        <td class="tr-mono">${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}</td>
+        <td>${statusBadge(q.status)}</td>`;
+      tbody.appendChild(tr);
+    });
+  } catch { /* keep demo data */ }
+}
+
+async function loadLiveCampaigns() {
+  try {
+    const camps = await api('/api/campaigns/live');
+    if (!Array.isArray(camps) || camps.length === 0) return;
+    const tbody = document.querySelector('#campaigns .troom-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    camps.forEach(c => {
+      const abbr = (c.project_name || '').slice(0, 2).toUpperCase();
+      const gradients = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4'];
+      const grad = gradients[(c.project_name || '').length % gradients.length];
+      const pct = c.max_participants ? Math.round((c.current_participants || 0) / c.max_participants * 100) : 50;
+      const tr = document.createElement('tr');
+      tr.style.cursor = 'pointer';
+      tr.onclick = () => location.href = 'campaign.html?id=' + c.id;
+      tr.innerHTML = `
+        <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,${grad});">${abbr}</div><div><div class="tr-pname">${c.project_name || '-'}</div><div class="tr-chain">${c.chain || '-'}</div></div></div></td>
+        <td class="tr-mono">${formatNum(c.current_participants)}</td>
+        <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
+        <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:${pct}%"></div></div></td>
+        <td>${statusBadge(c.status)}</td>`;
+      tbody.appendChild(tr);
+    });
+  } catch { /* keep demo data */ }
+}
+
+// ==================== CAMPAIGN WIZARD ====================
+let wizStep = 1;
+const WIZ_TOTAL = 3;
+
+const GOAL_QUEST_MAP = {
+  community: ['q_tg', 'q_discord'],
+  awareness: ['q_follow', 'q_rt'],
+  dapp: ['q_swap', 'q_mint'],
+  onchain: ['q_swap', 'q_mint', 'q_stake'],
+  content: ['q_review', 'q_youtube', 'q_thread'],
+};
+
+function toggleGoal(el) { el.classList.toggle('selected'); }
+
+function selectPType(el) {
+  $$('.wiz-ptype').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  const ptype = el.dataset.ptype;
+  document.getElementById('followerField').style.display = (ptype === 'influencer' || ptype === 'mix') ? 'block' : 'none';
+  document.getElementById('contentQuestGroup').style.display = (ptype === 'influencer' || ptype === 'mix') ? 'block' : 'none';
+}
+
+function applyQuestRecommendations() {
+  const selectedGoals = [];
+  $$('#wizStep1 .wiz-goal.selected').forEach(el => selectedGoals.push(el.dataset.goal));
+  const recommended = new Set();
+  selectedGoals.forEach(g => (GOAL_QUEST_MAP[g] || []).forEach(qid => recommended.add(qid)));
+  $$('.wiz-quest-cb').forEach(cb => { cb.checked = recommended.has(cb.dataset.qid); });
+}
+
+function buildStep3() {
+  const container = document.getElementById('questRewardInputs');
+  const quests = [];
+  $$('.wiz-quest-cb:checked').forEach(cb => {
+    const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+    if (name) quests.push({ id: cb.dataset.qid, name });
+  });
+  let html = '';
+  quests.forEach(q => {
+    html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-qid="' + q.id + '" oninput="updateEstimate()"></div></div>';
+  });
+  if (!html) html = '<p style="color:var(--text-3);font-size:0.82rem;">선택된 퀘스트가 없습니다.</p>';
+  container.innerHTML = html;
+  const ptype = document.querySelector('.wiz-ptype.selected')?.dataset.ptype;
+  document.getElementById('tierTableField').style.display = (ptype === 'influencer' || ptype === 'mix') ? 'block' : 'none';
+  buildSummary();
+  updateEstimate();
+}
+
+function buildSummary() {
+  const name = document.getElementById('cwProjName').value || '-';
+  const startD = document.getElementById('cwStart').value || '-';
+  const endD = document.getElementById('cwEnd').value || '-';
+  const goals = [];
+  $$('#wizStep1 .wiz-goal.selected .wiz-goal-name').forEach(el => goals.push(el.textContent));
+  const ptype = document.querySelector('.wiz-ptype.selected .wiz-ptype-name')?.textContent || '-';
+  const questNames = [];
+  $$('.wiz-quest-cb:checked').forEach(cb => {
+    const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+    if (n) questNames.push(n);
+  });
+  const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
+  const budget = document.getElementById('cwBudget').value;
+  const r = (l, v) => '<div class="wr-row"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
+  document.getElementById('wizReview').innerHTML =
+    r('프로젝트', name) + r('기간', startD + ' ~ ' + endD) + r('목표', goals.join(', ') || '-') + r('참여자', ptype) +
+    r('퀘스트', questNames.map(n => '<span class="wr-quest-tag">' + n + '</span>').join(' ')) +
+    r('보상 토큰', token) + r('총 예산', '$' + Number(budget || 0).toLocaleString()) +
+    '<label class="wr-confirm" onclick="event.stopPropagation()"><input type="checkbox" class="wr-confirm-check" onchange="updateLaunchBtn()"><span>위 내용을 확인했으며 캠페인을 제출합니다</span></label>';
+  updateLaunchBtn();
+}
+
+function updateLaunchBtn() {
+  const cb = document.querySelector('#wizReview .wr-confirm-check');
+  if (wizStep === WIZ_TOTAL) document.getElementById('wizNext').classList.toggle('disabled', !(cb && cb.checked));
+}
+
+function updateEstimate() {
+  const budget = Number(document.getElementById('cwBudget').value) || 0;
+  let totalPerPerson = 0;
+  $$('.wiz-qr-input input').forEach(inp => { totalPerPerson += Number(inp.value) || 0; });
+  if (totalPerPerson > 0) {
+    document.getElementById('tierPrice1').textContent = '$' + totalPerPerson.toLocaleString();
+    document.getElementById('tierPrice2').textContent = '$' + Math.round(totalPerPerson * 1.5).toLocaleString();
+    document.getElementById('tierPrice3').textContent = '$' + Math.round(totalPerPerson * 2.5).toLocaleString();
+  } else {
+    document.getElementById('tierPrice1').textContent = '-';
+    document.getElementById('tierPrice2').textContent = '-';
+    document.getElementById('tierPrice3').textContent = '-';
+  }
+  document.getElementById('estParticipants').textContent = (budget > 0 && totalPerPerson > 0) ? '~' + Math.floor(budget / totalPerPerson).toLocaleString() + '명' : '~350명';
+  buildSummary();
+}
+
+function wizGo(dir) {
+  const next = wizStep + dir;
+  if (next < 1 || next > WIZ_TOTAL + 1) return;
+  if (next === 2 && dir === 1) applyQuestRecommendations();
+  if (next === 3 && dir === 1) buildStep3();
+  if (next === WIZ_TOTAL + 1) {
+    const confirmCb = document.querySelector('#wizReview .wr-confirm-check');
+    if (!(confirmCb && confirmCb.checked)) {
+      document.getElementById('wizReview').classList.add('shake');
+      setTimeout(() => document.getElementById('wizReview').classList.remove('shake'), 500);
+      return;
+    }
+    const budget = Number(document.getElementById('cwBudget').value) || 0;
+    document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
+    document.getElementById('doneQuests').textContent = $$('.wiz-quest-cb:checked').length + '개';
+    document.getElementById('doneEst').textContent = document.getElementById('estParticipants').textContent;
+    submitCampaignToBackend();
+    for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
+    document.getElementById('wizDone').style.display = 'block';
+    document.getElementById('wizNav').style.display = 'none';
+    document.getElementById('wizBar').style.width = '100%';
+    launchConfetti();
+    return;
+  }
+  document.getElementById('wizStep' + wizStep).style.display = 'none';
+  document.getElementById('wizStep' + next).style.display = 'block';
+  wizStep = next;
+  document.getElementById('wizBar').style.width = ((wizStep / WIZ_TOTAL) * 100) + '%';
+  document.getElementById('wizPrev').style.display = wizStep === 1 ? 'none' : '';
+  document.getElementById('wizNext').textContent = wizStep === WIZ_TOTAL ? '캠페인 시작' : '다음';
+  if (wizStep === WIZ_TOTAL) updateLaunchBtn();
+  else document.getElementById('wizNext').classList.remove('disabled');
+}
+
+function closeCampWizard() {
+  closeModal('campModal');
+  setTimeout(() => {
+    wizStep = 1;
+    for (let i = 1; i <= WIZ_TOTAL; i++) {
+      const el = document.getElementById('wizStep' + i);
+      if (el) el.style.display = i === 1 ? 'block' : 'none';
+    }
+    document.getElementById('wizDone').style.display = 'none';
+    document.getElementById('wizNav').style.display = 'flex';
+    document.getElementById('wizBar').style.width = '33.33%';
+    document.getElementById('wizPrev').style.display = 'none';
+    document.getElementById('wizNext').textContent = '다음';
+    document.getElementById('wizNext').classList.remove('disabled');
+  }, 300);
+}
+
+async function submitCampaignToBackend() {
+  if (!Auth.isLoggedIn) {
+    if (Auth.wallet && Auth.provider) {
+      try { await authConnect(Auth.provider, Auth.walletName || 'Wallet'); } catch { return; }
+    } else return;
+  }
+  try {
+    const quests = [];
+    $$('.wiz-quest-cb:checked').forEach(cb => {
+      const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
+      const rewardInput = document.querySelector('.wiz-qr-input input[data-qid="' + cb.dataset.qid + '"]');
+      quests.push({ quest_type: cb.dataset.qid, name, reward_per_user: Number(rewardInput?.value) || 0, category: 'general' });
+    });
+    await api('/api/campaigns', {
+      method: 'POST',
+      body: JSON.stringify({
+        project_name: document.getElementById('cwProjName').value,
+        chain: document.getElementById('cwChain').value,
+        category: document.getElementById('cwSector').value,
+        start_date: document.getElementById('cwStart').value || null,
+        end_date: document.getElementById('cwEnd').value || null,
+        reward_token: document.getElementById('cwToken').value,
+        reward_amount: Number(document.getElementById('cwBudget').value) || 0,
+        max_participants: 500,
+        quests,
+      }),
+    });
+  } catch (e) { console.error('Campaign submit failed:', e); }
+}
+
+function launchConfetti() {
+  const colors = ['#3182F6','#20C997','#8B5CF6','#F59E0B','#EC4899','#6366F1'];
+  const c = document.createElement('div');
+  c.className = 'confetti-container';
+  document.body.appendChild(c);
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDelay = Math.random() * 0.6 + 's';
+    p.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
+    p.style.width = (Math.random() * 8 + 4) + 'px';
+    p.style.height = (Math.random() * 14 + 6) + 'px';
+    c.appendChild(p);
+  }
+  setTimeout(() => c.remove(), 4000);
+}
+
+// ==================== CTA ====================
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  const update = (now) => {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    el.textContent = '$' + Math.round(target * ease).toLocaleString();
+    if (t < 1) requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+}
+
+const ctaObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const counter = document.getElementById('ctaCounter');
+    const label = e.target.querySelector('.cta-label');
+    const title = e.target.querySelector('.cta-fade');
+    const btnWrap = e.target.querySelector('.cta-anim');
+    counter.classList.add('vis');
+    if (label) label.classList.add('vis');
+    if (title) title.classList.add('vis');
+    if (btnWrap) { btnWrap.style.opacity = '1'; btnWrap.style.transform = 'translateY(0)'; }
+    animateCounter(counter, 150000, 2000);
+    ctaObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const ctaEl = document.getElementById('cta');
+if (ctaEl) ctaObs.observe(ctaEl);
+
+// ==================== INIT ====================
+authRestore().then(() => {
+  initCommon();
+  if (Auth.isLoggedIn) updateWalletInfo();
+  loadLiveQuests();
+  loadLiveCampaigns();
+});
+</script>
 </body>
 </html>

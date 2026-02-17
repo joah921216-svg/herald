@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Dashboard — SHILL VAULT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
+    <button class="mob-toggle" onclick="$('.nav-links')?.classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links"></ul>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <div id="needLogin" style="display:none;">
+    <div class="dash-empty">
+      <div class="dash-empty-icon">&#128274;</div>
+      <p>프로젝트 계정으로 로그인이 필요합니다.</p>
+      <button class="btn btn-blue" style="margin-top:1rem;" onclick="openModal('walletModal')">지갑 연결</button>
+    </div>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <div class="dash-header">
+      <div>
+        <h1>My Campaigns</h1>
+        <span style="font-size:0.82rem;color:var(--text-2);" id="projName"></span>
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center;">
+        <span class="dash-role role-project">PROJECT</span>
+        <button class="btn btn-blue" style="padding:0.5rem 1rem;font-size:0.82rem;" onclick="openModal('newCampModal')">+ 캠페인 만들기</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-label">내 캠페인</div>
+        <div class="dash-stat-value" id="statCamps">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">승인 대기</div>
+        <div class="dash-stat-value" id="statPending">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">총 참여자</div>
+        <div class="dash-stat-value" id="statParts">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">총 보상</div>
+        <div class="dash-stat-value" id="statRewards">$0</div>
+      </div>
+    </div>
+
+    <!-- Campaign List -->
+    <div class="dash-card">
+      <div class="dash-card-title">캠페인 목록 <span class="count" id="campCount">0</span></div>
+      <div id="campList"></div>
+      <div id="campEmpty" class="dash-empty" style="display:none;">
+        <div class="dash-empty-icon">&#128640;</div>
+        <p>아직 등록한 캠페인이 없습니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Campaign Modal -->
+<div class="modal-overlay" id="newCampModal">
+  <div class="modal" style="max-width:500px;">
+    <button class="modal-close" onclick="closeModal('newCampModal')">&times;</button>
+    <h3>새 캠페인 만들기</h3>
+    <p class="modal-desc">캠페인을 등록하면 관리자 승인 후 공개됩니다.</p>
+    <div class="reg-field"><label>프로젝트 이름</label><input type="text" id="ncName" placeholder="예: AxiomDEX"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div class="reg-field"><label>카테고리</label>
+        <select id="ncCategory"><option value="defi">DeFi</option><option value="nft">NFT</option><option value="gamefi">GameFi</option><option value="l1l2">L1/L2</option><option value="ai">AI/DePIN</option><option value="meme">Meme</option><option value="other">기타</option></select>
+      </div>
+      <div class="reg-field"><label>체인</label>
+        <select id="ncChain"><option value="ethereum">Ethereum</option><option value="solana">Solana</option><option value="base">Base</option><option value="arbitrum">Arbitrum</option><option value="bnb">BNB</option><option value="polygon">Polygon</option><option value="multi">멀티체인</option></select>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div class="reg-field"><label>시작일</label><input type="date" id="ncStart"></div>
+      <div class="reg-field"><label>종료일</label><input type="date" id="ncEnd"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+      <div class="reg-field"><label>보상 토큰</label>
+        <select id="ncToken"><option value="USDT">USDT</option><option value="TOKEN">자체 토큰</option><option value="NFT">NFT</option><option value="POINT">포인트</option></select>
+      </div>
+      <div class="reg-field"><label>총 보상 (USD)</label><input type="number" id="ncAmount" placeholder="10000"></div>
+    </div>
+    <div class="reg-field"><label>최대 참여자</label><input type="number" id="ncMaxPart" placeholder="500"></div>
+    <button class="reg-btn" onclick="createCampaign()">캠페인 등록 (심사 요청)</button>
+  </div>
+</div>
+
+<!-- Wallet Modal -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
+    <div id="walletConnect">
+      <h3>지갑 연결</h3>
+      <div class="wallet-options">
+        <button class="wallet-opt" onclick="connectWallet('metamask')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">MM</div>
+          <div><div class="wallet-opt-name">MetaMask</div></div>
+        </button>
+        <button class="wallet-opt" onclick="connectWallet('rabby')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">RB</div>
+          <div><div class="wallet-opt-name">Rabby</div></div>
+        </button>
+      </div>
+      <div id="walletError" class="wallet-error" style="display:none;"></div>
+    </div>
+    <div id="walletRegister" style="display:none;"></div>
+    <div id="walletInfo" style="display:none;">
+      <h3>지갑 연결됨</h3>
+      <p class="modal-desc" id="wiAddr"></p>
+      <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  async function loadDashboard() {
+    if (!Auth.isLoggedIn || (!Auth.isProject && !Auth.isAdmin)) {
+      show('#needLogin');
+      return;
+    }
+    show('#dashboard');
+    $('#projName').textContent = Auth.user.project_name || shortAddr(Auth.wallet);
+
+    try {
+      const camps = await api('/api/campaigns');
+      const myCamps = camps.filter(c => c.creator_id === Auth.user.id);
+
+      $('#statCamps').textContent = myCamps.length;
+      $('#statPending').textContent = myCamps.filter(c => c.status === 'pending').length;
+      $('#statParts').textContent = formatNum(myCamps.reduce((s, c) => s + (c.current_participants || 0), 0));
+      $('#statRewards').textContent = '$' + formatNum(myCamps.reduce((s, c) => s + (Number(c.reward_amount) || 0), 0));
+      $('#campCount').textContent = myCamps.length;
+
+      if (myCamps.length === 0) {
+        show('#campEmpty');
+      } else {
+        let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>체인</th><th>상태</th><th>참여자</th><th>보상</th><th></th></tr></thead><tbody>';
+        myCamps.forEach(c => {
+          html += `<tr>
+            <td style="font-weight:600;">${c.project_name}</td>
+            <td>${c.chain || '-'}</td>
+            <td>${statusBadge(c.status)}</td>
+            <td class="tr-mono">${formatNum(c.current_participants)}</td>
+            <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
+            <td><a href="campaign.html?id=${c.id}" class="dash-action view">상세</a></td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        $('#campList').innerHTML = html;
+      }
+    } catch (e) {
+      show('#campEmpty');
+    }
+  }
+
+  async function createCampaign() {
+    try {
+      const body = {
+        project_name: $('#ncName').value,
+        category: $('#ncCategory').value,
+        chain: $('#ncChain').value,
+        start_date: $('#ncStart').value || null,
+        end_date: $('#ncEnd').value || null,
+        reward_token: $('#ncToken').value,
+        reward_amount: Number($('#ncAmount').value) || 0,
+        max_participants: Number($('#ncMaxPart').value) || 0,
+      };
+      await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
+      closeModal('newCampModal');
+      loadDashboard();
+      alert('캠페인이 등록되었습니다. 관리자 승인을 기다려주세요.');
+    } catch (e) {
+      alert(e.message || '등록 실패');
+    }
+  }
+
+  async function connectWallet(type) {
+    const provider = type === 'metamask' ? findMetaMask() : findRabby();
+    if (!provider) { $('#walletError').textContent = '지갑이 감지되지 않습니다.'; show('#walletError'); return; }
+    try {
+      const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+      if (result.needsRegistration) {
+        showRegForm(result.nonce, result.addr, provider);
+      } else { closeModal('walletModal'); location.reload(); }
+    } catch (e) { $('#walletError').textContent = e.message || '연결 실패'; show('#walletError'); }
+  }
+
+  function showRegForm(nonce, addr, provider) {
+    hide('#walletConnect');
+    let selectedRole = 'project';
+    $('#walletRegister').innerHTML = `
+      <h3>회원가입</h3><p class="modal-desc">${shortAddr(addr)}</p>
+      <div class="auth-reg">
+        <div class="auth-role-picker">
+          <button class="auth-role-opt" data-role="user" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128100;</span><span class="auth-role-name">일반 유저</span></button>
+          <button class="auth-role-opt selected" data-role="project" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128188;</span><span class="auth-role-name">프로젝트</span></button>
+        </div>
+        <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail"></div>
+        <div class="reg-field" id="regProjField"><label>프로젝트 이름</label><input type="text" id="regProjName"></div>
+        <button class="reg-btn" onclick="submitReg()">가입하기</button>
+      </div>`;
+    show('#walletRegister');
+    window.selectRegRole = function(el) {
+      $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected'); selectedRole = el.dataset.role;
+      document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
+    };
+    window.submitReg = async function() {
+      const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
+      if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
+      try { await authSign(addr, nonce, provider, regData); closeModal('walletModal'); location.reload(); }
+      catch (e) { alert(e.message || '가입 실패'); }
+    };
+  }
+
+  function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
+
+  authRestore().then(() => { initCommon(); loadDashboard(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest — SHILL VAULT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
+    <button class="mob-toggle" onclick="$('.nav-links')?.classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links"></ul>
+  </div>
+</nav>
+
+<div class="detail-wrap">
+  <a href="javascript:history.back()" class="detail-back">&larr; 돌아가기</a>
+
+  <div id="loading" class="dash-loading"><div class="spinner"></div></div>
+
+  <div id="content" style="display:none;">
+    <h1 class="detail-title" id="questName"></h1>
+    <div class="detail-meta">
+      <span id="questType"></span>
+      <span id="questAction"></span>
+      <span id="questStatus"></span>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="dash-stats" style="grid-template-columns:repeat(3,1fr);">
+      <div class="dash-stat">
+        <div class="dash-stat-label">보상</div>
+        <div class="dash-stat-value" id="questReward">-</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">참여자</div>
+        <div class="dash-stat-value" id="questParticipants">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">캠페인</div>
+        <div class="dash-stat-value" id="questCampaign" style="font-size:0.95rem;">-</div>
+      </div>
+    </div>
+
+    <!-- Action -->
+    <div class="dash-card" id="actionCard">
+      <div class="dash-card-title">퀘스트 참여</div>
+      <div id="actionContent">
+        <p style="color:var(--text-2);font-size:0.9rem;margin-bottom:1rem;">지갑을 연결하고 퀘스트에 참여하세요.</p>
+        <button class="reg-btn" id="joinBtn" onclick="joinQuest()">퀘스트 참여하기</button>
+      </div>
+      <div id="alreadyJoined" style="display:none;">
+        <div style="text-align:center;padding:1rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">&#9989;</div>
+          <p style="font-weight:600;color:var(--green);margin-bottom:0.75rem;">이미 참여중입니다</p>
+          <div class="reg-field"><label>증빙 URL (선택)</label><input type="url" id="proofUrl" placeholder="https://twitter.com/..."></div>
+          <button class="reg-btn" onclick="completeQuest()">퀘스트 완료 제출</button>
+        </div>
+      </div>
+      <div id="questCompleted" style="display:none;">
+        <div style="text-align:center;padding:1rem;">
+          <div style="font-size:2rem;margin-bottom:0.5rem;">&#127881;</div>
+          <p style="font-weight:600;color:var(--green);">퀘스트를 완료했습니다!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="notFound" style="display:none;">
+    <div class="dash-empty">
+      <div class="dash-empty-icon">&#128533;</div>
+      <p>퀘스트를 찾을 수 없습니다.</p>
+      <a href="index.html" class="btn btn-ghost" style="margin-top:1rem;">홈으로</a>
+    </div>
+  </div>
+</div>
+
+<!-- Wallet Modal -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
+    <div id="walletConnect">
+      <h3>지갑 연결</h3>
+      <p class="modal-desc">퀘스트에 참여하려면 지갑을 연결하세요.</p>
+      <div class="wallet-options">
+        <button class="wallet-opt" onclick="connectWallet('metamask')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">MM</div>
+          <div><div class="wallet-opt-name">MetaMask</div></div>
+        </button>
+        <button class="wallet-opt" onclick="connectWallet('rabby')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">RB</div>
+          <div><div class="wallet-opt-name">Rabby</div></div>
+        </button>
+      </div>
+      <div id="walletError" class="wallet-error" style="display:none;"></div>
+    </div>
+    <div id="walletRegister" style="display:none;"></div>
+    <div id="walletInfo" style="display:none;">
+      <h3>지갑 연결됨</h3>
+      <p class="modal-desc" id="wiAddr"></p>
+      <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  const questId = new URLSearchParams(location.search).get('id');
+  let questData = null;
+
+  async function loadQuest() {
+    if (!questId) { hide('#loading'); show('#notFound'); return; }
+    try {
+      const q = await api('/api/quests/' + questId);
+      questData = q;
+      hide('#loading');
+      show('#content');
+
+      $('#questName').textContent = q.name;
+      $('#questType').textContent = q.quest_type || '-';
+      $('#questAction').textContent = q.action_type || '';
+      $('#questStatus').innerHTML = statusBadge(q.status);
+      $('#questReward').textContent = q.reward_per_user ? '$' + formatNum(q.reward_per_user) : '-';
+      $('#questParticipants').textContent = formatNum(q.current_participants) + (q.max_participants ? ' / ' + formatNum(q.max_participants) : '');
+      $('#questCampaign').textContent = q.campaigns?.project_name || '-';
+
+      // Check if already joined
+      if (Auth.isLoggedIn) checkParticipation();
+    } catch (e) {
+      hide('#loading');
+      show('#notFound');
+    }
+  }
+
+  async function checkParticipation() {
+    try {
+      const parts = await api('/api/users/me/participations');
+      const mine = parts.find(p => p.quest_id === questId);
+      if (mine) {
+        hide('#actionContent');
+        if (mine.status === 'completed' || mine.status === 'rewarded') {
+          show('#questCompleted');
+        } else {
+          show('#alreadyJoined');
+        }
+      }
+    } catch { /* no participation data */ }
+  }
+
+  async function joinQuest() {
+    if (!Auth.isLoggedIn) { openModal('walletModal'); return; }
+    try {
+      $('#joinBtn').disabled = true;
+      $('#joinBtn').textContent = '참여 중...';
+      await api('/api/quests/' + questId + '/join', { method: 'POST' });
+      hide('#actionContent');
+      show('#alreadyJoined');
+    } catch (e) {
+      alert(e.message || '참여 실패');
+      $('#joinBtn').disabled = false;
+      $('#joinBtn').textContent = '퀘스트 참여하기';
+    }
+  }
+
+  async function completeQuest() {
+    try {
+      const proofUrl = $('#proofUrl')?.value || undefined;
+      await api('/api/quests/' + questId + '/complete', {
+        method: 'PUT',
+        body: JSON.stringify({ proofUrl }),
+      });
+      hide('#alreadyJoined');
+      show('#questCompleted');
+    } catch (e) {
+      alert(e.message || '완료 제출 실패');
+    }
+  }
+
+  // Wallet connect (same pattern)
+  async function connectWallet(type) {
+    const provider = type === 'metamask' ? findMetaMask() : findRabby();
+    if (!provider) { $('#walletError').textContent = '지갑이 감지되지 않습니다.'; show('#walletError'); return; }
+    try {
+      const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+      if (result.needsRegistration) {
+        showRegForm(result.nonce, result.addr, provider);
+      } else {
+        closeModal('walletModal');
+        setupNav();
+        checkParticipation();
+      }
+    } catch (e) {
+      $('#walletError').textContent = e.message || '연결 실패';
+      show('#walletError');
+    }
+  }
+
+  function showRegForm(nonce, addr, provider) {
+    hide('#walletConnect');
+    let selectedRole = 'user';
+    $('#walletRegister').innerHTML = `
+      <h3>회원가입</h3>
+      <p class="modal-desc">${shortAddr(addr)}</p>
+      <div class="auth-reg">
+        <div class="auth-role-picker">
+          <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)">
+            <span class="auth-role-icon">&#128100;</span><span class="auth-role-name">일반 유저</span>
+          </button>
+          <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)">
+            <span class="auth-role-icon">&#128188;</span><span class="auth-role-name">프로젝트</span>
+          </button>
+        </div>
+        <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail"></div>
+        <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName"></div>
+        <button class="reg-btn" onclick="submitReg()">가입하기</button>
+      </div>`;
+    show('#walletRegister');
+    window._regData = { nonce, addr, provider };
+    window.selectRegRole = function(el) {
+      $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedRole = el.dataset.role;
+      document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
+    };
+    window.submitReg = async function() {
+      try {
+        const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
+        if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
+        await authSign(addr, nonce, provider, regData);
+        closeModal('walletModal'); setupNav(); checkParticipation();
+      } catch (e) { alert(e.message || '가입 실패'); }
+    };
+  }
+
+  function doDisconnect() { Auth.clear(); closeModal('walletModal'); setupNav(); }
+
+  authRestore().then(() => { initCommon(); loadQuest(); });
+</script>
+</body>
+</html>

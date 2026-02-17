@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — SHILL VAULT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
+    <button class="mob-toggle" onclick="$('.nav-links')?.classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links"></ul>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <div id="noAccess" style="display:none;">
+    <div class="dash-empty">
+      <div class="dash-empty-icon">&#128683;</div>
+      <p>관리자 권한이 필요합니다.</p>
+      <a href="index.html" class="btn btn-ghost" style="margin-top:1rem;">홈으로</a>
+    </div>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <div class="dash-header">
+      <div>
+        <h1>Admin Dashboard</h1>
+      </div>
+      <span class="dash-role role-admin">ADMIN</span>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats" id="statsRow">
+      <div class="dash-stat"><div class="dash-stat-label">총 유저</div><div class="dash-stat-value" id="statUsers">-</div></div>
+      <div class="dash-stat"><div class="dash-stat-label">총 캠페인</div><div class="dash-stat-value" id="statCamps">-</div></div>
+      <div class="dash-stat"><div class="dash-stat-label">총 퀘스트</div><div class="dash-stat-value" id="statQuests">-</div></div>
+      <div class="dash-stat"><div class="dash-stat-label">총 참여</div><div class="dash-stat-value" id="statParts">-</div></div>
+      <div class="dash-stat"><div class="dash-stat-label">승인 대기</div><div class="dash-stat-value" id="statPending" style="color:var(--orange);">-</div></div>
+      <div class="dash-stat"><div class="dash-stat-label">총 보상</div><div class="dash-stat-value" id="statRewards">-</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="dash-tabs">
+      <button class="dash-tab active" onclick="switchTab('pending')">승인 대기</button>
+      <button class="dash-tab" onclick="switchTab('campaigns')">전체 캠페인</button>
+      <button class="dash-tab" onclick="switchTab('users')">유저 관리</button>
+    </div>
+
+    <!-- Pending Campaigns -->
+    <div id="tab-pending" class="dash-card">
+      <div class="dash-card-title">승인 대기 캠페인 <span class="count" id="pendingCount">0</span></div>
+      <div id="pendingList"></div>
+      <div id="pendingEmpty" class="dash-empty" style="display:none;">
+        <div class="dash-empty-icon">&#9989;</div>
+        <p>대기중인 캠페인이 없습니다.</p>
+      </div>
+    </div>
+
+    <!-- All Campaigns -->
+    <div id="tab-campaigns" class="dash-card" style="display:none;">
+      <div class="dash-card-title">전체 캠페인 <span class="count" id="allCampCount">0</span></div>
+      <div id="allCampList"></div>
+    </div>
+
+    <!-- Users -->
+    <div id="tab-users" class="dash-card" style="display:none;">
+      <div class="dash-card-title">
+        유저 목록 <span class="count" id="allUserCount">0</span>
+        <select id="userRoleFilter" onchange="loadUsers()" style="font-size:0.75rem;padding:0.2rem 0.5rem;border:1px solid var(--border);border-radius:var(--r-xs);">
+          <option value="">전체</option>
+          <option value="user">User</option>
+          <option value="project">Project</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div id="userList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Reject Reason Modal -->
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" onclick="closeModal('rejectModal')">&times;</button>
+    <h3>캠페인 반려</h3>
+    <div class="reg-field"><label>반려 사유</label><input type="text" id="rejectReason" placeholder="사유를 입력하세요"></div>
+    <button class="reg-btn" style="background:var(--red);" onclick="confirmReject()">반려하기</button>
+  </div>
+</div>
+
+<!-- Wallet Modal -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
+    <div id="walletConnect">
+      <h3>지갑 연결</h3>
+      <div class="wallet-options">
+        <button class="wallet-opt" onclick="connectWallet('metamask')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">MM</div>
+          <div><div class="wallet-opt-name">MetaMask</div></div>
+        </button>
+        <button class="wallet-opt" onclick="connectWallet('rabby')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">RB</div>
+          <div><div class="wallet-opt-name">Rabby</div></div>
+        </button>
+      </div>
+      <div id="walletError" class="wallet-error" style="display:none;"></div>
+    </div>
+    <div id="walletRegister" style="display:none;"></div>
+    <div id="walletInfo" style="display:none;">
+      <h3>지갑 연결됨</h3>
+      <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  let rejectingId = null;
+
+  function switchTab(tab) {
+    $$('.dash-tab').forEach(t => t.classList.remove('active'));
+    $$('.dash-tabs .dash-tab').forEach(t => { if (t.textContent.includes(tab === 'pending' ? '대기' : tab === 'campaigns' ? '캠페인' : '유저')) t.classList.add('active'); });
+    hide('#tab-pending'); hide('#tab-campaigns'); hide('#tab-users');
+    show('#tab-' + tab);
+    if (tab === 'users') loadUsers();
+    if (tab === 'campaigns') loadAllCampaigns();
+  }
+
+  async function loadStats() {
+    try {
+      const s = await api('/api/admin/stats');
+      $('#statUsers').textContent = formatNum(s.totalUsers);
+      $('#statCamps').textContent = formatNum(s.totalCampaigns);
+      $('#statQuests').textContent = formatNum(s.totalQuests);
+      $('#statParts').textContent = formatNum(s.totalParticipations);
+      $('#statPending').textContent = formatNum(s.pendingCampaigns);
+      $('#statRewards').textContent = '$' + formatNum(s.totalRewards);
+    } catch { /* silent */ }
+  }
+
+  async function loadPending() {
+    try {
+      const camps = await api('/api/admin/campaigns');
+      const pending = camps.filter(c => c.status === 'pending');
+      $('#pendingCount').textContent = pending.length;
+
+      if (pending.length === 0) {
+        show('#pendingEmpty');
+        return;
+      }
+      hide('#pendingEmpty');
+
+      let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>카테고리</th><th>체인</th><th>보상</th><th>등록자</th><th>액션</th></tr></thead><tbody>';
+      pending.forEach(c => {
+        const creator = c.users?.wallet_address ? shortAddr(c.users.wallet_address) : '-';
+        html += `<tr>
+          <td style="font-weight:600;">${c.project_name}</td>
+          <td>${c.category || '-'}</td>
+          <td>${c.chain || '-'}</td>
+          <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
+          <td style="font-size:0.78rem;">${creator}</td>
+          <td>
+            <button class="dash-action approve" onclick="approveCampaign('${c.id}')">승인</button>
+            <button class="dash-action reject" onclick="startReject('${c.id}')" style="margin-left:0.3rem;">반려</button>
+          </td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      $('#pendingList').innerHTML = html;
+    } catch (e) {
+      show('#pendingEmpty');
+    }
+  }
+
+  async function loadAllCampaigns() {
+    try {
+      const camps = await api('/api/admin/campaigns');
+      $('#allCampCount').textContent = camps.length;
+
+      let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>체인</th><th>상태</th><th>참여자</th><th>보상</th><th></th></tr></thead><tbody>';
+      camps.forEach(c => {
+        html += `<tr>
+          <td style="font-weight:600;">${c.project_name}</td>
+          <td>${c.chain || '-'}</td>
+          <td>${statusBadge(c.status)}</td>
+          <td class="tr-mono">${formatNum(c.current_participants)}</td>
+          <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
+          <td><a href="campaign.html?id=${c.id}" class="dash-action view">상세</a></td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      $('#allCampList').innerHTML = html;
+    } catch { /* silent */ }
+  }
+
+  async function loadUsers() {
+    try {
+      const role = $('#userRoleFilter')?.value || '';
+      const url = '/api/admin/users' + (role ? '?role=' + role : '');
+      const users = await api(url);
+      $('#allUserCount').textContent = users.length;
+
+      let html = '<table class="dash-table"><thead><tr><th>지갑</th><th>이메일</th><th>역할</th><th>프로젝트</th><th>가입일</th></tr></thead><tbody>';
+      users.forEach(u => {
+        const roleClass = u.role === 'admin' ? 'role-admin' : u.role === 'project' ? 'role-project' : 'role-user';
+        html += `<tr>
+          <td style="font-family:monospace;font-size:0.8rem;">${shortAddr(u.wallet_address)}</td>
+          <td>${u.email || '-'}</td>
+          <td><span class="dash-role ${roleClass}" style="font-size:0.65rem;">${u.role?.toUpperCase()}</span></td>
+          <td>${u.project_name || '-'}</td>
+          <td style="font-size:0.8rem;">${formatDate(u.created_at)}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      $('#userList').innerHTML = html;
+    } catch { /* silent */ }
+  }
+
+  async function approveCampaign(id) {
+    if (!confirm('이 캠페인을 승인하시겠습니까?')) return;
+    try {
+      await api('/api/admin/campaigns/' + id, { method: 'PUT', body: JSON.stringify({ action: 'approve' }) });
+      loadPending();
+      loadStats();
+    } catch (e) { alert(e.message || '승인 실패'); }
+  }
+
+  function startReject(id) {
+    rejectingId = id;
+    openModal('rejectModal');
+  }
+
+  async function confirmReject() {
+    if (!rejectingId) return;
+    try {
+      const reason = $('#rejectReason')?.value || '';
+      await api('/api/admin/campaigns/' + rejectingId, { method: 'PUT', body: JSON.stringify({ action: 'reject', reason }) });
+      closeModal('rejectModal');
+      rejectingId = null;
+      loadPending();
+      loadStats();
+    } catch (e) { alert(e.message || '반려 실패'); }
+  }
+
+  async function connectWallet(type) {
+    const provider = type === 'metamask' ? findMetaMask() : findRabby();
+    if (!provider) { $('#walletError').textContent = '지갑이 감지되지 않습니다.'; show('#walletError'); return; }
+    try {
+      const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+      if (!result.needsRegistration) { closeModal('walletModal'); location.reload(); }
+    } catch (e) { $('#walletError').textContent = e.message || '연결 실패'; show('#walletError'); }
+  }
+
+  function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
+
+  async function init() {
+    await authRestore();
+    initCommon();
+    if (!Auth.isLoggedIn || !Auth.isAdmin) {
+      show('#noAccess');
+      return;
+    }
+    show('#dashboard');
+    loadStats();
+    loadPending();
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — SHILL VAULT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo"><div class="logo-mark">SV</div><span class="logo-name">SHILL VAULT</span></a>
+    <button class="mob-toggle" onclick="$('.nav-links')?.classList.toggle('active')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links"></ul>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <div id="needLogin" style="display:none;">
+    <div class="dash-empty">
+      <div class="dash-empty-icon">&#128274;</div>
+      <p>로그인이 필요합니다.</p>
+      <button class="btn btn-blue" style="margin-top:1rem;" onclick="openModal('walletModal')">지갑 연결</button>
+    </div>
+  </div>
+
+  <div id="dashboard" style="display:none;">
+    <div class="dash-header">
+      <div>
+        <h1>My Dashboard</h1>
+        <span style="font-size:0.82rem;color:var(--text-2);" id="userAddr"></span>
+      </div>
+      <span class="dash-role" id="userRole"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-label">참여 퀘스트</div>
+        <div class="dash-stat-value" id="statJoined">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">완료</div>
+        <div class="dash-stat-value" id="statCompleted">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">보상 받음</div>
+        <div class="dash-stat-value" id="statRewarded">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">가입일</div>
+        <div class="dash-stat-value" id="statCreated" style="font-size:0.9rem;">-</div>
+      </div>
+    </div>
+
+    <!-- Participations -->
+    <div class="dash-card">
+      <div class="dash-card-title">내 참여 내역 <span class="count" id="partCount">0</span></div>
+      <div id="partList"></div>
+      <div id="partEmpty" class="dash-empty" style="display:none;">
+        <div class="dash-empty-icon">&#128640;</div>
+        <p>아직 참여한 퀘스트가 없습니다.</p>
+        <a href="index.html#quests" class="btn btn-blue" style="margin-top:1rem;">퀘스트 둘러보기</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Wallet Modal -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
+    <div id="walletConnect">
+      <h3>지갑 연결</h3>
+      <p class="modal-desc">로그인하려면 지갑을 연결하세요.</p>
+      <div class="wallet-options">
+        <button class="wallet-opt" onclick="connectWallet('metamask')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">MM</div>
+          <div><div class="wallet-opt-name">MetaMask</div></div>
+        </button>
+        <button class="wallet-opt" onclick="connectWallet('rabby')">
+          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">RB</div>
+          <div><div class="wallet-opt-name">Rabby</div></div>
+        </button>
+      </div>
+      <div id="walletError" class="wallet-error" style="display:none;"></div>
+    </div>
+    <div id="walletRegister" style="display:none;"></div>
+    <div id="walletInfo" style="display:none;">
+      <h3>지갑 연결됨</h3>
+      <p class="modal-desc" id="wiAddr"></p>
+      <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  async function loadDashboard() {
+    if (!Auth.isLoggedIn) {
+      show('#needLogin');
+      return;
+    }
+
+    show('#dashboard');
+    const roleMap = { admin: 'role-admin', project: 'role-project', user: 'role-user' };
+    $('#userRole').textContent = Auth.role?.toUpperCase();
+    $('#userRole').className = 'dash-role ' + (roleMap[Auth.role] || 'role-user');
+    $('#userAddr').textContent = shortAddr(Auth.wallet);
+
+    // Load profile
+    try {
+      const me = await api('/api/users/me');
+      $('#statCreated').textContent = formatDate(me.created_at);
+    } catch { /* silent */ }
+
+    // Load participations
+    try {
+      const parts = await api('/api/users/me/participations');
+      const joined = parts.filter(p => p.status === 'joined').length;
+      const completed = parts.filter(p => p.status === 'completed').length;
+      const rewarded = parts.filter(p => p.status === 'rewarded').length;
+
+      $('#statJoined').textContent = parts.length;
+      $('#statCompleted').textContent = completed;
+      $('#statRewarded').textContent = rewarded;
+      $('#partCount').textContent = parts.length;
+
+      if (parts.length === 0) {
+        show('#partEmpty');
+      } else {
+        let html = '<table class="dash-table"><thead><tr><th>퀘스트</th><th>캠페인</th><th>상태</th><th>참여일</th><th></th></tr></thead><tbody>';
+        parts.forEach(p => {
+          const quest = p.quests || {};
+          const camp = quest.campaigns || {};
+          html += `<tr>
+            <td style="font-weight:600;">${quest.name || '-'}</td>
+            <td>${camp.project_name || '-'}</td>
+            <td>${statusBadge(p.status)}</td>
+            <td style="font-size:0.8rem;color:var(--text-2);">${formatDate(p.joined_at)}</td>
+            <td><a href="quest.html?id=${p.quest_id}" class="dash-action view">보기</a></td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+        $('#partList').innerHTML = html;
+      }
+    } catch (e) {
+      show('#partEmpty');
+    }
+  }
+
+  // Wallet connect
+  async function connectWallet(type) {
+    const provider = type === 'metamask' ? findMetaMask() : findRabby();
+    if (!provider) { $('#walletError').textContent = '지갑이 감지되지 않습니다.'; show('#walletError'); return; }
+    try {
+      const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+      if (result.needsRegistration) {
+        showRegForm(result.nonce, result.addr, provider);
+      } else {
+        closeModal('walletModal'); location.reload();
+      }
+    } catch (e) { $('#walletError').textContent = e.message || '연결 실패'; show('#walletError'); }
+  }
+
+  function showRegForm(nonce, addr, provider) {
+    hide('#walletConnect');
+    let selectedRole = 'user';
+    $('#walletRegister').innerHTML = `
+      <h3>회원가입</h3><p class="modal-desc">${shortAddr(addr)}</p>
+      <div class="auth-reg">
+        <div class="auth-role-picker">
+          <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128100;</span><span class="auth-role-name">일반 유저</span></button>
+          <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128188;</span><span class="auth-role-name">프로젝트</span></button>
+        </div>
+        <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail"></div>
+        <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName"></div>
+        <button class="reg-btn" onclick="submitReg()">가입하기</button>
+      </div>`;
+    show('#walletRegister');
+    window.selectRegRole = function(el) {
+      $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected'); selectedRole = el.dataset.role;
+      document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
+    };
+    window.submitReg = async function() {
+      const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
+      if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
+      try { await authSign(addr, nonce, provider, regData); closeModal('walletModal'); location.reload(); }
+      catch (e) { alert(e.message || '가입 실패'); }
+    };
+  }
+
+  function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
+
+  authRestore().then(() => { initCommon(); loadDashboard(); });
+</script>
+</body>
+</html>
