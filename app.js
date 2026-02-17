@@ -186,7 +186,7 @@ async function authSign(addr, nonce, provider, regData = null) {
   const message = 'Sign this message to authenticate with SHILL VAULT.\n\nNonce: ' + nonce;
   const signature = await provider.request({ method: 'personal_sign', params: [message, addr] });
 
-  const body = { walletAddress: addr, signature };
+  const body = { walletAddress: addr, signature, nonce };
   if (regData) Object.assign(body, regData);
 
   const data = await api('/api/auth/verify', { method: 'POST', body: JSON.stringify(body) });
