@@ -29,7 +29,7 @@
     <h1 class="rv" data-i18n="hero_h1">암호화폐의 모든 기회,<br>한 곳에서.</h1>
     <p class="hero-desc rv rv-d1" data-i18n="hero_desc">퀘스트에 참여하고, 보상을 받으세요.</p>
     <div class="hero-actions rv rv-d2">
-      <a href="#quests" class="btn btn-blue" data-i18n="hero_btn">퀘스트 둘러보기</a>
+      <a href="#campaigns" class="btn btn-blue" data-i18n="hero_btn">퀘스트 둘러보기</a>
     </div>
     <div class="hero-metrics rv rv-d3">
       <div class="hm-item">
@@ -48,61 +48,18 @@
   </div>
 </section>
 
-<!-- ==================== QUEST BOARD ==================== -->
-<section class="s-alt" id="quests">
+<!-- ==================== CAMPAIGNS (Card Grid) ==================== -->
+<section class="s-alt" id="campaigns">
   <div class="container">
     <div class="sheader">
-      <h2 class="stitle rv" data-i18n="quest_title">지금 참여할 수 있는 퀘스트</h2>
+      <h2 class="stitle rv" data-i18n="camp_title">진행 중인 캠페인</h2>
+      <p class="sdesc rv rv-d1">참여하고 싶은 캠페인을 선택하세요.</p>
     </div>
-    <div class="troom-wrap rv">
-      <div class="troom-header">
-        <h4 data-i18n="quest_active">참여 가능한 퀘스트</h4>
-        <div class="troom-live"><span class="dot"></span>Live</div>
+    <div class="camp-cards rv rv-d2" id="campGrid">
+      <div class="camp-card-empty">
+        <div class="camp-card-empty-icon">&#128270;</div>
+        <p>캠페인을 불러오는 중...</p>
       </div>
-      <table class="troom-table">
-        <thead>
-          <tr>
-            <th data-i18n="qt_project">프로젝트</th>
-            <th data-i18n="qt_quest">퀘스트</th>
-            <th data-i18n="qt_reward">보상</th>
-            <th data-i18n="qt_participants">참여자</th>
-            <th data-i18n="qt_status">상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
-            <td data-i18n="qq1_quest">첫 스왑 체험</td>
-            <td class="tr-mono">10 USDT + 참여보상</td>
-            <td class="tr-mono">234 / 500</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
-            <td data-i18n="qq2_quest">사용 리뷰 작성</td>
-            <td class="tr-mono">5 USDT</td>
-            <td class="tr-mono">89 / 200</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
-            <td data-i18n="qq3_quest">친구 3명 초대</td>
-            <td class="tr-mono">15 USDT + NFT</td>
-            <td class="tr-mono">45 / 100</td>
-            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--orange);"></span><span data-i18n="qt_recruiting">모집중</span></span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
-            <td data-i18n="qq4_quest">테스트넷 참여 &amp; 피드백</td>
-            <td class="tr-mono" data-i18n="qq4_reward">TGE 참여보상</td>
-            <td class="tr-mono">1.2K</td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span><span data-i18n="qt_live">진행중</span></span></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="text-align:center;margin-top:2rem;">
-      <a href="#" class="btn btn-ghost rv" data-i18n="quest_btn">전체 퀘스트 보기</a>
     </div>
   </div>
 </section>
@@ -135,62 +92,6 @@
         <h4 data-i18n="step3_title">보상받기</h4>
         <p data-i18n="step3_desc">조건 달성 시 보상이 자동 지급됩니다. 토큰, USDT, NFT, 참여보상 포인트 등.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== CAMPAIGNS ==================== -->
-<section class="s-alt" id="campaigns">
-  <div class="container">
-    <div class="sheader">
-      <h2 class="stitle rv" data-i18n="camp_title">진행 중인 캠페인</h2>
-    </div>
-    <div class="troom-wrap rv">
-      <div class="troom-header">
-        <h4 data-i18n="camp_active">활성 캠페인</h4>
-        <div class="troom-live"><span class="dot"></span>Live</div>
-      </div>
-      <table class="troom-table">
-        <thead>
-          <tr>
-            <th data-i18n="ct_project">프로젝트</th>
-            <th data-i18n="ct_participants">참여자</th>
-            <th data-i18n="ct_pool">보상 풀</th>
-            <th data-i18n="ct_progress">진행률</th>
-            <th data-i18n="ct_status">상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#6366f1,#818cf8);">AX</div><div><div class="tr-pname">AxiomDEX</div><div class="tr-chain">Ethereum</div></div></div></td>
-            <td class="tr-mono">12</td>
-            <td class="tr-mono">$48,000</td>
-            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:65%"></div></div></td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">NV</div><div><div class="tr-pname">NovaChain</div><div class="tr-chain">Solana</div></div></div></td>
-            <td class="tr-mono">8</td>
-            <td class="tr-mono">$25,000</td>
-            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:75%"></div></div></td>
-            <td><span class="tr-status tr-active"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span>Active</span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#ec4899,#f472b6);">ZF</div><div><div class="tr-pname">ZenFi</div><div class="tr-chain">Arbitrum</div></div></div></td>
-            <td class="tr-mono">5</td>
-            <td class="tr-mono">$15,000</td>
-            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:40%"></div></div></td>
-            <td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--orange);"></span>Filling</span></td>
-          </tr>
-          <tr>
-            <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,#22d3ee,#06b6d4);">OP</div><div><div class="tr-pname">OmniPad</div><div class="tr-chain">Base</div></div></div></td>
-            <td class="tr-mono">15</td>
-            <td class="tr-mono">$62,000</td>
-            <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:100%;background:var(--text-3);"></div></div></td>
-            <td><span class="tr-status tr-completed">Completed</span></td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   </div>
 </section>
@@ -234,7 +135,7 @@
     <div class="cta-label" data-i18n="cta_label">누적 보상 지급액</div>
     <h2 class="stitle cta-fade" data-i18n="cta_title">당신의 보상이 쌓이고 있습니다.</h2>
     <div style="opacity:0;transform:translateY(20px);transition:opacity 0.8s ease 0.45s,transform 0.8s ease 0.45s;" class="cta-anim">
-      <a href="#quests" class="btn btn-blue" data-i18n="cta_btn">퀘스트 둘러보기</a>
+      <a href="#campaigns" class="btn btn-blue" data-i18n="cta_btn">퀘스트 둘러보기</a>
     </div>
   </div>
 </section>
@@ -415,24 +316,24 @@
           <!-- 소셜 -->
           <div class="wiz-quest-group">
             <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--blue);"></span>소셜</div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_follow"><span class="wq-name">트위터 팔로우</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_rt"><span class="wq-name">트윗 RT &amp; 좋아요</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_tg"><span class="wq-name">텔레그램 가입</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_discord"><span class="wq-name">디스코드 참여</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="twitter_follow"><span class="wq-name">트위터 팔로우</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="twitter_rt"><span class="wq-name">RT &amp; 좋아요</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="telegram_join"><span class="wq-name">텔레그램 가입</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="discord_join"><span class="wq-name">디스코드 참여</span></div>
           </div>
           <!-- 온체인 -->
           <div class="wiz-quest-group">
             <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--green);"></span>온체인</div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_swap"><span class="wq-name">토큰 스왑</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_mint"><span class="wq-name">NFT 민팅</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_stake"><span class="wq-name">스테이킹</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="token_swap"><span class="wq-name">스왑 체험</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="staking"><span class="wq-name">스테이킹</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="nft_mint"><span class="wq-name">NFT 민팅</span></div>
           </div>
           <!-- 콘텐츠 (인플루언서/믹스 선택시만) -->
           <div class="wiz-quest-group" id="contentQuestGroup" style="display:none;">
             <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--purple);"></span>콘텐츠 <span class="wiz-qg-tag">인플루언서</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_review"><span class="wq-name">리뷰 작성</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_youtube"><span class="wq-name">유튜브 영상</span></div>
-            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_thread"><span class="wq-name">트위터 스레드</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="review"><span class="wq-name">리뷰 작성</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="youtube_video"><span class="wq-name">유튜브 영상</span></div>
+            <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="twitter_thread"><span class="wq-name">트위터 스레드</span></div>
           </div>
         </div>
       </div>
@@ -633,58 +534,57 @@ function updateWalletInfo() {
 
 // doDisconnect and doLogout are defined in app.js
 
-// ==================== LOAD LIVE DATA ====================
-async function loadLiveQuests() {
-  try {
-    const quests = await api('/api/quests?status=active');
-    if (!Array.isArray(quests) || quests.length === 0) return;
-    const tbody = document.querySelector('#quests .troom-table tbody');
-    if (!tbody) return;
-    // Clear demo data and replace with real data
-    tbody.innerHTML = '';
-    quests.forEach(q => {
-      const camp = q.campaigns || {};
-      const abbr = (camp.project_name || '').slice(0, 2).toUpperCase();
-      const gradients = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4','#10b981,#34d399'];
-      const grad = gradients[(camp.project_name || '').length % gradients.length];
-      const tr = document.createElement('tr');
-      tr.style.cursor = 'pointer';
-      tr.onclick = () => location.href = 'quest.html?id=' + q.id;
-      tr.innerHTML = `
-        <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,${grad});">${abbr}</div><div><div class="tr-pname">${camp.project_name || '-'}</div><div class="tr-chain">${camp.chain || '-'}</div></div></div></td>
-        <td>${q.title || q.name || '-'}</td>
-        <td class="tr-mono">${q.reward_per_user ? '$' + q.reward_per_user : '-'}</td>
-        <td class="tr-mono">${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}</td>
-        <td>${statusBadge(q.status)}</td>`;
-      tbody.appendChild(tr);
-    });
-  } catch { /* keep demo data */ }
-}
+// ==================== LOAD LIVE CAMPAIGNS (Card Grid) ====================
+const GRADIENTS = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4','#10b981,#34d399','#8b5cf6,#a78bfa'];
+function pickGrad(name) { return GRADIENTS[(name || '').length % GRADIENTS.length]; }
 
-async function loadLiveCampaigns() {
+async function loadCampaignCards() {
+  const grid = document.getElementById('campGrid');
+  if (!grid) return;
   try {
     const camps = await api('/api/campaigns/live');
-    if (!Array.isArray(camps) || camps.length === 0) return;
-    const tbody = document.querySelector('#campaigns .troom-table tbody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
+    if (!Array.isArray(camps) || camps.length === 0) {
+      grid.innerHTML = '<div class="camp-card-empty"><div class="camp-card-empty-icon">&#128270;</div><p>현재 진행 중인 캠페인이 없습니다.</p></div>';
+      return;
+    }
+    grid.innerHTML = '';
     camps.forEach(c => {
       const abbr = (c.project_name || '').slice(0, 2).toUpperCase();
-      const gradients = ['#6366f1,#818cf8','#f59e0b,#fbbf24','#ec4899,#f472b6','#22d3ee,#06b6d4'];
-      const grad = gradients[(c.project_name || '').length % gradients.length];
-      const pct = c.max_participants ? Math.round((c.current_participants || 0) / c.max_participants * 100) : 50;
-      const tr = document.createElement('tr');
-      tr.style.cursor = 'pointer';
-      tr.onclick = () => location.href = 'campaign.html?id=' + c.id;
-      tr.innerHTML = `
-        <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,${grad});">${abbr}</div><div><div class="tr-pname">${c.project_name || '-'}</div><div class="tr-chain">${c.chain || '-'}</div></div></div></td>
-        <td class="tr-mono">${formatNum(c.current_participants)}</td>
-        <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
-        <td><div class="tr-bar-wrap"><div class="tr-bar" style="width:${pct}%"></div></div></td>
-        <td>${statusBadge(c.status)}</td>`;
-      tbody.appendChild(tr);
+      const grad = pickGrad(c.project_name);
+      const questCount = Array.isArray(c.quests) ? c.quests.length : 0;
+      const card = document.createElement('a');
+      card.className = 'camp-card';
+      card.href = 'campaign.html?id=' + c.id;
+      card.innerHTML = `
+        <div class="camp-card-top">
+          <div class="camp-card-icon" style="background:linear-gradient(135deg,${grad});">${abbr}</div>
+          <div class="camp-card-info">
+            <div class="camp-card-name">${c.project_name || '-'}</div>
+            <div class="camp-card-chain">${c.chain || '-'}</div>
+          </div>
+          ${statusBadge(c.status)}
+        </div>
+        <div class="camp-card-stats">
+          <div class="camp-card-stat"><div class="camp-card-stat-val">${questCount}</div><div class="camp-card-stat-lbl">퀘스트</div></div>
+          <div class="camp-card-stat"><div class="camp-card-stat-val">${formatNum(c.current_participants)}</div><div class="camp-card-stat-lbl">참여자</div></div>
+          <div class="camp-card-stat"><div class="camp-card-stat-val">$${formatNum(c.reward_amount)}</div><div class="camp-card-stat-lbl">보상 풀</div></div>
+        </div>
+        <div class="camp-card-bottom">
+          <span class="camp-card-reward">${c.reward_token ? c.reward_token.toUpperCase() : 'USDT'}</span>
+          <span style="font-size:0.72rem;color:var(--text-3);">${formatDate(c.start_date)} ~ ${formatDate(c.end_date)}</span>
+        </div>`;
+      grid.appendChild(card);
     });
-  } catch { /* keep demo data */ }
+    // Update hero metrics
+    const totalParticipants = camps.reduce((s, c) => s + (c.current_participants || 0), 0);
+    const totalReward = camps.reduce((s, c) => s + (c.reward_amount || 0), 0);
+    const hmNums = $$('.hm-num');
+    if (hmNums[0]) hmNums[0].textContent = camps.length;
+    if (hmNums[1]) hmNums[1].textContent = formatNum(totalParticipants);
+    if (hmNums[2]) hmNums[2].textContent = '$' + formatNum(totalReward);
+  } catch {
+    grid.innerHTML = '<div class="camp-card-empty"><div class="camp-card-empty-icon">&#128270;</div><p>캠페인을 불러오지 못했습니다.</p></div>';
+  }
 }
 
 // ==================== CAMPAIGN WIZARD ====================
@@ -692,11 +592,11 @@ let wizStep = 1;
 const WIZ_TOTAL = 3;
 
 const GOAL_QUEST_MAP = {
-  community: ['q_tg', 'q_discord'],
-  awareness: ['q_follow', 'q_rt'],
-  dapp: ['q_swap', 'q_mint'],
-  onchain: ['q_swap', 'q_mint', 'q_stake'],
-  content: ['q_review', 'q_youtube', 'q_thread'],
+  community: ['telegram_join', 'discord_join'],
+  awareness: ['twitter_follow', 'twitter_rt'],
+  dapp: ['token_swap', 'nft_mint'],
+  onchain: ['token_swap', 'nft_mint', 'staking'],
+  content: ['review', 'youtube_video', 'twitter_thread'],
 };
 
 function toggleGoal(el) { el.classList.toggle('selected'); }
@@ -713,8 +613,8 @@ function applyQuestRecommendations() {
   const selectedGoals = [];
   $$('#wizStep1 .wiz-goal.selected').forEach(el => selectedGoals.push(el.dataset.goal));
   const recommended = new Set();
-  selectedGoals.forEach(g => (GOAL_QUEST_MAP[g] || []).forEach(qid => recommended.add(qid)));
-  $$('.wiz-quest-cb').forEach(cb => { cb.checked = recommended.has(cb.dataset.qid); });
+  selectedGoals.forEach(g => (GOAL_QUEST_MAP[g] || []).forEach(atype => recommended.add(atype)));
+  $$('.wiz-quest-cb').forEach(cb => { cb.checked = recommended.has(cb.dataset.atype); });
 }
 
 function buildStep3() {
@@ -722,11 +622,11 @@ function buildStep3() {
   const quests = [];
   $$('.wiz-quest-cb:checked').forEach(cb => {
     const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
-    if (name) quests.push({ id: cb.dataset.qid, name });
+    if (name) quests.push({ atype: cb.dataset.atype, name });
   });
   let html = '';
   quests.forEach(q => {
-    html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-qid="' + q.id + '" oninput="updateEstimate()"></div></div>';
+    html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '" oninput="updateEstimate()"></div></div>';
   });
   if (!html) html = '<p style="color:var(--text-3);font-size:0.82rem;">선택된 퀘스트가 없습니다.</p>';
   container.innerHTML = html;
@@ -841,11 +741,16 @@ async function submitCampaignToBackend() {
   try {
     const quests = [];
     $$('.wiz-quest-cb:checked').forEach(cb => {
-      const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
-      const rewardInput = document.querySelector('.wiz-qr-input input[data-qid="' + cb.dataset.qid + '"]');
-      quests.push({ quest_type: cb.dataset.qid, name, reward_per_user: Number(rewardInput?.value) || 0, category: 'general' });
+      const title = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
+      const rewardInput = document.querySelector('.wiz-qr-input input[data-atype="' + cb.dataset.atype + '"]');
+      quests.push({
+        title,
+        quest_type: cb.dataset.qtype,
+        action_type: cb.dataset.atype,
+        reward_per_user: Number(rewardInput?.value) || 0,
+      });
     });
-    await api('/api/campaigns', {
+    const result = await api('/api/campaigns', {
       method: 'POST',
       body: JSON.stringify({
         project_name: document.getElementById('cwProjName').value,
@@ -859,6 +764,8 @@ async function submitCampaignToBackend() {
         quests,
       }),
     });
+    // Reload campaign cards
+    loadCampaignCards();
   } catch (e) { console.error('Campaign submit failed:', e); }
 }
 
@@ -915,8 +822,7 @@ if (ctaEl) ctaObs.observe(ctaEl);
 authRestore().then(() => {
   initCommon();
   if (Auth.isLoggedIn) updateWalletInfo();
-  loadLiveQuests();
-  loadLiveCampaigns();
+  loadCampaignCards();
 });
 </script>
 </body>

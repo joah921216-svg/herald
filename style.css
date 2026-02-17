@@ -674,4 +674,82 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   .fp-features { flex-direction: column; gap: 0.75rem; }
   .troom-wrap { overflow-x: auto; }
   .troom-table { min-width: 600px; }
+  .camp-cards { grid-template-columns: 1fr; }
+}
+
+/* === CAMPAIGN CARD GRID === */
+.camp-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+.camp-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 1.5rem; box-shadow: var(--shadow); cursor: pointer;
+  transition: all 0.25s ease; text-decoration: none; color: inherit; display: block;
+}
+.camp-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); border-color: var(--blue-mid); }
+.camp-card-top {
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+}
+.camp-card-icon {
+  width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center;
+  justify-content: center; font-weight: 700; font-size: 0.75rem; color: white; flex-shrink: 0;
+}
+.camp-card-info { flex: 1; min-width: 0; }
+.camp-card-name { font-size: 1rem; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.camp-card-chain { font-size: 0.72rem; color: var(--text-3); font-weight: 500; }
+.camp-card-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
+  padding: 0.85rem 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  margin-bottom: 0.85rem;
+}
+.camp-card-stat { text-align: center; }
+.camp-card-stat-val { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+.camp-card-stat-lbl { font-size: 0.62rem; color: var(--text-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.camp-card-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.camp-card-reward {
+  font-size: 0.82rem; font-weight: 600; color: var(--blue);
+}
+.camp-card-empty {
+  grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-3);
+}
+.camp-card-empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.5; }
+
+/* === QUEST LIST (campaign detail) === */
+.quest-list { display: flex; flex-direction: column; gap: 0.75rem; }
+.quest-item {
+  display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem;
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--r-sm);
+  box-shadow: var(--shadow); transition: all 0.2s;
+}
+.quest-item:hover { border-color: var(--blue-mid); }
+.quest-type-badge {
+  display: flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0; font-size: 1.1rem;
+}
+.quest-type-social { background: var(--blue-soft); }
+.quest-type-onchain { background: var(--green-soft); }
+.quest-type-content { background: var(--purple-soft); }
+.quest-item-body { flex: 1; min-width: 0; }
+.quest-item-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+.quest-item-meta {
+  display: flex; gap: 0.75rem; margin-top: 0.2rem; font-size: 0.72rem; color: var(--text-3);
+}
+.quest-item-meta span { display: flex; align-items: center; gap: 0.25rem; }
+.quest-join-btn {
+  padding: 0.45rem 1rem; background: var(--blue); color: white; border: none;
+  border-radius: var(--r-xs); font-family: inherit; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.quest-join-btn:hover { opacity: 0.9; }
+.quest-join-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.quest-join-btn.joined { background: var(--green-soft); color: var(--green); cursor: default; }
+.quest-join-btn.completed { background: var(--purple-soft); color: var(--purple); cursor: default; }
+.quest-join-btn.connect { background: var(--orange-soft); color: var(--orange); }
+
+@media(max-width:768px) {
+  .quest-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .quest-join-btn { width: 100%; text-align: center; }
 }

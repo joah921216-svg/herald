@@ -26,7 +26,7 @@
 
   <div id="content" style="display:none;">
     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
-      <div class="tr-picon" id="campIcon" style="width:40px;height:40px;font-size:0.85rem;"></div>
+      <div class="tr-picon" id="campIcon" style="width:44px;height:44px;font-size:0.85rem;"></div>
       <div>
         <h1 class="detail-title" id="campName"></h1>
         <div class="detail-meta">
@@ -36,6 +36,8 @@
         </div>
       </div>
     </div>
+
+    <p id="campDesc" style="font-size:0.9rem;color:var(--text-2);margin-bottom:1.5rem;line-height:1.65;"></p>
 
     <!-- Stats -->
     <div class="dash-stats" style="grid-template-columns:repeat(4,1fr);">
@@ -60,7 +62,7 @@
     <!-- Quests -->
     <div class="dash-card">
       <div class="dash-card-title">퀘스트 목록 <span class="count" id="questCountBadge">0</span></div>
-      <div id="questList"></div>
+      <div class="quest-list" id="questList"></div>
       <div id="questEmpty" class="dash-empty" style="display:none;">
         <div class="dash-empty-icon">&#128270;</div>
         <p>등록된 퀘스트가 없습니다.</p>
@@ -77,7 +79,7 @@
   </div>
 </div>
 
-<!-- Wallet Modal (shared) -->
+<!-- Wallet Modal -->
 <div class="modal-overlay" id="walletModal">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('walletModal')">&times;</button>
@@ -101,10 +103,37 @@
   const params = new URLSearchParams(location.search);
   const campaignId = params.get('id');
 
+  // Quest type → emoji mapping
+  const QUEST_EMOJI = {
+    twitter_follow: '🐦', twitter_rt: '🔁', telegram_join: '✈️', discord_join: '💬',
+    token_swap: '🔄', staking: '📌', nft_mint: '🎨',
+    review: '📝', youtube_video: '🎬', twitter_thread: '🧵',
+  };
+  const ACTION_LABELS = {
+    twitter_follow: '트위터 팔로우', twitter_rt: 'RT & 좋아요', telegram_join: '텔레그램 가입',
+    discord_join: '디스코드 참여', token_swap: '스왑 체험', staking: '스테이킹', nft_mint: 'NFT 민팅',
+    review: '리뷰 작성', youtube_video: '유튜브 영상', twitter_thread: '트위터 스레드',
+  };
+
+  let myParticipations = {}; // questId -> status
+
+  async function loadMyParticipations() {
+    if (!Auth.isLoggedIn) return;
+    try {
+      const data = await api('/api/users/me/participations');
+      if (Array.isArray(data)) {
+        data.forEach(p => { myParticipations[p.quest_id] = p.status; });
+      }
+    } catch { /* not logged in or error */ }
+  }
+
   async function loadCampaign() {
     if (!campaignId) { hide('#loading'); show('#notFound'); return; }
     try {
-      const camp = await api('/api/campaigns/' + campaignId);
+      const [camp] = await Promise.all([
+        api('/api/campaigns/' + campaignId),
+        loadMyParticipations(),
+      ]);
       hide('#loading');
       show('#content');
 
@@ -117,9 +146,14 @@
       $('#campChain').textContent = camp.chain || '-';
       $('#campCategory').textContent = camp.category || '-';
       $('#campStatus').innerHTML = statusBadge(camp.status);
+      if (camp.description) $('#campDesc').textContent = camp.description;
+      else hide('#campDesc');
       $('#campParticipants').textContent = formatNum(camp.current_participants) + (camp.max_participants ? ' / ' + formatNum(camp.max_participants) : '');
       $('#campReward').textContent = '$' + formatNum(camp.reward_amount);
       $('#campPeriod').textContent = formatDate(camp.start_date) + ' ~ ' + formatDate(camp.end_date);
+
+      // Set page title
+      document.title = (camp.project_name || 'Campaign') + ' — SHILL VAULT';
 
       const quests = camp.quests || [];
       $('#campQuestCount').textContent = quests.length;
@@ -128,23 +162,91 @@
       if (quests.length === 0) {
         show('#questEmpty');
       } else {
-        let html = '<table class="dash-table"><thead><tr><th>퀘스트</th><th>유형</th><th>보상</th><th>참여자</th><th>상태</th><th></th></tr></thead><tbody>';
-        quests.forEach(q => {
-          html += `<tr>
-            <td style="font-weight:600;">${q.name}</td>
-            <td>${q.quest_type || '-'}</td>
-            <td class="tr-mono">${q.reward_per_user ? '$' + q.reward_per_user : '-'}</td>
-            <td class="tr-mono">${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}</td>
-            <td>${statusBadge(q.status)}</td>
-            <td><a href="quest.html?id=${q.id}" class="dash-action view">참여</a></td>
-          </tr>`;
-        });
-        html += '</tbody></table>';
-        $('#questList').innerHTML = html;
+        renderQuests(quests);
       }
     } catch (e) {
       hide('#loading');
       show('#notFound');
+    }
+  }
+
+  function renderQuests(quests) {
+    const list = $('#questList');
+    list.innerHTML = '';
+    quests.forEach(q => {
+      const emoji = QUEST_EMOJI[q.action_type] || '📋';
+      const typeClass = 'quest-type-' + (q.quest_type || 'social');
+      const actionLabel = ACTION_LABELS[q.action_type] || q.action_type || q.quest_type || '-';
+      const myStatus = myParticipations[q.id];
+
+      let btnHtml;
+      if (myStatus === 'completed' || myStatus === 'rewarded') {
+        btnHtml = '<button class="quest-join-btn completed" disabled>완료</button>';
+      } else if (myStatus === 'joined') {
+        btnHtml = '<button class="quest-join-btn joined" disabled>참여중</button>';
+      } else if (!Auth.isLoggedIn) {
+        btnHtml = '<button class="quest-join-btn connect" onclick="openModal(\'walletModal\')">지갑 연결</button>';
+      } else {
+        btnHtml = '<button class="quest-join-btn" onclick="joinQuest(\'' + q.id + '\', this)">참여하기</button>';
+      }
+
+      const item = document.createElement('div');
+      item.className = 'quest-item';
+      item.id = 'quest-' + q.id;
+      item.innerHTML = `
+        <div class="quest-type-badge ${typeClass}">${emoji}</div>
+        <div class="quest-item-body">
+          <div class="quest-item-title">${q.title || q.name || actionLabel}</div>
+          <div class="quest-item-meta">
+            <span>${actionLabel}</span>
+            <span>${q.reward_per_user ? '$' + q.reward_per_user : '-'} 보상</span>
+            <span>${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}명</span>
+          </div>
+        </div>
+        ${btnHtml}`;
+      list.appendChild(item);
+    });
+  }
+
+  async function joinQuest(questId, btn) {
+    btn.disabled = true;
+    btn.textContent = '참여 중...';
+    try {
+      await api('/api/quests/' + questId + '/join', { method: 'POST' });
+      btn.className = 'quest-join-btn joined';
+      btn.textContent = '참여중';
+      myParticipations[questId] = 'joined';
+      // Update participant count in the quest item
+      const item = document.getElementById('quest-' + questId);
+      if (item) {
+        const meta = item.querySelectorAll('.quest-item-meta span');
+        if (meta[2]) {
+          const match = meta[2].textContent.match(/^([\d,]+)/);
+          if (match) {
+            const newCount = parseInt(match[1].replace(/,/g, '')) + 1;
+            meta[2].textContent = meta[2].textContent.replace(/^[\d,]+/, formatNum(newCount));
+          }
+        }
+      }
+      // Update campaign participants
+      const el = $('#campParticipants');
+      if (el) {
+        const match = el.textContent.match(/^([\d,]+)/);
+        if (match) {
+          const newCount = parseInt(match[1].replace(/,/g, '')) + 1;
+          el.textContent = el.textContent.replace(/^[\d,]+/, formatNum(newCount));
+        }
+      }
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = '참여하기';
+      if (e.status === 409) {
+        btn.className = 'quest-join-btn joined';
+        btn.textContent = '참여중';
+        btn.disabled = true;
+      } else {
+        alert(e.message || '참여 실패');
+      }
     }
   }
 
@@ -160,6 +262,7 @@
       } else {
         closeModal('walletModal');
         setupNav();
+        location.reload();
       }
     } catch (e) {
       $('#walletError').textContent = e.message || '연결 실패';
@@ -211,8 +314,6 @@
       } catch (e) { alert(e.message || '가입 실패'); }
     };
   }
-
-  // doDisconnect and doLogout are defined in app.js
 
   // Init
   authRestore().then(() => { initCommon(); loadCampaign(); });
