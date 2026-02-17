@@ -1,3 +1,7 @@
+// ==================== API CONFIG ====================
+const API_BASE_URL = 'https://shill-vault-api.vercel.app';
+let authToken = localStorage.getItem('sv_auth_token');
+
 // ==================== SCROLL REVEAL ====================
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
@@ -109,6 +113,37 @@ async function getBalance(provider, addr) {
   } catch { return '— ETH'; }
 }
 
+async function authenticateWithBackend(addr, provider) {
+  try {
+    // 1. Get nonce
+    const nonceRes = await fetch(API_BASE_URL + '/api/auth/nonce?walletAddress=' + addr);
+    const { nonce } = await nonceRes.json();
+
+    // 2. Sign nonce with wallet
+    const message = 'Sign this message to authenticate with SHILL VAULT.\n\nNonce: ' + nonce;
+    const signature = await provider.request({
+      method: 'personal_sign',
+      params: [message, addr],
+    });
+
+    // 3. Verify signature and get JWT
+    const verifyRes = await fetch(API_BASE_URL + '/api/auth/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ walletAddress: addr, signature }),
+    });
+    const data = await verifyRes.json();
+    if (data.token) {
+      authToken = data.token;
+      localStorage.setItem('sv_auth_token', data.token);
+    }
+    return data;
+  } catch (err) {
+    console.error('Backend auth failed:', err);
+    return null;
+  }
+}
+
 async function onWalletConnected(addr, walletName) {
   connectedAddr = addr;
   connectedWallet = walletName;
@@ -136,14 +171,21 @@ async function onWalletConnected(addr, walletName) {
   // Persist
   localStorage.setItem('sv_wallet_addr', addr);
   localStorage.setItem('sv_wallet_name', walletName);
+
+  // Backend authentication (non-blocking — if no token yet)
+  if (!authToken) {
+    authenticateWithBackend(addr, provider);
+  }
 }
 
 function disconnectWallet() {
   connectedAddr = null;
   connectedWallet = null;
   activeProvider = null;
+  authToken = null;
   localStorage.removeItem('sv_wallet_addr');
   localStorage.removeItem('sv_wallet_name');
+  localStorage.removeItem('sv_auth_token');
 
   // Nav button reset
   const btn = document.getElementById('walletBtn');
@@ -404,6 +446,8 @@ function wizGo(dir) {
     document.getElementById('doneEst').textContent = document.getElementById('estParticipants').textContent;
     // Add to quest table
     addCampaignToQuestTable();
+    // Submit campaign to backend
+    submitCampaignToBackend();
     for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
     document.getElementById('wizDone').style.display = 'block';
     document.getElementById('wizNav').style.display = 'none';
@@ -486,3 +530,102 @@ const ctaObs = new IntersectionObserver(entries => {
 }, { threshold: 0.3 });
 const ctaEl = document.getElementById('cta');
 if (ctaEl) ctaObs.observe(ctaEl);
+
+// ==================== BACKEND API INTEGRATION ====================
+async function submitCampaignToBackend() {
+  if (!authToken) {
+    console.warn('No auth token, skipping backend submission');
+    return;
+  }
+  try {
+    const projName = document.getElementById('cwProjName').value || '';
+    const chain = document.getElementById('cwChain').selectedOptions[0]?.text || 'Ethereum';
+    const startDate = document.getElementById('cwStart').value || null;
+    const endDate = document.getElementById('cwEnd').value || null;
+    const token = document.getElementById('cwToken').selectedOptions[0]?.text || 'USDT';
+    const budget = Number(document.getElementById('cwBudget').value) || 0;
+
+    // Collect goals
+    const goals = [];
+    document.querySelectorAll('#wizStep1 .wiz-goal.selected').forEach(el => {
+      goals.push({ type: el.dataset.goal, name: el.querySelector('.wiz-goal-name')?.textContent || el.dataset.goal });
+    });
+
+    // Collect quests
+    const quests = [];
+    document.querySelectorAll('.wiz-quest-cb:checked').forEach(cb => {
+      const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
+      const rewardInput = document.querySelector('.wiz-qr-input input[data-qid="' + cb.dataset.qid + '"]');
+      quests.push({
+        quest_type: cb.dataset.qid,
+        name: name,
+        reward_per_user: Number(rewardInput?.value) || 0,
+        category: 'general',
+      });
+    });
+
+    const est = document.getElementById('estParticipants').textContent.replace('~', '').replace('명', '').replace(/,/g, '');
+
+    const res = await fetch(API_BASE_URL + '/api/campaigns', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + authToken,
+      },
+      body: JSON.stringify({
+        project_name: projName,
+        chain: chain,
+        status: 'live',
+        start_date: startDate,
+        end_date: endDate,
+        reward_type: 'token',
+        reward_amount: budget,
+        reward_token: token,
+        max_participants: Number(est) || 500,
+        goals: goals,
+        quests: quests,
+      }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      console.log('Campaign created on backend:', data.id);
+    } else {
+      console.error('Backend campaign creation failed:', data.error);
+    }
+  } catch (err) {
+    console.error('Failed to submit campaign to backend:', err);
+  }
+}
+
+async function loadLiveCampaigns() {
+  try {
+    const res = await fetch(API_BASE_URL + '/api/campaigns/live');
+    const campaigns = await res.json();
+    if (!Array.isArray(campaigns) || campaigns.length === 0) return;
+
+    const tbody = document.querySelector('.troom-table tbody');
+    if (!tbody) return;
+
+    campaigns.forEach(c => {
+      const abbr = (c.project_name || '').slice(0, 2).toUpperCase();
+      const gradients = ['#6366f1,#818cf8', '#f59e0b,#fbbf24', '#ec4899,#f472b6', '#22d3ee,#06b6d4', '#10b981,#34d399', '#8b5cf6,#a78bfa'];
+      const grad = gradients[Math.floor(Math.random() * gradients.length)];
+      const rewardText = (c.reward_amount || 0) + ' ' + (c.reward_token || 'USDT');
+      const partText = (c.current_participants || 0) + ' / ' + (c.max_participants || '-');
+
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,' + grad + ');">' + abbr + '</div><div><div class="tr-pname">' + (c.project_name || '') + '</div><div class="tr-chain">' + (c.chain || '') + '</div></div></div></td>' +
+        '<td>퀘스트</td>' +
+        '<td class="tr-mono">' + rewardText + '</td>' +
+        '<td class="tr-mono">' + partText + '</td>' +
+        '<td><span class="tr-status tr-filling"><span class="dot" style="width:5px;height:5px;border-radius:50%;background:var(--green);"></span>진행중</span></td>';
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error('Failed to load live campaigns:', err);
+  }
+}
+
+// Load live campaigns on page load
+loadLiveCampaigns();
