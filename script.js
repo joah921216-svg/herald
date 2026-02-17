@@ -209,7 +209,6 @@ const GOAL_QUEST_MAP = {
   dapp: ['q_swap', 'q_mint'],
   onchain: ['q_swap', 'q_mint', 'q_stake'],
   content: ['q_review', 'q_youtube', 'q_thread'],
-  referral: []
 };
 
 function toggleGoal(el) {
@@ -230,14 +229,6 @@ function applyQuestRecommendations() {
   const recommended = new Set();
   selectedGoals.forEach(g => (GOAL_QUEST_MAP[g] || []).forEach(qid => recommended.add(qid)));
   document.querySelectorAll('.wiz-quest-cb').forEach(cb => { cb.checked = recommended.has(cb.dataset.qid); });
-  if (selectedGoals.includes('referral')) {
-    document.getElementById('referralToggle').checked = true;
-    document.getElementById('referralRewardField').style.display = 'flex';
-  }
-}
-
-function toggleReferral() {
-  document.getElementById('referralRewardField').style.display = document.getElementById('referralToggle').checked ? 'flex' : 'none';
 }
 
 function buildStep3() {
@@ -248,9 +239,6 @@ function buildStep3() {
     const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
     if (name) quests.push({ id: cb.dataset.qid, name: name });
   });
-  if (document.getElementById('referralToggle').checked) {
-    quests.push({ id: 'q_referral', name: '레퍼럴 링크 공유' });
-  }
   let html = '';
   quests.forEach(q => {
     html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span>' +
@@ -280,7 +268,6 @@ function buildSummary() {
     const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
     if (n) questNames.push(n);
   });
-  if (document.getElementById('referralToggle').checked) questNames.push('레퍼럴 링크 공유');
   const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
   const budget = document.getElementById('cwBudget').value;
 
@@ -357,7 +344,6 @@ function addCampaignToQuestTable() {
     const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
     if (n) questNames.push(n);
   });
-  if (document.getElementById('referralToggle').checked) questNames.push('레퍼럴');
   const questLabel = questNames[0] || '퀘스트';
   if (questNames.length > 1) questLabel;
 
@@ -422,7 +408,7 @@ function wizGo(dir) {
     // Populate done stats
     const budget = Number(document.getElementById('cwBudget').value) || 0;
     document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
-    const qCount = document.querySelectorAll('.wiz-quest-cb:checked').length + (document.getElementById('referralToggle').checked ? 1 : 0);
+    const qCount = document.querySelectorAll('.wiz-quest-cb:checked').length;
     document.getElementById('doneQuests').textContent = qCount + '개';
     document.getElementById('doneEst').textContent = document.getElementById('estParticipants').textContent;
     // Add to quest table
@@ -476,8 +462,6 @@ function closeCampWizard() {
     document.querySelector('.wiz-ptype[data-ptype="general"]')?.classList.add('selected');
     document.getElementById('followerField').style.display = 'none';
     document.getElementById('contentQuestGroup').style.display = 'none';
-    document.getElementById('referralToggle').checked = false;
-    document.getElementById('referralRewardField').style.display = 'none';
   }, 300);
 }
 

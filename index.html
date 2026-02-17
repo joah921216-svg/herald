@@ -412,11 +412,6 @@
             <span class="wiz-goal-emoji">&#127909;</span>
             <span class="wiz-goal-name">콘텐츠 생성</span>
           </button>
-          <button class="wiz-goal" data-goal="referral" onclick="toggleGoal(this)">
-            <span class="wiz-goal-check">&#10003;</span>
-            <span class="wiz-goal-emoji">&#128227;</span>
-            <span class="wiz-goal-name">레퍼럴 확산</span>
-          </button>
         </div>
       </div>
     </div>
@@ -476,21 +471,6 @@
             <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_review"><span class="wq-name">리뷰 작성</span></div>
             <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_youtube"><span class="wq-name">유튜브 영상</span></div>
             <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qid="q_thread"><span class="wq-name">트위터 스레드</span></div>
-          </div>
-          <!-- 레퍼럴 -->
-          <div class="wiz-quest-group">
-            <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--orange);"></span>레퍼럴</div>
-            <div class="wiz-referral-row">
-              <span class="wq-name">레퍼럴 링크 공유</span>
-              <label class="wiz-toggle">
-                <input type="checkbox" id="referralToggle" onchange="toggleReferral()">
-                <span class="wiz-toggle-slider"></span>
-              </label>
-            </div>
-            <div class="wiz-referral-reward" id="referralRewardField">
-              <span>1명당 보상</span>
-              <input type="text" id="cwRefReward" placeholder="예: 2 USDT">
-            </div>
           </div>
         </div>
       </div>

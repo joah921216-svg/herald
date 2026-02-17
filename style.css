@@ -479,37 +479,6 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   margin: 0; padding: 0; cursor: pointer;
 }
 .wiz-quest-item .wq-name { font-size: 0.85rem; font-weight: 500; color: var(--text); white-space: nowrap; }
-/* Referral */
-.wiz-referral-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0.6rem 0.7rem; background: var(--bg-2); border: 1px solid var(--border);
-  border-radius: var(--r-xs);
-}
-.wiz-referral-row .wq-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
-.wiz-toggle {
-  position: relative; display: inline-block; width: 38px; height: 20px; cursor: pointer;
-}
-.wiz-toggle input { opacity: 0; width: 0; height: 0; }
-.wiz-toggle-slider {
-  position: absolute; inset: 0; background: var(--bg-3); border-radius: 20px; transition: 0.3s;
-}
-.wiz-toggle-slider::before {
-  content: ''; position: absolute; left: 3px; bottom: 3px;
-  width: 14px; height: 14px; border-radius: 50%; background: white; transition: 0.3s;
-}
-.wiz-toggle input:checked + .wiz-toggle-slider { background: var(--blue); }
-.wiz-toggle input:checked + .wiz-toggle-slider::before { transform: translateX(18px); }
-.wiz-referral-reward {
-  display: none; align-items: center; gap: 0.5rem; margin-top: 0.35rem;
-  padding: 0.5rem 0.7rem; background: var(--blue-soft); border-radius: var(--r-xs);
-}
-.wiz-referral-reward span { font-size: 0.75rem; color: var(--text-2); font-weight: 500; white-space: nowrap; }
-.wiz-referral-reward input {
-  flex: 1; padding: 0.4rem 0.6rem; border: 1px solid var(--border);
-  border-radius: var(--r-xs); font-size: 0.8rem; background: var(--bg);
-  font-family: inherit; outline: none; color: var(--text);
-}
-.wiz-referral-reward input:focus { border-color: var(--blue); }
 /* Quest reward inputs */
 .wiz-qr-list { display: flex; flex-direction: column; gap: 0.35rem; }
 .wiz-qr-row {
