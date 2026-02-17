@@ -318,9 +318,9 @@ function toggleWalletDropdown(e) {
     </div>
     <div class="wd-addr">${Auth.wallet || '-'}</div>
     <div class="wd-divider"></div>
-    <a href="user.html" class="wd-item">My Dashboard</a>
-    ${Auth.isProject || Auth.isAdmin ? '<a href="project.html" class="wd-item">My Campaigns</a>' : ''}
-    ${Auth.isAdmin ? '<a href="admin.html" class="wd-item">Admin Panel</a>' : ''}
+    ${Auth.isAdmin ? '<a href="admin.html" class="wd-item">Admin Dashboard</a><a href="project.html" class="wd-item">My Campaigns</a>' : ''}
+    ${Auth.isProject && !Auth.isAdmin ? '<a href="project.html" class="wd-item">Dashboard</a>' : ''}
+    ${Auth.isUser ? '<a href="user.html" class="wd-item">My Quests</a>' : ''}
     <div class="wd-divider"></div>
     <button class="wd-disconnect" onclick="doLogout()">지갑 연결 해제</button>
   `;
@@ -346,14 +346,23 @@ function setupNav() {
   const linksEl = $('.nav-links');
   if (!linksEl) return;
 
-  let links = `
-    <li><a href="index.html#campaigns">Campaigns</a></li>
-  `;
+  let links = '<li><a href="index.html#campaigns">Campaigns</a></li>';
 
   if (Auth.isLoggedIn) {
-    if (Auth.isAdmin) links += '<li><a href="admin.html">Admin</a></li>';
-    links += '<li><a href="project.html">My Campaigns</a></li>';
-    links += '<li><a href="user.html">Dashboard</a></li>';
+    if (Auth.isAdmin) {
+      // Admin: Admin Dashboard, My Campaigns, Campaigns
+      links = '<li><a href="admin.html">Admin Dashboard</a></li>'
+            + '<li><a href="project.html">My Campaigns</a></li>'
+            + '<li><a href="index.html#campaigns">Campaigns</a></li>';
+    } else if (Auth.isProject) {
+      // Project: Dashboard, Campaigns
+      links = '<li><a href="project.html">Dashboard</a></li>'
+            + '<li><a href="index.html#campaigns">Campaigns</a></li>';
+    } else {
+      // User: My Quests, Campaigns
+      links = '<li><a href="user.html">My Quests</a></li>'
+            + '<li><a href="index.html#campaigns">Campaigns</a></li>';
+    }
     links += `<li><button class="wallet-btn connected" onclick="toggleWalletDropdown(event)">${shortAddr(Auth.wallet)}</button></li>`;
   } else {
     links += `<li><button class="wallet-btn" onclick="openModal('walletModal')">지갑 연결</button></li>`;

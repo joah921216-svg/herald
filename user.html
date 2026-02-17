@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — SHILL VAULT</title>
+  <title>My Quests — SHILL VAULT</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -31,10 +31,10 @@
   <div id="dashboard" style="display:none;">
     <div class="dash-header">
       <div>
-        <h1>My Dashboard</h1>
+        <h1>My Quests</h1>
         <span style="font-size:0.82rem;color:var(--text-2);" id="userAddr"></span>
       </div>
-      <span class="dash-role" id="userRole"></span>
+      <span class="dash-role role-user">USER</span>
     </div>
 
     <!-- Stats -->
@@ -44,27 +44,27 @@
         <div class="dash-stat-value" id="statJoined">0</div>
       </div>
       <div class="dash-stat">
+        <div class="dash-stat-label">참여중</div>
+        <div class="dash-stat-value" id="statActive" style="color:var(--blue);">0</div>
+      </div>
+      <div class="dash-stat">
         <div class="dash-stat-label">완료</div>
-        <div class="dash-stat-value" id="statCompleted">0</div>
+        <div class="dash-stat-value" id="statCompleted" style="color:var(--green);">0</div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-label">보상 받음</div>
-        <div class="dash-stat-value" id="statRewarded">0</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-label">가입일</div>
-        <div class="dash-stat-value" id="statCreated" style="font-size:0.9rem;">-</div>
+        <div class="dash-stat-value" id="statRewarded" style="color:var(--purple);">0</div>
       </div>
     </div>
 
     <!-- Participations -->
     <div class="dash-card">
-      <div class="dash-card-title">내 참여 내역 <span class="count" id="partCount">0</span></div>
+      <div class="dash-card-title">참여한 캠페인 / 퀘스트 <span class="count" id="partCount">0</span></div>
       <div id="partList"></div>
       <div id="partEmpty" class="dash-empty" style="display:none;">
         <div class="dash-empty-icon">&#128640;</div>
         <p>아직 참여한 퀘스트가 없습니다.</p>
-        <a href="index.html#quests" class="btn btn-blue" style="margin-top:1rem;">퀘스트 둘러보기</a>
+        <a href="index.html#campaigns" class="btn btn-blue" style="margin-top:1rem;">캠페인 둘러보기</a>
       </div>
     </div>
   </div>
@@ -91,6 +91,12 @@
 
 <script src="app.js"></script>
 <script>
+  const ACTION_LABELS = {
+    twitter_follow: '트위터 팔로우', twitter_rt: 'RT & 좋아요', telegram_join: '텔레그램 가입',
+    discord_join: '디스코드 참여', token_swap: '스왑 체험', staking: '스테이킹', nft_mint: 'NFT 민팅',
+    review: '리뷰 작성', youtube_video: '유튜브 영상', twitter_thread: '트위터 스레드',
+  };
+
   async function loadDashboard() {
     if (!Auth.isLoggedIn) {
       show('#needLogin');
@@ -98,25 +104,16 @@
     }
 
     show('#dashboard');
-    const roleMap = { admin: 'role-admin', project: 'role-project', user: 'role-user' };
-    $('#userRole').textContent = Auth.role?.toUpperCase();
-    $('#userRole').className = 'dash-role ' + (roleMap[Auth.role] || 'role-user');
     $('#userAddr').textContent = shortAddr(Auth.wallet);
 
-    // Load profile
-    try {
-      const me = await api('/api/users/me');
-      $('#statCreated').textContent = formatDate(me.created_at);
-    } catch { /* silent */ }
-
-    // Load participations
     try {
       const parts = await api('/api/users/me/participations');
-      const joined = parts.filter(p => p.status === 'joined').length;
+      const active = parts.filter(p => p.status === 'joined').length;
       const completed = parts.filter(p => p.status === 'completed').length;
       const rewarded = parts.filter(p => p.status === 'rewarded').length;
 
       $('#statJoined').textContent = parts.length;
+      $('#statActive').textContent = active;
       $('#statCompleted').textContent = completed;
       $('#statRewarded').textContent = rewarded;
       $('#partCount').textContent = parts.length;
@@ -124,16 +121,18 @@
       if (parts.length === 0) {
         show('#partEmpty');
       } else {
-        let html = '<table class="dash-table"><thead><tr><th>퀘스트</th><th>캠페인</th><th>상태</th><th>참여일</th><th></th></tr></thead><tbody>';
+        let html = '<table class="dash-table"><thead><tr><th>퀘스트</th><th>캠페인</th><th>유형</th><th>상태</th><th>참여일</th><th></th></tr></thead><tbody>';
         parts.forEach(p => {
           const quest = p.quests || {};
           const camp = quest.campaigns || {};
+          const typeLabel = ACTION_LABELS[quest.action_type] || quest.quest_type || '-';
           html += `<tr>
-            <td style="font-weight:600;">${quest.title || '-'}</td>
-            <td>${camp.project_name || '-'}</td>
+            <td style="font-weight:600;">${quest.title || quest.name || '-'}</td>
+            <td><a href="campaign.html?id=${quest.campaign_id}" style="color:var(--blue);text-decoration:none;">${camp.project_name || '-'}</a></td>
+            <td style="font-size:0.78rem;">${typeLabel}</td>
             <td>${statusBadge(p.status)}</td>
-            <td style="font-size:0.8rem;color:var(--text-2);">${formatDate(p.created_at)}</td>
-            <td><a href="quest.html?id=${p.quest_id}" class="dash-action view">보기</a></td>
+            <td style="font-size:0.8rem;color:var(--text-2);">${formatDate(p.joined_at || p.created_at)}</td>
+            <td><a href="campaign.html?id=${quest.campaign_id}" class="dash-action view">보기</a></td>
           </tr>`;
         });
         html += '</tbody></table>';
@@ -144,7 +143,6 @@
     }
   }
 
-  // Wallet connect
   async function connectWallet(type) {
     const provider = findProviderByName(type);
     const walletName = WALLET_INFO[type]?.name || type;
@@ -186,8 +184,6 @@
       catch (e) { alert(e.message || '가입 실패'); }
     };
   }
-
-  // doDisconnect and doLogout are defined in app.js
 
   authRestore().then(() => { initCommon(); loadDashboard(); });
 </script>

@@ -23,7 +23,7 @@
   <div id="needLogin" style="display:none;">
     <div class="dash-empty">
       <div class="dash-empty-icon">&#128274;</div>
-      <p>로그인이 필요합니다.</p>
+      <p>프로젝트 또는 관리자 계정으로 로그인이 필요합니다.</p>
       <button class="btn btn-blue" style="margin-top:1rem;" onclick="openModal('walletModal')">지갑 연결</button>
     </div>
   </div>
@@ -127,11 +127,15 @@
   const STATUS_LABEL = { pending: '대기중', live: '승인됨 (Live)', rejected: '거절됨', ended: '종료' };
 
   async function loadDashboard() {
-    if (!Auth.isLoggedIn) {
+    if (!Auth.isLoggedIn || (!Auth.isProject && !Auth.isAdmin)) {
       show('#needLogin');
       return;
     }
     show('#dashboard');
+    // Admin sees "My Campaigns", Project sees "Dashboard"
+    const pageTitle = Auth.isAdmin ? 'My Campaigns' : 'Dashboard';
+    document.querySelector('#dashboard h1').textContent = pageTitle;
+    document.title = pageTitle + ' — SHILL VAULT';
     $('#projName').textContent = Auth.user.project_name || shortAddr(Auth.wallet);
     const roleClass = Auth.isAdmin ? 'role-admin' : Auth.isProject ? 'role-project' : 'role-user';
     $('#roleBadge').className = 'dash-role ' + roleClass;
