@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Dashboard — SHILL VAULT</title>
+  <title>My Campaigns — SHILL VAULT</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -23,7 +23,7 @@
   <div id="needLogin" style="display:none;">
     <div class="dash-empty">
       <div class="dash-empty-icon">&#128274;</div>
-      <p>프로젝트 계정으로 로그인이 필요합니다.</p>
+      <p>로그인이 필요합니다.</p>
       <button class="btn btn-blue" style="margin-top:1rem;" onclick="openModal('walletModal')">지갑 연결</button>
     </div>
   </div>
@@ -35,8 +35,8 @@
         <span style="font-size:0.82rem;color:var(--text-2);" id="projName"></span>
       </div>
       <div style="display:flex;gap:0.5rem;align-items:center;">
-        <span class="dash-role role-project">PROJECT</span>
-        <button class="btn btn-blue" style="padding:0.5rem 1rem;font-size:0.82rem;" onclick="openModal('newCampModal')">+ 캠페인 만들기</button>
+        <span class="dash-role" id="roleBadge">-</span>
+        <button class="btn btn-blue" style="padding:0.5rem 1rem;font-size:0.82rem;" onclick="openNewCampModal()">+ 캠페인 접수</button>
       </div>
     </div>
 
@@ -47,16 +47,16 @@
         <div class="dash-stat-value" id="statCamps">0</div>
       </div>
       <div class="dash-stat">
-        <div class="dash-stat-label">승인 대기</div>
-        <div class="dash-stat-value" id="statPending">0</div>
+        <div class="dash-stat-label">대기중</div>
+        <div class="dash-stat-value" id="statPending" style="color:var(--orange);">0</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-label">승인됨 (Live)</div>
+        <div class="dash-stat-value" id="statLive" style="color:var(--green);">0</div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-label">총 참여자</div>
         <div class="dash-stat-value" id="statParts">0</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-label">총 보상</div>
-        <div class="dash-stat-value" id="statRewards">$0</div>
       </div>
     </div>
 
@@ -66,39 +66,41 @@
       <div id="campList"></div>
       <div id="campEmpty" class="dash-empty" style="display:none;">
         <div class="dash-empty-icon">&#128640;</div>
-        <p>아직 등록한 캠페인이 없습니다.</p>
+        <p>아직 접수한 캠페인이 없습니다.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- New Campaign Modal -->
-<div class="modal-overlay" id="newCampModal">
+<!-- New/Edit Campaign Modal -->
+<div class="modal-overlay" id="campFormModal">
   <div class="modal" style="max-width:500px;">
-    <button class="modal-close" onclick="closeModal('newCampModal')">&times;</button>
-    <h3>새 캠페인 만들기</h3>
-    <p class="modal-desc">캠페인을 등록하면 관리자 승인 후 공개됩니다.</p>
-    <div class="reg-field"><label>프로젝트 이름</label><input type="text" id="ncName" placeholder="예: AxiomDEX"></div>
+    <button class="modal-close" onclick="closeModal('campFormModal')">&times;</button>
+    <h3 id="campFormTitle">캠페인 접수</h3>
+    <p class="modal-desc" id="campFormDesc">캠페인을 접수하면 관리자 승인 후 메인에 노출됩니다.</p>
+    <input type="hidden" id="cfEditId" value="">
+    <div class="reg-field"><label>프로젝트 이름</label><input type="text" id="cfName" placeholder="예: AxiomDEX"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
       <div class="reg-field"><label>카테고리</label>
-        <select id="ncCategory"><option value="defi">DeFi</option><option value="nft">NFT</option><option value="gamefi">GameFi</option><option value="l1l2">L1/L2</option><option value="ai">AI/DePIN</option><option value="meme">Meme</option><option value="other">기타</option></select>
+        <select id="cfCategory"><option value="defi">DeFi</option><option value="nft">NFT</option><option value="gamefi">GameFi</option><option value="l1l2">L1/L2</option><option value="ai">AI/DePIN</option><option value="meme">Meme</option><option value="other">기타</option></select>
       </div>
       <div class="reg-field"><label>체인</label>
-        <select id="ncChain"><option value="ethereum">Ethereum</option><option value="solana">Solana</option><option value="base">Base</option><option value="arbitrum">Arbitrum</option><option value="bnb">BNB</option><option value="polygon">Polygon</option><option value="multi">멀티체인</option></select>
+        <select id="cfChain"><option value="ethereum">Ethereum</option><option value="solana">Solana</option><option value="base">Base</option><option value="arbitrum">Arbitrum</option><option value="bnb">BNB</option><option value="polygon">Polygon</option><option value="multi">멀티체인</option></select>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-      <div class="reg-field"><label>시작일</label><input type="date" id="ncStart"></div>
-      <div class="reg-field"><label>종료일</label><input type="date" id="ncEnd"></div>
+      <div class="reg-field"><label>시작일</label><input type="date" id="cfStart"></div>
+      <div class="reg-field"><label>종료일</label><input type="date" id="cfEnd"></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
       <div class="reg-field"><label>보상 토큰</label>
-        <select id="ncToken"><option value="USDT">USDT</option><option value="TOKEN">자체 토큰</option><option value="NFT">NFT</option><option value="POINT">포인트</option></select>
+        <select id="cfToken"><option value="USDT">USDT</option><option value="TOKEN">자체 토큰</option><option value="NFT">NFT</option><option value="POINT">포인트</option></select>
       </div>
-      <div class="reg-field"><label>총 보상 (USD)</label><input type="number" id="ncAmount" placeholder="10000"></div>
+      <div class="reg-field"><label>총 보상 (USD)</label><input type="number" id="cfAmount" placeholder="10000"></div>
     </div>
-    <div class="reg-field"><label>최대 참여자</label><input type="number" id="ncMaxPart" placeholder="500"></div>
-    <button class="reg-btn" onclick="createCampaign()">캠페인 등록 (심사 요청)</button>
+    <div class="reg-field"><label>최대 참여자</label><input type="number" id="cfMaxPart" placeholder="500"></div>
+    <div class="reg-field"><label>설명 (선택)</label><input type="text" id="cfDesc" placeholder="캠페인 설명"></div>
+    <button class="reg-btn" id="campFormBtn" onclick="submitCampForm()">캠페인 접수 (심사 요청)</button>
   </div>
 </div>
 
@@ -122,64 +124,138 @@
 
 <script src="app.js"></script>
 <script>
+  const STATUS_LABEL = { pending: '대기중', live: '승인됨 (Live)', rejected: '거절됨', ended: '종료' };
+
   async function loadDashboard() {
-    if (!Auth.isLoggedIn || (!Auth.isProject && !Auth.isAdmin)) {
+    if (!Auth.isLoggedIn) {
       show('#needLogin');
       return;
     }
     show('#dashboard');
     $('#projName').textContent = Auth.user.project_name || shortAddr(Auth.wallet);
+    const roleClass = Auth.isAdmin ? 'role-admin' : Auth.isProject ? 'role-project' : 'role-user';
+    $('#roleBadge').className = 'dash-role ' + roleClass;
+    $('#roleBadge').textContent = (Auth.role || 'user').toUpperCase();
 
     try {
-      const camps = await api('/api/campaigns');
-      const myCamps = camps.filter(c => c.creator_id === Auth.user.id);
+      const camps = await api('/api/campaigns?creatorId=' + Auth.user.id);
 
-      $('#statCamps').textContent = myCamps.length;
-      $('#statPending').textContent = myCamps.filter(c => c.status === 'pending').length;
-      $('#statParts').textContent = formatNum(myCamps.reduce((s, c) => s + (c.current_participants || 0), 0));
-      $('#statRewards').textContent = '$' + formatNum(myCamps.reduce((s, c) => s + (Number(c.reward_amount) || 0), 0));
-      $('#campCount').textContent = myCamps.length;
+      const total = camps.length;
+      const pending = camps.filter(c => c.status === 'pending').length;
+      const live = camps.filter(c => c.status === 'live').length;
+      const parts = camps.reduce((s, c) => s + (c.current_participants || 0), 0);
 
-      if (myCamps.length === 0) {
+      $('#statCamps').textContent = total;
+      $('#statPending').textContent = pending;
+      $('#statLive').textContent = live;
+      $('#statParts').textContent = formatNum(parts);
+      $('#campCount').textContent = total;
+
+      if (total === 0) {
         show('#campEmpty');
-      } else {
-        let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>체인</th><th>상태</th><th>참여자</th><th>보상</th><th></th></tr></thead><tbody>';
-        myCamps.forEach(c => {
-          html += `<tr>
-            <td style="font-weight:600;">${c.project_name}</td>
-            <td>${c.chain || '-'}</td>
-            <td>${statusBadge(c.status)}</td>
-            <td class="tr-mono">${formatNum(c.current_participants)}</td>
-            <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
-            <td><a href="campaign.html?id=${c.id}" class="dash-action view">상세</a></td>
-          </tr>`;
-        });
-        html += '</tbody></table>';
-        $('#campList').innerHTML = html;
+        return;
       }
+      hide('#campEmpty');
+
+      let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>체인</th><th>상태</th><th>참여자</th><th>보상</th><th></th></tr></thead><tbody>';
+      camps.forEach(c => {
+        let actions = `<a href="campaign.html?id=${c.id}" class="dash-action view">상세</a>`;
+        if (c.status === 'pending') {
+          actions = `<button class="dash-action approve" onclick="editCampaign('${c.id}')" style="background:var(--orange-soft);color:var(--orange);">수정</button> ` + actions;
+        }
+        if (c.status === 'rejected') {
+          actions = `<button class="dash-action approve" onclick="editCampaign('${c.id}')" style="background:var(--blue-soft);color:var(--blue);">재제출</button> ` + actions;
+        }
+        html += `<tr>
+          <td style="font-weight:600;">${c.project_name}</td>
+          <td>${c.chain || '-'}</td>
+          <td>${statusBadge(c.status)}${c.status === 'rejected' && c.rejection_reason ? '<div style="font-size:0.68rem;color:var(--red);margin-top:0.2rem;">사유: ' + c.rejection_reason + '</div>' : ''}</td>
+          <td class="tr-mono">${formatNum(c.current_participants)}</td>
+          <td class="tr-mono">$${formatNum(c.reward_amount)}</td>
+          <td>${actions}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+      $('#campList').innerHTML = html;
     } catch (e) {
       show('#campEmpty');
     }
   }
 
-  async function createCampaign() {
+  // Cache loaded campaign data for edit
+  let _campCache = {};
+
+  function openNewCampModal() {
+    $('#cfEditId').value = '';
+    $('#cfName').value = '';
+    $('#cfCategory').value = 'defi';
+    $('#cfChain').value = 'ethereum';
+    $('#cfStart').value = '';
+    $('#cfEnd').value = '';
+    $('#cfToken').value = 'USDT';
+    $('#cfAmount').value = '';
+    $('#cfMaxPart').value = '';
+    $('#cfDesc').value = '';
+    $('#campFormTitle').textContent = '캠페인 접수';
+    $('#campFormDesc').textContent = '캠페인을 접수하면 관리자 승인 후 메인에 노출됩니다.';
+    $('#campFormBtn').textContent = '캠페인 접수 (심사 요청)';
+    openModal('campFormModal');
+  }
+
+  async function editCampaign(id) {
     try {
-      const body = {
-        project_name: $('#ncName').value,
-        category: $('#ncCategory').value,
-        chain: $('#ncChain').value,
-        start_date: $('#ncStart').value || null,
-        end_date: $('#ncEnd').value || null,
-        reward_token: $('#ncToken').value,
-        reward_amount: Number($('#ncAmount').value) || 0,
-        max_participants: Number($('#ncMaxPart').value) || 0,
-      };
-      await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
-      closeModal('newCampModal');
+      const camp = await api('/api/campaigns/' + id);
+      $('#cfEditId').value = id;
+      $('#cfName').value = camp.project_name || '';
+      $('#cfCategory').value = camp.category || 'defi';
+      $('#cfChain').value = camp.chain || 'ethereum';
+      $('#cfStart').value = camp.start_date ? camp.start_date.split('T')[0] : '';
+      $('#cfEnd').value = camp.end_date ? camp.end_date.split('T')[0] : '';
+      $('#cfToken').value = camp.reward_token || 'USDT';
+      $('#cfAmount').value = camp.reward_amount || '';
+      $('#cfMaxPart').value = camp.max_participants || '';
+      $('#cfDesc').value = camp.description || '';
+      $('#campFormTitle').textContent = '캠페인 수정';
+      $('#campFormDesc').textContent = '수정 후 재제출하면 관리자 재심사를 받습니다.';
+      $('#campFormBtn').textContent = '재제출 (심사 요청)';
+      openModal('campFormModal');
+    } catch (e) { alert(e.message || '불러오기 실패'); }
+  }
+
+  async function submitCampForm() {
+    const editId = $('#cfEditId').value;
+    const body = {
+      project_name: $('#cfName').value,
+      category: $('#cfCategory').value,
+      chain: $('#cfChain').value,
+      start_date: $('#cfStart').value || null,
+      end_date: $('#cfEnd').value || null,
+      reward_token: $('#cfToken').value,
+      reward_amount: Number($('#cfAmount').value) || 0,
+      max_participants: Number($('#cfMaxPart').value) || 0,
+      description: $('#cfDesc').value || null,
+    };
+
+    if (!body.project_name) { alert('프로젝트 이름을 입력하세요.'); return; }
+
+    try {
+      if (editId) {
+        // Update (resubmit) — backend will reset status to pending
+        await api('/api/campaigns/' + editId, { method: 'PUT', body: JSON.stringify(body) });
+        alert('재제출되었습니다. 관리자 승인을 기다려주세요.');
+      } else {
+        // Create new
+        await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
+        if (Auth.isAdmin) {
+          alert('캠페인이 생성되어 바로 메인에 노출됩니다.');
+        } else {
+          alert('캠페인이 접수되었습니다. 관리자 승인을 기다려주세요.');
+        }
+      }
+      closeModal('campFormModal');
       loadDashboard();
-      alert('캠페인이 등록되었습니다. 관리자 승인을 기다려주세요.');
     } catch (e) {
-      alert(e.message || '등록 실패');
+      alert(e.message || '처리 실패');
     }
   }
 
@@ -197,16 +273,16 @@
 
   function showRegForm(nonce, addr, provider) {
     hide('#walletConnect');
-    let selectedRole = 'project';
+    let selectedRole = 'user';
     $('#walletRegister').innerHTML = `
       <h3>회원가입</h3><p class="modal-desc">${shortAddr(addr)}</p>
       <div class="auth-reg">
         <div class="auth-role-picker">
-          <button class="auth-role-opt" data-role="user" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128100;</span><span class="auth-role-name">일반 유저</span></button>
-          <button class="auth-role-opt selected" data-role="project" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128188;</span><span class="auth-role-name">프로젝트</span></button>
+          <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128100;</span><span class="auth-role-name">일반 유저</span></button>
+          <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)"><span class="auth-role-icon">&#128188;</span><span class="auth-role-name">프로젝트</span></button>
         </div>
         <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail"></div>
-        <div class="reg-field" id="regProjField"><label>프로젝트 이름</label><input type="text" id="regProjName"></div>
+        <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName"></div>
         <button class="reg-btn" onclick="submitReg()">가입하기</button>
       </div>`;
     show('#walletRegister');
@@ -222,8 +298,6 @@
       catch (e) { alert(e.message || '가입 실패'); }
     };
   }
-
-  // doDisconnect and doLogout are defined in app.js
 
   authRestore().then(() => { initCommon(); loadDashboard(); });
 </script>

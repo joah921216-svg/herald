@@ -230,8 +230,8 @@ function statusBadge(status) {
   const map = {
     active: { cls: 'tr-active', color: 'var(--green)', label: '진행중' },
     live: { cls: 'tr-active', color: 'var(--green)', label: 'Live' },
-    approved: { cls: 'tr-filling', color: 'var(--blue)', label: '승인됨' },
-    pending: { cls: 'tr-filling', color: 'var(--orange)', label: '심사중' },
+    approved: { cls: 'tr-active', color: 'var(--green)', label: 'Live' },
+    pending: { cls: 'tr-filling', color: 'var(--orange)', label: '대기중' },
     rejected: { cls: 'tr-completed', color: 'var(--red)', label: '반려' },
     ended: { cls: 'tr-completed', color: 'var(--text-3)', label: '종료' },
     joined: { cls: 'tr-filling', color: 'var(--blue)', label: '참여중' },
@@ -347,13 +347,12 @@ function setupNav() {
   if (!linksEl) return;
 
   let links = `
-    <li><a href="index.html#quests">Quests</a></li>
     <li><a href="index.html#campaigns">Campaigns</a></li>
   `;
 
   if (Auth.isLoggedIn) {
     if (Auth.isAdmin) links += '<li><a href="admin.html">Admin</a></li>';
-    if (Auth.isProject || Auth.isAdmin) links += '<li><a href="project.html">My Campaigns</a></li>';
+    links += '<li><a href="project.html">My Campaigns</a></li>';
     links += '<li><a href="user.html">Dashboard</a></li>';
     links += `<li><button class="wallet-btn connected" onclick="toggleWalletDropdown(event)">${shortAddr(Auth.wallet)}</button></li>`;
   } else {
