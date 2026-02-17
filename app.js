@@ -68,12 +68,67 @@ async function getBalance(provider, addr) {
   } catch { return '— ETH'; }
 }
 
+// ==================== MULTI-WALLET PROVIDER DETECTION ====================
+// Multiple wallet extensions (MetaMask, Rabby, Phantom, Kaia) all try to set
+// window.ethereum, causing "Cannot redefine property: ethereum" errors.
+// Each wallet must be found via its own dedicated path.
+
+function getProviders() {
+  // Some wallets populate window.ethereum.providers array
+  return window.ethereum?.providers || [];
+}
+
 function findMetaMask() {
-  return window.ethereum?.providers?.find(p => p.isMetaMask) || (window.ethereum?.isMetaMask ? window.ethereum : null);
+  // 1. Check providers array (when multiple wallets coexist)
+  const fromProviders = getProviders().find(p => p.isMetaMask && !p.isRabby && !p.isPhantom);
+  if (fromProviders) return fromProviders;
+  // 2. Check window.ethereum directly (single wallet case)
+  if (window.ethereum?.isMetaMask && !window.ethereum?.isRabby && !window.ethereum?.isPhantom) return window.ethereum;
+  return null;
 }
 
 function findRabby() {
-  return window.rabby || window.ethereum?.providers?.find(p => p.isRabby) || window.ethereum;
+  // 1. Rabby sets its own global
+  if (window.rabby) return window.rabby;
+  // 2. Check providers array
+  const fromProviders = getProviders().find(p => p.isRabby);
+  if (fromProviders) return fromProviders;
+  // 3. Check window.ethereum
+  if (window.ethereum?.isRabby) return window.ethereum;
+  return null;
+}
+
+function findPhantom() {
+  // Phantom (EVM mode) sets window.phantom.ethereum
+  if (window.phantom?.ethereum) return window.phantom.ethereum;
+  // Check providers array
+  const fromProviders = getProviders().find(p => p.isPhantom);
+  if (fromProviders) return fromProviders;
+  if (window.ethereum?.isPhantom) return window.ethereum;
+  return null;
+}
+
+function findKaia() {
+  // Kaia Wallet (formerly Klaytn/Kaikas) sets window.klaytn or window.kaia
+  if (window.kaia) return window.kaia;
+  if (window.klaytn) return window.klaytn;
+  const fromProviders = getProviders().find(p => p.isKaikas || p.isKaia);
+  if (fromProviders) return fromProviders;
+  return null;
+}
+
+function findProviderByName(name) {
+  switch (name) {
+    case 'metamask': return findMetaMask();
+    case 'rabby': return findRabby();
+    case 'phantom': return findPhantom();
+    case 'kaia': return findKaia();
+    default: return null;
+  }
+}
+
+function findAnyProvider() {
+  return findMetaMask() || findRabby() || findPhantom() || findKaia() || window.ethereum || null;
 }
 
 // ==================== AUTH FLOW ====================
@@ -115,12 +170,18 @@ async function authSign(addr, nonce, provider, regData = null) {
 async function authRestore() {
   const saved = localStorage.getItem('sv_wallet');
   const name = localStorage.getItem('sv_wallet_name');
-  if (!saved || !window.ethereum) return false;
+  if (!saved) return false;
+
+  // Find the correct provider based on previously used wallet
+  const nameMap = { 'MetaMask': 'metamask', 'Rabby': 'rabby', 'Phantom': 'phantom', 'Kaia': 'kaia' };
+  const provider = findProviderByName(nameMap[name] || '') || findAnyProvider();
+  if (!provider) return false;
+
   try {
-    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+    const accounts = await provider.request({ method: 'eth_accounts' });
     const match = accounts.find(a => a.toLowerCase() === saved.toLowerCase());
     if (match) {
-      Auth.provider = window.ethereum;
+      Auth.provider = provider;
       Auth.wallet = match;
       Auth.walletName = name || 'Wallet';
       return true;
@@ -156,6 +217,37 @@ function statusBadge(status) {
 
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('ko-KR') : '-'; }
 function formatNum(n) { return (n || 0).toLocaleString(); }
+
+// ==================== WALLET UI BUILDER ====================
+const WALLET_INFO = {
+  metamask: { name: 'MetaMask', desc: '브라우저 확장 지갑', gradient: '#f6851b,#e2761b', label: 'MM', badge: '인기' },
+  rabby:    { name: 'Rabby Wallet', desc: 'EVM 멀티체인 지갑', gradient: '#7084ff,#5c6fff', label: 'RB', badge: null },
+  phantom:  { name: 'Phantom', desc: 'Solana & EVM 지갑', gradient: '#ab9ff2,#6e56cf', label: 'PH', badge: null },
+  kaia:     { name: 'Kaia Wallet', desc: 'Kaia 네트워크 지갑', gradient: '#3f51b5,#5c6bc0', label: 'KA', badge: null },
+};
+
+function buildWalletButtons(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  let html = '';
+  for (const [key, info] of Object.entries(WALLET_INFO)) {
+    const provider = findProviderByName(key);
+    const disabled = !provider;
+    html += `<button class="wallet-opt${disabled ? ' wc-disabled' : ''}" onclick="${disabled ? '' : "connectWallet('" + key + "')"}" ${disabled ? 'title="설치되지 않음"' : ''}>
+      <div class="wallet-opt-icon" style="background:linear-gradient(135deg,${info.gradient});">
+        <span style="color:white;font-weight:800;font-size:0.7rem;">${info.label}</span>
+      </div>
+      <div>
+        <div class="wallet-opt-name">${info.name}</div>
+        <div class="wallet-opt-desc">${disabled ? '미설치' : info.desc}</div>
+      </div>
+      ${info.badge && !disabled ? '<span class="wallet-opt-badge">' + info.badge + '</span>' : ''}
+      ${disabled ? '<span class="wallet-opt-badge wc-soon">미설치</span>' : ''}
+    </button>`;
+  }
+  container.innerHTML = html;
+}
 
 // ==================== NAV SETUP ====================
 function setupNav() {
@@ -202,6 +294,9 @@ function initCommon() {
   $$('.nav-links a').forEach(a => {
     a.addEventListener('click', () => $('.nav-links')?.classList.remove('active'));
   });
+
+  // Build wallet buttons dynamically
+  buildWalletButtons('walletOptions');
 
   setupNav();
 }

@@ -262,27 +262,7 @@
     <div id="walletConnect">
       <h3>지갑 연결</h3>
       <p class="modal-desc">지갑을 연결하여 퀘스트에 참여하고 보상을 받으세요.</p>
-      <div class="wallet-options">
-        <button class="wallet-opt" onclick="connectWallet('metamask')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M21.3 2L13 8.2l1.5-3.7L21.3 2zM2.7 2l8.2 6.3L9.5 4.5 2.7 2zm16 14.2l-2.2 3.4 4.7 1.3 1.4-4.6-3.9-.1zM1.4 16.3l1.3 4.6 4.7-1.3-2.2-3.4-3.8.1z"/></svg>
-          </div>
-          <div>
-            <div class="wallet-opt-name">MetaMask</div>
-            <div class="wallet-opt-desc">브라우저 확장 지갑</div>
-          </div>
-          <span class="wallet-opt-badge">인기</span>
-        </button>
-        <button class="wallet-opt" onclick="connectWallet('rabby')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2V7h-2v6z"/></svg>
-          </div>
-          <div>
-            <div class="wallet-opt-name">Rabby Wallet</div>
-            <div class="wallet-opt-desc">EVM 멀티체인 지갑</div>
-          </div>
-        </button>
-      </div>
+      <div class="wallet-options" id="walletOptions"></div>
       <div id="walletError" class="wallet-error" style="display:none;"></div>
     </div>
 
@@ -569,15 +549,16 @@
 <script>
 // ==================== WALLET CONNECTION ====================
 async function connectWallet(type) {
-  const provider = type === 'metamask' ? findMetaMask() : findRabby();
+  const provider = findProviderByName(type);
+  const walletName = WALLET_INFO[type]?.name || type;
   if (!provider) {
     const el = document.getElementById('walletError');
-    el.textContent = type === 'metamask' ? 'MetaMask가 설치되어 있지 않습니다.' : '지갑이 감지되지 않습니다.';
+    el.textContent = walletName + '이(가) 감지되지 않습니다. 확장프로그램을 확인해주세요.';
     el.style.display = 'block';
     return;
   }
   try {
-    const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+    const result = await authConnect(provider, walletName);
     if (result.needsRegistration) {
       showRegForm(result.nonce, result.addr, provider);
     } else {

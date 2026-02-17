@@ -77,16 +77,7 @@
     <div id="walletConnect">
       <h3>지갑 연결</h3>
       <p class="modal-desc">로그인하려면 지갑을 연결하세요.</p>
-      <div class="wallet-options">
-        <button class="wallet-opt" onclick="connectWallet('metamask')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#f6851b,#e2761b);">MM</div>
-          <div><div class="wallet-opt-name">MetaMask</div></div>
-        </button>
-        <button class="wallet-opt" onclick="connectWallet('rabby')">
-          <div class="wallet-opt-icon" style="background:linear-gradient(135deg,#7084ff,#5c6fff);">RB</div>
-          <div><div class="wallet-opt-name">Rabby</div></div>
-        </button>
-      </div>
+      <div class="wallet-options" id="walletOptions"></div>
       <div id="walletError" class="wallet-error" style="display:none;"></div>
     </div>
     <div id="walletRegister" style="display:none;"></div>
@@ -155,10 +146,11 @@
 
   // Wallet connect
   async function connectWallet(type) {
-    const provider = type === 'metamask' ? findMetaMask() : findRabby();
-    if (!provider) { $('#walletError').textContent = '지갑이 감지되지 않습니다.'; show('#walletError'); return; }
+    const provider = findProviderByName(type);
+    const walletName = WALLET_INFO[type]?.name || type;
+    if (!provider) { $('#walletError').textContent = walletName + '이(가) 감지되지 않습니다.'; show('#walletError'); return; }
     try {
-      const result = await authConnect(provider, type === 'metamask' ? 'MetaMask' : 'Rabby');
+      const result = await authConnect(provider, walletName);
       if (result.needsRegistration) {
         showRegForm(result.nonce, result.addr, provider);
       } else {
