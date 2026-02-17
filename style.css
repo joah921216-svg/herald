@@ -301,9 +301,25 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 }
 .wallet-btn:hover { opacity: 0.9; }
 .wallet-btn.connected { background: var(--green); }
-.wallet-btn.logout-btn { background: var(--text-3); font-size: 0.72rem; padding: 0.35rem 0.75rem; }
-.wallet-btn.logout-btn:hover { background: var(--red, #ef4444); }
 .wallet-addr { font-size: 0.72rem; font-weight: 600; }
+
+/* Wallet Dropdown */
+.wallet-dropdown {
+  z-index: 9999; background: var(--bg); border: 1px solid var(--line);
+  border-radius: var(--r-sm); box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  min-width: 240px; padding: 0.75rem 0; animation: wdFade 0.15s ease;
+}
+@keyframes wdFade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+.wd-header { display: flex; justify-content: space-between; align-items: center; padding: 0 1rem 0.5rem; }
+.wd-wallet-name { font-weight: 700; font-size: 0.85rem; color: var(--text-1); }
+.wd-role { font-size: 0.68rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 99px; background: var(--blue-soft); color: var(--blue); }
+.wd-addr { padding: 0 1rem 0.6rem; font-size: 0.72rem; color: var(--text-3); font-family: 'SF Mono', monospace; word-break: break-all; line-height: 1.4; }
+.wd-divider { height: 1px; background: var(--line); margin: 0.25rem 0; }
+.wd-item { display: block; padding: 0.5rem 1rem; font-size: 0.82rem; color: var(--text-1); text-decoration: none; transition: background 0.15s; }
+.wd-item:hover { background: var(--bg-2); }
+.wd-disconnect { width: 100%; padding: 0.55rem 1rem; border: none; background: none; text-align: left;
+  font-size: 0.82rem; color: #ef4444; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.wd-disconnect:hover { background: #fef2f2; }
 
 /* === MODAL === */
 .modal-overlay {

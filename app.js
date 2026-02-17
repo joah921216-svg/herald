@@ -282,16 +282,12 @@ window.addEventListener('eip6963:announceProvider', () => {
 });
 
 // ==================== GLOBAL LOGOUT/DISCONNECT ====================
-function doLogout() {
-  Auth.clear();
-  location.href = location.pathname.includes('index') || location.pathname.endsWith('/') || location.pathname.endsWith('/herald/') ? location.href : 'index.html';
-  location.reload();
-}
-
 function doDisconnect() {
   Auth.clear();
-  const modal = document.getElementById('walletModal');
-  if (modal) modal.classList.remove('open');
+  // Close dropdown
+  const dd = document.getElementById('walletDropdown');
+  if (dd) dd.remove();
+  // Reset wallet modal if exists
   const wc = document.getElementById('walletConnect');
   const wi = document.getElementById('walletInfo');
   const wr = document.getElementById('walletRegister');
@@ -299,7 +295,50 @@ function doDisconnect() {
   if (wi) wi.style.display = 'none';
   if (wr) wr.style.display = 'none';
   setupNav();
+}
+
+function doLogout() {
+  doDisconnect();
   location.reload();
+}
+
+function toggleWalletDropdown(e) {
+  e.stopPropagation();
+  let dd = document.getElementById('walletDropdown');
+  if (dd) { dd.remove(); return; }
+
+  const roleLabel = { admin: 'Admin', project: 'Project', user: 'User' };
+  dd = document.createElement('div');
+  dd.id = 'walletDropdown';
+  dd.className = 'wallet-dropdown';
+  dd.innerHTML = `
+    <div class="wd-header">
+      <div class="wd-wallet-name">${Auth.walletName || 'Wallet'}</div>
+      <div class="wd-role">${roleLabel[Auth.role] || Auth.role || '-'}</div>
+    </div>
+    <div class="wd-addr">${Auth.wallet || '-'}</div>
+    <div class="wd-divider"></div>
+    <a href="user.html" class="wd-item">My Dashboard</a>
+    ${Auth.isProject || Auth.isAdmin ? '<a href="project.html" class="wd-item">My Campaigns</a>' : ''}
+    ${Auth.isAdmin ? '<a href="admin.html" class="wd-item">Admin Panel</a>' : ''}
+    <div class="wd-divider"></div>
+    <button class="wd-disconnect" onclick="doLogout()">지갑 연결 해제</button>
+  `;
+
+  // Position it near the wallet button
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  dd.style.position = 'fixed';
+  dd.style.top = (rect.bottom + 8) + 'px';
+  dd.style.right = Math.max(12, window.innerWidth - rect.right) + 'px';
+  document.body.appendChild(dd);
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', function _close(ev) {
+      if (!dd.contains(ev.target)) { dd.remove(); document.removeEventListener('click', _close); }
+    });
+  }, 0);
 }
 
 // ==================== NAV SETUP ====================
@@ -307,7 +346,6 @@ function setupNav() {
   const linksEl = $('.nav-links');
   if (!linksEl) return;
 
-  // Build nav based on auth state
   let links = `
     <li><a href="index.html#quests">Quests</a></li>
     <li><a href="index.html#campaigns">Campaigns</a></li>
@@ -317,8 +355,7 @@ function setupNav() {
     if (Auth.isAdmin) links += '<li><a href="admin.html">Admin</a></li>';
     if (Auth.isProject || Auth.isAdmin) links += '<li><a href="project.html">My Campaigns</a></li>';
     links += '<li><a href="user.html">Dashboard</a></li>';
-    links += `<li><button class="wallet-btn connected" onclick="openModal('walletModal')">${shortAddr(Auth.wallet)}</button></li>`;
-    links += `<li><button class="wallet-btn logout-btn" onclick="doLogout()">Logout</button></li>`;
+    links += `<li><button class="wallet-btn connected" onclick="toggleWalletDropdown(event)">${shortAddr(Auth.wallet)}</button></li>`;
   } else {
     links += `<li><button class="wallet-btn" onclick="openModal('walletModal')">지갑 연결</button></li>`;
   }
