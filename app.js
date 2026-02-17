@@ -68,52 +68,80 @@ async function getBalance(provider, addr) {
   } catch { return '— ETH'; }
 }
 
-// ==================== MULTI-WALLET PROVIDER DETECTION ====================
-// Multiple wallet extensions (MetaMask, Rabby, Phantom, Kaia) all try to set
-// window.ethereum, causing "Cannot redefine property: ethereum" errors.
-// Each wallet must be found via its own dedicated path.
+// ==================== MULTI-WALLET PROVIDER DETECTION (EIP-6963) ====================
+// window.ethereum 직접 접근 금지! 여러 지갑이 window.ethereum을 덮어쓰려고
+// 충돌하면서 "Cannot redefine property: ethereum" 에러가 발생함.
+// EIP-6963 이벤트로 각 지갑이 스스로를 등록하게 하고, 그걸 수집한다.
 
-function getProviders() {
-  // Some wallets populate window.ethereum.providers array
-  return window.ethereum?.providers || [];
+const _eip6963Providers = new Map(); // rdns -> { info, provider }
+
+// EIP-6963: 지갑이 자신을 announce하면 수집
+window.addEventListener('eip6963:announceProvider', (event) => {
+  const { info, provider } = event.detail;
+  if (info?.rdns) _eip6963Providers.set(info.rdns, { info, provider });
+});
+// 이미 등록된 지갑들에게 announce 요청
+window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+// RDNS 매핑
+const WALLET_RDNS = {
+  metamask: 'io.metamask',
+  rabby: 'io.rabby',
+  phantom: 'app.phantom',
+};
+
+function _safeGetEthereum() {
+  // window.ethereum 접근 시 에러 날 수 있으므로 try/catch
+  try { return window.ethereum || null; } catch { return null; }
+}
+
+function _safeGetProviders() {
+  try {
+    const eth = _safeGetEthereum();
+    return eth?.providers || [];
+  } catch { return []; }
 }
 
 function findMetaMask() {
-  // 1. Check providers array (when multiple wallets coexist)
-  const fromProviders = getProviders().find(p => p.isMetaMask && !p.isRabby && !p.isPhantom);
-  if (fromProviders) return fromProviders;
-  // 2. Check window.ethereum directly (single wallet case)
-  if (window.ethereum?.isMetaMask && !window.ethereum?.isRabby && !window.ethereum?.isPhantom) return window.ethereum;
+  // 1. EIP-6963 (가장 안전)
+  const eip = _eip6963Providers.get('io.metamask');
+  if (eip) return eip.provider;
+  // 2. providers 배열에서 찾기
+  const fromArr = _safeGetProviders().find(p => {
+    try { return p.isMetaMask && !p.isRabby && !p.isPhantom; } catch { return false; }
+  });
+  if (fromArr) return fromArr;
+  // 3. window.ethereum fallback (단독 설치)
+  try {
+    const eth = _safeGetEthereum();
+    if (eth?.isMetaMask && !eth?.isRabby && !eth?.isPhantom) return eth;
+  } catch { /* ignore */ }
   return null;
 }
 
 function findRabby() {
-  // 1. Rabby sets its own global
-  if (window.rabby) return window.rabby;
-  // 2. Check providers array
-  const fromProviders = getProviders().find(p => p.isRabby);
-  if (fromProviders) return fromProviders;
-  // 3. Check window.ethereum
-  if (window.ethereum?.isRabby) return window.ethereum;
+  const eip = _eip6963Providers.get('io.rabby');
+  if (eip) return eip.provider;
+  try { if (window.rabby) return window.rabby; } catch { /* ignore */ }
+  const fromArr = _safeGetProviders().find(p => {
+    try { return p.isRabby; } catch { return false; }
+  });
+  if (fromArr) return fromArr;
+  try {
+    const eth = _safeGetEthereum();
+    if (eth?.isRabby) return eth;
+  } catch { /* ignore */ }
   return null;
 }
 
 function findPhantom() {
-  // Phantom (EVM mode) sets window.phantom.ethereum
-  if (window.phantom?.ethereum) return window.phantom.ethereum;
-  // Check providers array
-  const fromProviders = getProviders().find(p => p.isPhantom);
-  if (fromProviders) return fromProviders;
-  if (window.ethereum?.isPhantom) return window.ethereum;
-  return null;
-}
-
-function findKaia() {
-  // Kaia Wallet (formerly Klaytn/Kaikas) sets window.klaytn or window.kaia
-  if (window.kaia) return window.kaia;
-  if (window.klaytn) return window.klaytn;
-  const fromProviders = getProviders().find(p => p.isKaikas || p.isKaia);
-  if (fromProviders) return fromProviders;
+  const eip = _eip6963Providers.get('app.phantom');
+  if (eip) return eip.provider;
+  try { if (window.phantom?.ethereum) return window.phantom.ethereum; } catch { /* ignore */ }
+  const fromArr = _safeGetProviders().find(p => {
+    try { return p.isPhantom; } catch { return false; }
+  });
+  if (fromArr) return fromArr;
   return null;
 }
 
@@ -122,13 +150,12 @@ function findProviderByName(name) {
     case 'metamask': return findMetaMask();
     case 'rabby': return findRabby();
     case 'phantom': return findPhantom();
-    case 'kaia': return findKaia();
     default: return null;
   }
 }
 
 function findAnyProvider() {
-  return findMetaMask() || findRabby() || findPhantom() || findKaia() || window.ethereum || null;
+  return findMetaMask() || findRabby() || findPhantom() || _safeGetEthereum();
 }
 
 // ==================== AUTH FLOW ====================
@@ -173,7 +200,7 @@ async function authRestore() {
   if (!saved) return false;
 
   // Find the correct provider based on previously used wallet
-  const nameMap = { 'MetaMask': 'metamask', 'Rabby': 'rabby', 'Phantom': 'phantom', 'Kaia': 'kaia' };
+  const nameMap = { 'MetaMask': 'metamask', 'Rabby Wallet': 'rabby', 'Rabby': 'rabby', 'Phantom': 'phantom' };
   const provider = findProviderByName(nameMap[name] || '') || findAnyProvider();
   if (!provider) return false;
 
@@ -223,17 +250,17 @@ const WALLET_INFO = {
   metamask: { name: 'MetaMask', desc: '브라우저 확장 지갑', gradient: '#f6851b,#e2761b', label: 'MM', badge: '인기' },
   rabby:    { name: 'Rabby Wallet', desc: 'EVM 멀티체인 지갑', gradient: '#7084ff,#5c6fff', label: 'RB', badge: null },
   phantom:  { name: 'Phantom', desc: 'Solana & EVM 지갑', gradient: '#ab9ff2,#6e56cf', label: 'PH', badge: null },
-  kaia:     { name: 'Kaia Wallet', desc: 'Kaia 네트워크 지갑', gradient: '#3f51b5,#5c6bc0', label: 'KA', badge: null },
 };
 
 function buildWalletButtons(containerId) {
-  const container = document.getElementById(containerId);
+  const container = document.getElementById(containerId || 'walletOptions');
   if (!container) return;
 
   let html = '';
   for (const [key, info] of Object.entries(WALLET_INFO)) {
     const provider = findProviderByName(key);
     const disabled = !provider;
+    // 설치된 지갑: 클릭 가능. 미설치: 비활성화하되 항상 표시
     html += `<button class="wallet-opt${disabled ? ' wc-disabled' : ''}" onclick="${disabled ? '' : "connectWallet('" + key + "')"}" ${disabled ? 'title="설치되지 않음"' : ''}>
       <div class="wallet-opt-icon" style="background:linear-gradient(135deg,${info.gradient});">
         <span style="color:white;font-weight:800;font-size:0.7rem;">${info.label}</span>
@@ -248,6 +275,11 @@ function buildWalletButtons(containerId) {
   }
   container.innerHTML = html;
 }
+
+// EIP-6963 provider가 뒤늦게 등록될 때 버튼 갱신
+window.addEventListener('eip6963:announceProvider', () => {
+  buildWalletButtons('walletOptions');
+});
 
 // ==================== NAV SETUP ====================
 function setupNav() {
