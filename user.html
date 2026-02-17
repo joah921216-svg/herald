@@ -129,10 +129,10 @@
           const quest = p.quests || {};
           const camp = quest.campaigns || {};
           html += `<tr>
-            <td style="font-weight:600;">${quest.name || '-'}</td>
+            <td style="font-weight:600;">${quest.title || '-'}</td>
             <td>${camp.project_name || '-'}</td>
             <td>${statusBadge(p.status)}</td>
-            <td style="font-size:0.8rem;color:var(--text-2);">${formatDate(p.joined_at)}</td>
+            <td style="font-size:0.8rem;color:var(--text-2);">${formatDate(p.created_at)}</td>
             <td><a href="quest.html?id=${p.quest_id}" class="dash-action view">보기</a></td>
           </tr>`;
         });
@@ -188,6 +188,7 @@
   }
 
   function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
+  function doLogout() { Auth.clear(); location.href = 'index.html'; }
 
   authRestore().then(() => { initCommon(); loadDashboard(); });
 </script>

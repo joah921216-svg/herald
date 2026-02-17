@@ -294,9 +294,10 @@ function setupNav() {
 
   if (Auth.isLoggedIn) {
     if (Auth.isAdmin) links += '<li><a href="admin.html">Admin</a></li>';
-    if (Auth.isProject) links += '<li><a href="project.html">My Campaigns</a></li>';
+    if (Auth.isProject || Auth.isAdmin) links += '<li><a href="project.html">My Campaigns</a></li>';
     links += '<li><a href="user.html">Dashboard</a></li>';
     links += `<li><button class="wallet-btn connected" onclick="openModal('walletModal')">${shortAddr(Auth.wallet)}</button></li>`;
+    links += `<li><button class="wallet-btn logout-btn" onclick="doLogout()">Logout</button></li>`;
   } else {
     links += `<li><button class="wallet-btn" onclick="openModal('walletModal')">지갑 연결</button></li>`;
   }

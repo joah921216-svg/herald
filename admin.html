@@ -252,6 +252,7 @@
   }
 
   function doDisconnect() { Auth.clear(); closeModal('walletModal'); location.reload(); }
+  function doLogout() { Auth.clear(); location.href = 'index.html'; }
 
   async function init() {
     await authRestore();

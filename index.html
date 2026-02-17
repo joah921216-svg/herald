@@ -640,6 +640,12 @@ function doDisconnect() {
   setupNav();
 }
 
+function doLogout() {
+  Auth.clear();
+  setupNav();
+  location.reload();
+}
+
 // ==================== LOAD LIVE DATA ====================
 async function loadLiveQuests() {
   try {
@@ -659,7 +665,7 @@ async function loadLiveQuests() {
       tr.onclick = () => location.href = 'quest.html?id=' + q.id;
       tr.innerHTML = `
         <td><div class="tr-project"><div class="tr-picon" style="background:linear-gradient(135deg,${grad});">${abbr}</div><div><div class="tr-pname">${camp.project_name || '-'}</div><div class="tr-chain">${camp.chain || '-'}</div></div></div></td>
-        <td>${q.name}</td>
+        <td>${q.title || q.name || '-'}</td>
         <td class="tr-mono">${q.reward_per_user ? '$' + q.reward_per_user : '-'}</td>
         <td class="tr-mono">${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}</td>
         <td>${statusBadge(q.status)}</td>`;

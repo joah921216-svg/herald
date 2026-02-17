@@ -301,6 +301,8 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 }
 .wallet-btn:hover { opacity: 0.9; }
 .wallet-btn.connected { background: var(--green); }
+.wallet-btn.logout-btn { background: var(--text-3); font-size: 0.72rem; padding: 0.35rem 0.75rem; }
+.wallet-btn.logout-btn:hover { background: var(--red, #ef4444); }
 .wallet-addr { font-size: 0.72rem; font-weight: 600; }
 
 /* === MODAL === */
