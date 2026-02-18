@@ -98,14 +98,14 @@
   const QUEST_EMOJI = {
     twitter_follow: '🐦', twitter_rt: '🔁', telegram_join: '✈️', discord_join: '💬',
     token_swap: '🔄', staking: '📌', nft_mint: '🎨',
-    review: '📝', youtube_video: '🎬', twitter_thread: '🧵',
+    review: '📝', twitter_thread: '🧵', other_content: '📋',
   };
   const ACTION_LABELS = {
     twitter_follow: '트위터 팔로우', twitter_rt: 'RT & 좋아요', telegram_join: '텔레그램 가입',
     discord_join: '디스코드 참여', token_swap: '스왑 체험', staking: '스테이킹', nft_mint: 'NFT 민팅',
-    review: '리뷰 작성', youtube_video: '유튜브 영상', twitter_thread: '트위터 스레드',
+    review: '리뷰 작성', twitter_thread: '트위터 스레드', other_content: '기타 콘텐츠',
   };
-  const KOL_ACTIONS = ['review', 'youtube_video', 'twitter_thread'];
+  const KOL_ACTIONS = ['review', 'twitter_thread', 'other_content'];
 
   let myParticipations = {};
 
@@ -176,6 +176,14 @@
       r('현재 참여자', formatNum(camp.current_participants) + '명') +
       r('캠페인 기간', formatDate(camp.start_date) + ' ~ ' + formatDate(camp.end_date)) +
       r('생성일', formatDate(camp.created_at));
+
+    // KOL follower requirements
+    const fmtF = (n) => n >= 1000 ? (n / 1000) + 'K+' : n + '+';
+    if (camp.min_twitter_followers > 0 || camp.min_telegram_followers > 0) {
+      const tw = camp.min_twitter_followers ? fmtF(camp.min_twitter_followers) : '-';
+      const tg = camp.min_telegram_followers ? fmtF(camp.min_telegram_followers) : '-';
+      html += r('KOL 트위터 최소', tw) + r('KOL 텔레그램 최소', tg);
+    }
 
     // Per-quest reward breakdown
     const quests = camp.quests || [];

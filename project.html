@@ -204,21 +204,40 @@
           <span>해당 없음 (인플루언서 대상 아님)</span>
         </label>
         <div id="kolQuestArea">
-          <div class="reg-field" style="margin-bottom:0.75rem;">
-            <label>최소 팔로워 수</label>
-            <select id="cwMinFollower">
-              <option value="5000">5K+</option>
-              <option value="10000">10K+</option>
-              <option value="50000">50K+</option>
-              <option value="100000">100K+</option>
-            </select>
+          <div style="display:flex;gap:0.75rem;margin-bottom:0.75rem;">
+            <div class="reg-field" style="flex:1;">
+              <label>트위터 최소 팔로워</label>
+              <select id="cwMinTwitter">
+                <option value="500">500+</option>
+                <option value="1000">1K+</option>
+                <option value="3000">3K+</option>
+                <option value="5000" selected>5K+</option>
+                <option value="10000">10K+</option>
+                <option value="20000">20K+</option>
+                <option value="30000">30K+</option>
+                <option value="40000">40K+</option>
+              </select>
+            </div>
+            <div class="reg-field" style="flex:1;">
+              <label>텔레그램 최소 팔로워</label>
+              <select id="cwMinTelegram">
+                <option value="500">500+</option>
+                <option value="1000">1K+</option>
+                <option value="3000">3K+</option>
+                <option value="5000" selected>5K+</option>
+                <option value="10000">10K+</option>
+                <option value="20000">20K+</option>
+                <option value="30000">30K+</option>
+                <option value="40000">40K+</option>
+              </select>
+            </div>
           </div>
           <div class="wiz-quest-groups">
             <div class="wiz-quest-group">
               <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--purple);"></span>콘텐츠</div>
               <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="review" data-target="kol" onchange="validateStep2()"><span class="wq-name">리뷰 작성 (텔레그램 광고 포함)</span></div>
-              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="youtube_video" data-target="kol" onchange="validateStep2()"><span class="wq-name">유튜브 영상</span></div>
               <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="twitter_thread" data-target="kol" onchange="validateStep2()"><span class="wq-name">트위터 스레드</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="other_content" data-target="kol" onchange="validateStep2()"><span class="wq-name">기타</span></div>
             </div>
           </div>
         </div>
@@ -313,7 +332,7 @@
     awareness: ['twitter_follow', 'twitter_rt'],
     dapp: ['token_swap', 'nft_mint'],
     onchain: ['token_swap', 'nft_mint', 'staking'],
-    content: ['review', 'youtube_video', 'twitter_thread'],
+    content: ['review', 'twitter_thread', 'other_content'],
   };
 
   // ==================== DASHBOARD ====================
@@ -407,7 +426,7 @@
       twitter_follow: ['awareness'], twitter_rt: ['awareness'],
       token_swap: ['dapp', 'onchain'], nft_mint: ['dapp', 'onchain'],
       staking: ['onchain'],
-      review: ['content'], youtube_video: ['content'], twitter_thread: ['content'],
+      review: ['content'], twitter_thread: ['content'], other_content: ['content'],
     };
     const detected = new Set();
     questActions.forEach(a => (GOAL_REVERSE[a] || []).forEach(g => detected.add(g)));
@@ -416,8 +435,12 @@
       if (btn) btn.classList.add('selected');
     });
 
+    // Follower settings
+    if (camp.min_twitter_followers) document.getElementById('cwMinTwitter').value = camp.min_twitter_followers;
+    if (camp.min_telegram_followers) document.getElementById('cwMinTelegram').value = camp.min_telegram_followers;
+
     // Step 2: Quest checkboxes
-    const KOL_ACTIONS = ['review', 'youtube_video', 'twitter_thread'];
+    const KOL_ACTIONS = ['review', 'twitter_thread', 'other_content'];
     const hasGeneral = quests.some(q => !KOL_ACTIONS.includes(q.action_type));
     const hasKOL = quests.some(q => KOL_ACTIONS.includes(q.action_type));
 
@@ -570,7 +593,11 @@
     if (skipGen) questSummary += '<span style="color:var(--text-3);">일반유저: 해당 없음</span>';
     else if (genNames.length) questSummary += '<div style="margin-bottom:0.25rem;"><span style="font-size:0.7rem;color:var(--text-3);">일반유저:</span> ' + qTags(genNames) + '</div>';
     if (skipKOL) questSummary += '<span style="color:var(--text-3);">KOL: 해당 없음</span>';
-    else if (kolNames.length) questSummary += '<div><span style="font-size:0.7rem;color:var(--text-3);">KOL:</span> ' + qTags(kolNames) + '</div>';
+    else if (kolNames.length) {
+      const tw = document.getElementById('cwMinTwitter')?.selectedOptions[0]?.text || '-';
+      const tg = document.getElementById('cwMinTelegram')?.selectedOptions[0]?.text || '-';
+      questSummary += '<div><span style="font-size:0.7rem;color:var(--text-3);">KOL:</span> ' + qTags(kolNames) + '<div style="font-size:0.72rem;color:var(--text-3);margin-top:0.2rem;">트위터 ' + tw + ' · 텔레그램 ' + tg + '</div></div>';
+    }
 
     document.getElementById('wizReview').innerHTML =
       r('프로젝트', name) + r('체인', chain) + r('기간', startD + ' ~ ' + endD) + r('목표', goals.join(', ') || '-') +
@@ -704,6 +731,8 @@
         reward_token: document.getElementById('cwToken').value,
         reward_amount: Number(document.getElementById('cwBudget').value) || 0,
         max_participants: 500,
+        min_twitter_followers: Number(document.getElementById('cwMinTwitter')?.value) || 0,
+        min_telegram_followers: Number(document.getElementById('cwMinTelegram')?.value) || 0,
         quests,
       };
       if (_wizEditId) {
