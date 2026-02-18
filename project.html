@@ -585,7 +585,7 @@
     });
     const row = (q) => {
       const saved = (window._editQuestRewards && window._editQuestRewards[q.atype]) || '';
-      return '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '" value="' + saved + '"></div></div>';
+      return '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" min="0" step="0.01" data-atype="' + q.atype + '" value="' + saved + '"></div><label class="wiz-tbd-label"><input type="checkbox" class="wiz-tbd-cb" onchange="toggleTBD(this)"><span>향후공개</span></label></div>';
     };
     let html = '';
     if (!skipGen && general.length > 0) {

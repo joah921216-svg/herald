@@ -277,6 +277,23 @@ function statusBadge(status) {
 function formatDate(d) { return d ? new Date(d).toLocaleDateString('ko-KR') : '-'; }
 function formatNum(n) { return (n || 0).toLocaleString(); }
 
+function toggleTBD(cb) {
+  const row = cb.closest('.wiz-qr-row');
+  const input = row.querySelector('.wiz-qr-input input[type="number"]');
+  if (cb.checked) {
+    input.disabled = true;
+    input.dataset.prevValue = input.value;
+    input.value = '';
+    input.placeholder = 'TBD';
+    row.classList.add('tbd-active');
+  } else {
+    input.disabled = false;
+    input.value = input.dataset.prevValue || '';
+    input.placeholder = '0';
+    row.classList.remove('tbd-active');
+  }
+}
+
 // ==================== WALLET UI BUILDER ====================
 const WALLET_INFO = {
   metamask: { name: 'MetaMask', desc: '브라우저 확장 지갑', gradient: '#f6851b,#e2761b', label: 'MM', badge: '인기', installUrl: 'https://metamask.io/download/' },

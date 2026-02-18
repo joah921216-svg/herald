@@ -509,11 +509,18 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
 /* Quest reward inputs */
 .wiz-qr-list { display: flex; flex-direction: column; gap: 0.35rem; }
 .wiz-qr-row {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 0.5rem;
   padding: 0.5rem 0.7rem; background: var(--bg-2); border: 1px solid var(--border);
-  border-radius: var(--r-xs);
+  border-radius: var(--r-xs); transition: opacity 0.2s;
 }
-.wiz-qr-name { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+.wiz-qr-row.tbd-active { opacity: 0.55; }
+.wiz-qr-row.tbd-active .wiz-qr-input { background: var(--bg-2); }
+.wiz-qr-name { font-size: 0.82rem; font-weight: 500; color: var(--text); flex: 1; }
+.wiz-tbd-label {
+  display: flex; align-items: center; gap: 0.3rem; cursor: pointer;
+  font-size: 0.7rem; color: var(--text-3); white-space: nowrap; user-select: none;
+}
+.wiz-tbd-label input { accent-color: var(--orange); }
 .wiz-qr-input {
   display: flex; align-items: center; gap: 0.3rem;
   background: var(--bg); border: 1px solid var(--border); border-radius: var(--r-xs);

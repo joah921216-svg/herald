@@ -671,7 +671,7 @@ function buildStep3() {
     if (cb.dataset.target === 'kol') kol.push({ atype: cb.dataset.atype, name });
     else general.push({ atype: cb.dataset.atype, name });
   });
-  const row = (q) => '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '"></div></div>';
+  const row = (q) => '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" min="0" step="0.01" data-atype="' + q.atype + '"></div><label class="wiz-tbd-label"><input type="checkbox" class="wiz-tbd-cb" onchange="toggleTBD(this)"><span>향후공개</span></label></div>';
   let html = '';
   if (!skipGen && general.length > 0) {
     html += '<div class="wiz-qr-group-header">&#128203; 일반 유저 퀘스트 보상</div>';
