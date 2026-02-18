@@ -593,18 +593,32 @@ function validateStep1() {
 function toggleGeneralSkip() {
   const skip = document.getElementById('skipGeneral').checked;
   const area = document.getElementById('generalQuestArea');
-  area.style.display = skip ? 'none' : '';
   if (skip) {
-    $$('#generalQuestArea .wiz-quest-cb').forEach(cb => cb.checked = false);
+    $$('#generalQuestArea .wiz-quest-cb').forEach(cb => { cb.checked = false; cb.disabled = true; });
+    $$('#generalQuestArea select').forEach(s => s.disabled = true);
+    area.style.opacity = '0.4';
+    area.style.pointerEvents = 'none';
+  } else {
+    $$('#generalQuestArea .wiz-quest-cb').forEach(cb => cb.disabled = false);
+    $$('#generalQuestArea select').forEach(s => s.disabled = false);
+    area.style.opacity = '';
+    area.style.pointerEvents = '';
   }
 }
 
 function toggleKOLSkip() {
   const skip = document.getElementById('skipKOL').checked;
   const area = document.getElementById('kolQuestArea');
-  area.style.display = skip ? 'none' : '';
   if (skip) {
-    $$('#kolQuestArea .wiz-quest-cb').forEach(cb => cb.checked = false);
+    $$('#kolQuestArea .wiz-quest-cb').forEach(cb => { cb.checked = false; cb.disabled = true; });
+    $$('#kolQuestArea select').forEach(s => s.disabled = true);
+    area.style.opacity = '0.4';
+    area.style.pointerEvents = 'none';
+  } else {
+    $$('#kolQuestArea .wiz-quest-cb').forEach(cb => cb.disabled = false);
+    $$('#kolQuestArea select').forEach(s => s.disabled = false);
+    area.style.opacity = '';
+    area.style.pointerEvents = '';
   }
 }
 
@@ -647,17 +661,27 @@ function applyQuestRecommendations() {
 // ---- Step 3: Build reward inputs & summary ----
 function buildStep3() {
   const container = document.getElementById('questRewardInputs');
-  const quests = [];
+  const skipGen = document.getElementById('skipGeneral').checked;
+  const skipKOL = document.getElementById('skipKOL').checked;
+  const general = [];
+  const kol = [];
   $$('.wiz-quest-cb:checked').forEach(cb => {
     const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
-    const target = cb.dataset.target;
-    const tag = target === 'kol' ? ' (KOL)' : '';
-    if (name) quests.push({ atype: cb.dataset.atype, name: name + tag, rawName: name });
+    if (!name) return;
+    if (cb.dataset.target === 'kol') kol.push({ atype: cb.dataset.atype, name });
+    else general.push({ atype: cb.dataset.atype, name });
   });
+  const row = (q) => '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '"></div></div>';
   let html = '';
-  quests.forEach(q => {
-    html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '"></div></div>';
-  });
+  if (!skipGen && general.length > 0) {
+    html += '<div class="wiz-qr-group-header">&#128203; 일반 유저 퀘스트 보상</div>';
+    general.forEach(q => html += row(q));
+  }
+  if (!skipKOL && kol.length > 0) {
+    if (html) html += '<div class="wiz-qr-divider"></div>';
+    html += '<div class="wiz-qr-group-header">&#11088; 인플루언서 퀘스트 보상</div>';
+    kol.forEach(q => html += row(q));
+  }
   if (!html) html = '<p style="color:var(--text-3);font-size:0.82rem;">선택된 퀘스트가 없습니다.</p>';
   container.innerHTML = html;
   buildSummary();
@@ -791,9 +815,12 @@ function closeCampWizard() {
     // Reset form state
     document.getElementById('skipGeneral').checked = false;
     document.getElementById('skipKOL').checked = false;
-    document.getElementById('generalQuestArea').style.display = '';
-    document.getElementById('kolQuestArea').style.display = '';
-    $$('.wiz-quest-cb').forEach(cb => cb.checked = false);
+    ['generalQuestArea', 'kolQuestArea'].forEach(id => {
+      const a = document.getElementById(id);
+      a.style.opacity = ''; a.style.pointerEvents = '';
+    });
+    $$('.wiz-quest-cb').forEach(cb => { cb.checked = false; cb.disabled = false; });
+    $$('#kolQuestArea select').forEach(s => s.disabled = false);
     $$('.wiz-goal').forEach(g => g.classList.remove('selected'));
     document.getElementById('step1Msg').style.display = 'none';
     document.getElementById('step2Msg').style.display = 'none';

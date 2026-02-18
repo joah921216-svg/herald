@@ -497,6 +497,15 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   margin: 0; padding: 0; cursor: pointer;
 }
 .wiz-quest-item .wq-name { font-size: 0.85rem; font-weight: 500; color: var(--text); white-space: nowrap; }
+/* Quest reward group headers */
+.wiz-qr-group-header {
+  font-size: 0.82rem; font-weight: 700; color: var(--text);
+  padding: 0.5rem 0 0.3rem; margin-bottom: 0.1rem;
+}
+.wiz-qr-divider {
+  height: 1px; background: var(--border); margin: 0.75rem 0;
+}
+
 /* Quest reward inputs */
 .wiz-qr-list { display: flex; flex-direction: column; gap: 0.35rem; }
 .wiz-qr-row {
