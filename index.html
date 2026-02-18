@@ -128,43 +128,132 @@
   </div>
 </section>
 
-<!-- ==================== CTA ==================== -->
-<section class="cta-section" id="cta">
-  <div class="container">
-    <div class="cta-counter" id="ctaCounter">$0</div>
-    <div class="cta-label" data-i18n="cta_label">누적 보상 지급액</div>
-    <h2 class="stitle cta-fade" data-i18n="cta_title">당신의 보상이 쌓이고 있습니다.</h2>
-    <div style="opacity:0;transform:translateY(20px);transition:opacity 0.8s ease 0.45s,transform 0.8s ease 0.45s;" class="cta-anim">
-      <a href="#campaigns" class="btn btn-blue" data-i18n="cta_btn">퀘스트 둘러보기</a>
-    </div>
-  </div>
-</section>
-
-<!-- ==================== FOR PROJECTS ==================== -->
-<section class="for-projects-section" id="for-projects">
-  <div class="container">
-    <h2 class="stitle rv" data-i18n="fp_title" style="font-size:clamp(1.4rem,3vw,1.85rem);">프로젝트를 운영하고 계신가요?</h2>
-    <p class="sdesc rv" data-i18n="fp_desc">한국 유저 확보, 이제 SHILL VAULT에서 시작하세요.</p>
-    <div class="fp-features rv">
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f1">캠페인 생성 및 보상 설정</span></div>
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f2">직접 설정하거나, 추천 세팅으로 바로 시작</span></div>
-      <div class="fp-feat"><div class="fp-feat-icon"></div><span data-i18n="fp_f3">실시간 성과 대시보드</span></div>
-    </div>
-    <a href="javascript:startCampaignOrLogin()" class="btn btn-purple rv" data-i18n="fp_cta">캠페인 시작하기</a>
-  </div>
-</section>
-
-<!-- ==================== KOL SHOWCASE ==================== -->
+<!-- ==================== B2B SECTION ==================== -->
 <style>
+/* ══════════════════════════════════════
+   B2B 영역 전체 스타일
+   ══════════════════════════════════════ */
+
+/* ── 전환 디바이더 ── */
+.b2b-divider {
+  text-align: center;
+  padding: 64px 24px 0;
+  background: #fff;
+}
+.b2b-divider-line {
+  width: 48px;
+  height: 1px;
+  background: #e0e0e0;
+  margin: 0 auto;
+}
+
+/* ── 메인 B2B 히어로 ── */
+.b2b-hero {
+  padding: 56px 24px 64px;
+  background: #fff;
+  text-align: center;
+}
+.b2b-hero-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.b2b-eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  color: #999;
+  margin: 0 0 16px;
+  letter-spacing: 0.3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.b2b-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 12px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.b2b-desc {
+  font-size: 15px;
+  color: #888;
+  margin: 0 0 36px;
+  line-height: 1.65;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── 핵심 가치 4개 ── */
+.b2b-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 32px;
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+.b2b-feat {
+  padding: 20px 16px;
+  border-left: 2px solid #e5e5e5;
+}
+.b2b-feat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ddd;
+  margin-bottom: 10px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.b2b-feat-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.b2b-feat-desc {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── CTA 버튼 ── */
+.b2b-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 32px;
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.b2b-cta-btn:hover {
+  background: #333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0,0,0,.1);
+}
+.b2b-cta-btn svg { transition: transform .2s }
+.b2b-cta-btn:hover svg { transform: translateX(2px) }
+
+/* ══════════════════════════════════════
+   KOL Coming Soon 섹션
+   ══════════════════════════════════════ */
 .kol-section {
-  padding: 80px 24px 88px;
-  background: #fafafa;
+  padding: 64px 24px 80px;
+  background: #f5f5f5;
   overflow: hidden;
 }
 .kol-header {
   text-align: center;
-  max-width: 560px;
-  margin: 0 auto 52px;
+  max-width: 480px;
+  margin: 0 auto 44px;
 }
 .kol-label {
   display: inline-flex;
@@ -175,10 +264,10 @@
   color: #34d399;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
-.kol-label-dot {
+.kol-dot {
   width: 6px; height: 6px;
   background: #34d399;
   border-radius: 50%;
@@ -187,19 +276,18 @@
 @keyframes kolPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
 .kol-title {
-  font-size: 26px;
+  font-size: 22px;
   font-weight: 800;
   color: #111;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   line-height: 1.4;
-  letter-spacing: -0.3px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
-.kol-subtitle {
-  font-size: 15px;
-  color: #888;
+.kol-sub {
+  font-size: 14px;
+  color: #999;
   margin: 0;
-  line-height: 1.65;
+  line-height: 1.6;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
@@ -213,8 +301,8 @@
   content:''; position:absolute; top:0; bottom:0;
   width:100px; z-index:2; pointer-events:none;
 }
-.kol-track-area::before { left:0; background:linear-gradient(to right,#fafafa,transparent) }
-.kol-track-area::after { right:0; background:linear-gradient(to left,#fafafa,transparent) }
+.kol-track-area::before { left:0; background:linear-gradient(to right,#f5f5f5,transparent) }
+.kol-track-area::after { right:0; background:linear-gradient(to left,#f5f5f5,transparent) }
 
 .kol-track {
   display:flex; gap:14px; width:max-content;
@@ -229,99 +317,129 @@
 /* ── 미스터리 카드 ── */
 .kol-card {
   flex-shrink: 0;
-  width: 250px;
+  width: 240px;
   background: #fff;
   border: 1px dashed #e0e0e0;
-  border-radius: 14px;
-  padding: 18px;
+  border-radius: 12px;
+  padding: 16px;
   transition: all .2s ease;
 }
 .kol-card:hover {
   border-color: #ccc;
-  box-shadow: 0 2px 12px rgba(0,0,0,.03);
   transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,.03);
 }
-
-.kol-top {
+.kol-card-top {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
-
 .kol-av {
-  width: 40px; height: 40px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ebebeb, #f5f5f5);
+  background: linear-gradient(135deg, #eee, #f5f5f5);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
 .kol-av span {
-  font-size: 16px;
-  font-weight: 800;
-  color: #ccc;
+  font-size: 14px; font-weight: 800; color: #ccc;
 }
-
 .kol-nm {
-  font-size: 14px; font-weight: 700; color: #bbb; margin: 0;
+  font-size: 13px; font-weight: 700; color: #bbb; margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 .kol-hd {
-  font-size: 12px; color: #d4d4d4; margin: 1px 0 0;
+  font-size: 11px; color: #d4d4d4; margin: 1px 0 0;
 }
-
 .kol-stats { display:flex; gap:6px }
-
 .kol-st {
-  flex:1; background:#f9f9f9; border-radius:8px;
-  padding:8px 6px; text-align:center;
+  flex:1; background:#fafafa; border-radius:8px;
+  padding:7px 6px; text-align:center;
 }
-.kol-st-icon { font-size:12px; color:#d4d4d4; margin-bottom:2px }
+.kol-st-icon { font-size:11px; color:#d4d4d4; margin-bottom:2px }
 .kol-st-val {
-  font-size: 13px; font-weight: 700; color: #ccc;
+  font-size:12px; font-weight:700; color:#ccc;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 .kol-st-lbl {
-  font-size:9px; color:#d4d4d4;
+  font-size:9px; color:#d9d9d9;
   text-transform:uppercase; letter-spacing:.3px; margin-top:1px;
 }
 
-/* ── 하단 ── */
+/* ── KOL 하단 ── */
 .kol-bottom {
   text-align: center;
-  margin-top: 52px;
+  margin-top: 44px;
 }
 .kol-bottom p {
-  font-size: 14px; color: #999; margin: 0 0 18px;
+  font-size: 13px; color: #bbb; margin: 0 0 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
-.kol-btn {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:12px 28px; background:#111; color:#fff;
-  font-weight:600; font-size:14px; border-radius:10px;
-  border:none; cursor:pointer; transition:all .2s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-.kol-btn:hover { background:#333; transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.1) }
-.kol-btn svg { transition:transform .2s }
-.kol-btn:hover svg { transform:translateX(2px) }
 
+/* ── 반응형 ── */
 @media (max-width:640px) {
-  .kol-section { padding:60px 16px 72px }
-  .kol-title { font-size:21px }
-  .kol-card { width:215px; padding:14px }
+  .b2b-hero { padding: 48px 20px 56px }
+  .b2b-title { font-size: 23px }
+  .b2b-features { grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+  .kol-section { padding: 52px 16px 68px }
+  .kol-title { font-size: 19px }
+  .kol-card { width: 210px; padding: 14px }
   .kol-track-area::before,
-  .kol-track-area::after { width:50px }
+  .kol-track-area::after { width: 50px }
 }
 </style>
 
+<div class="b2b-divider">
+  <div class="b2b-divider-line"></div>
+</div>
+
+<section class="b2b-hero">
+  <div class="b2b-hero-inner">
+    <p class="b2b-eyebrow">프로젝트를 운영하고 계신가요?</p>
+    <h2 class="b2b-title">한국 시장 진출,<br>SHILL VAULT에서 시작하세요.</h2>
+    <p class="b2b-desc">
+      캠페인 하나로 한국 크립토 유저에게 도달하세요.<br>
+      복잡한 과정 없이, 바로 시작할 수 있습니다.
+    </p>
+
+    <div class="b2b-features">
+      <div class="b2b-feat">
+        <div class="b2b-feat-num">01</div>
+        <p class="b2b-feat-title">빠른 셋업</p>
+        <p class="b2b-feat-desc">캠페인 생성부터 집행까지<br>3분이면 충분합니다.</p>
+      </div>
+      <div class="b2b-feat">
+        <div class="b2b-feat-num">02</div>
+        <p class="b2b-feat-title">실시간 대시보드</p>
+        <p class="b2b-feat-desc">참여율, 전환, 비용을<br>한눈에 확인하세요.</p>
+      </div>
+      <div class="b2b-feat">
+        <div class="b2b-feat-num">03</div>
+        <p class="b2b-feat-title">정확한 타겟팅</p>
+        <p class="b2b-feat-desc">한국 크립토 유저에게<br>정확히 도달합니다.</p>
+      </div>
+      <div class="b2b-feat">
+        <div class="b2b-feat-num">04</div>
+        <p class="b2b-feat-title">KOL 네트워크</p>
+        <p class="b2b-feat-desc">검증된 인플루언서와<br>즉시 연결됩니다.</p>
+      </div>
+    </div>
+
+    <button class="b2b-cta-btn" onclick="startCampaignOrLogin()">
+      캠페인 시작하기
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
 <section class="kol-section" id="kol-showcase">
   <div class="kol-header">
-    <div class="kol-label"><span class="kol-label-dot"></span> KOL Network</div>
-    <h2 class="kol-title">한국 대표 크립토 KOL들이<br>합류하고 있습니다</h2>
-    <p class="kol-subtitle">검증된 인플루언서 네트워크와 함께<br>프로젝트를 한국 커뮤니티에 알리세요.</p>
+    <div class="kol-label"><span class="kol-dot"></span> KOL Network</div>
+    <h2 class="kol-title">한국의 KOL들이 함께합니다.</h2>
+    <p class="kol-sub">파트너 네트워크가 곧 공개됩니다.</p>
   </div>
 
   <div class="kol-track-area">
@@ -332,8 +450,8 @@
   </div>
 
   <div class="kol-bottom">
-    <p>파트너 KOL 네트워크가 곧 공개됩니다.</p>
-    <button class="kol-btn" onclick="startCampaignOrLogin()">
+    <p>더 많은 KOL이 합류하고 있습니다.</p>
+    <button class="b2b-cta-btn" onclick="startCampaignOrLogin()">
       캠페인 시작하기
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
     </button>
@@ -342,16 +460,16 @@
 
 <script>
 (function(){
-  const LABELS = [
+  var LABELS = [
     "합류 예정","협의 중","Coming Soon","준비 중",
     "합류 예정","Coming Soon","협의 중","준비 중",
     "합류 예정","Coming Soon","협의 중","준비 중",
     "합류 예정","Coming Soon","협의 중","준비 중",
   ];
   function mysteryCard(label) {
-    return '<div class="kol-card"><div class="kol-top"><div class="kol-av"><span>?</span></div><div><p class="kol-nm">'+label+'</p><p class="kol-hd">@••••••••</p></div></div><div class="kol-stats"><div class="kol-st"><div class="kol-st-icon">𝕏</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Followers</div></div><div class="kol-st"><div class="kol-st-icon">✈️</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Members</div></div></div></div>';
+    return '<div class="kol-card"><div class="kol-card-top"><div class="kol-av"><span>?</span></div><div><p class="kol-nm">'+label+'</p><p class="kol-hd">@••••••••</p></div></div><div class="kol-stats"><div class="kol-st"><div class="kol-st-icon">𝕏</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Followers</div></div><div class="kol-st"><div class="kol-st-icon">✈️</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Members</div></div></div></div>';
   }
-  function initKOL() {
+  function initKol() {
     var t1 = document.getElementById('kolTrack1');
     var t2 = document.getElementById('kolTrack2');
     if (!t1||!t2) return;
@@ -361,8 +479,8 @@
     t1.innerHTML = r1+r1;
     t2.innerHTML = r2+r2;
   }
-  document.addEventListener('DOMContentLoaded',initKOL);
-  if(document.readyState!=='loading') initKOL();
+  document.addEventListener('DOMContentLoaded', initKol);
+  if (document.readyState !== 'loading') initKol();
 })();
 </script>
 
@@ -1101,36 +1219,6 @@ function launchConfetti() {
   }
   setTimeout(() => c.remove(), 4000);
 }
-
-// ==================== CTA ====================
-function animateCounter(el, target, duration) {
-  const start = performance.now();
-  const update = (now) => {
-    const t = Math.min((now - start) / duration, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    el.textContent = '$' + Math.round(target * ease).toLocaleString();
-    if (t < 1) requestAnimationFrame(update);
-  };
-  requestAnimationFrame(update);
-}
-
-const ctaObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (!e.isIntersecting) return;
-    const counter = document.getElementById('ctaCounter');
-    const label = e.target.querySelector('.cta-label');
-    const title = e.target.querySelector('.cta-fade');
-    const btnWrap = e.target.querySelector('.cta-anim');
-    counter.classList.add('vis');
-    if (label) label.classList.add('vis');
-    if (title) title.classList.add('vis');
-    if (btnWrap) { btnWrap.style.opacity = '1'; btnWrap.style.transform = 'translateY(0)'; }
-    animateCounter(counter, 150000, 2000);
-    ctaObs.unobserve(e.target);
-  });
-}, { threshold: 0.3 });
-const ctaEl = document.getElementById('cta');
-if (ctaEl) ctaObs.observe(ctaEl);
 
 // ==================== INIT ====================
 authRestore().then(() => {
