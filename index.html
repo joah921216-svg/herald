@@ -553,11 +553,19 @@ function validateStep1() {
   const start = document.getElementById('cwStart').value;
   const end = document.getElementById('cwEnd').value;
   const goals = $$('#wizStep1 .wiz-goal.selected').length;
-  const valid = name && sector && start && end && goals > 0;
+  const today = new Date().toISOString().split('T')[0];
+  const msgEl = document.getElementById('step1Msg');
+
+  let dateErr = '';
+  if (start && start < today) dateErr = '시작일은 오늘 이후여야 합니다.';
+  else if (start && end && end <= start) dateErr = '종료일은 시작일보다 이후여야 합니다.';
+
+  const valid = name && sector && start && end && goals > 0 && !dateErr;
   const btn = document.getElementById('wizNext');
   if (wizStep === 1) {
     btn.classList.toggle('disabled', !valid);
-    document.getElementById('step1Msg').style.display = valid ? 'none' : '';
+    msgEl.textContent = dateErr || '모든 필수 항목을 입력해주세요.';
+    msgEl.style.display = valid ? 'none' : '';
   }
   return valid;
 }
@@ -766,6 +774,9 @@ function closeCampWizard() {
     $$('.wiz-goal').forEach(g => g.classList.remove('selected'));
     document.getElementById('step1Msg').style.display = 'none';
     document.getElementById('step2Msg').style.display = 'none';
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('cwStart').setAttribute('min', today);
+    document.getElementById('cwEnd').setAttribute('min', today);
     validateStep1();
   }, 300);
 }
