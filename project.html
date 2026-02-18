@@ -72,35 +72,212 @@
   </div>
 </div>
 
-<!-- New/Edit Campaign Modal -->
-<div class="modal-overlay" id="campFormModal">
-  <div class="modal" style="max-width:500px;">
-    <button class="modal-close" onclick="closeModal('campFormModal')">&times;</button>
-    <h3 id="campFormTitle">캠페인 접수</h3>
-    <p class="modal-desc" id="campFormDesc">캠페인을 접수하면 관리자 승인 후 메인에 노출됩니다.</p>
-    <input type="hidden" id="cfEditId" value="">
-    <div class="reg-field"><label>프로젝트 이름</label><input type="text" id="cfName" placeholder="예: AxiomDEX"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-      <div class="reg-field"><label>카테고리</label>
-        <select id="cfCategory"><option value="defi">DeFi</option><option value="nft">NFT</option><option value="gamefi">GameFi</option><option value="l1l2">L1/L2</option><option value="ai">AI/DePIN</option><option value="meme">Meme</option><option value="other">기타</option></select>
+<!-- ==================== CAMPAIGN WIZARD MODAL (3-step) ==================== -->
+<div class="modal-overlay" id="campModal">
+  <div class="modal wiz-modal">
+    <button class="modal-close" onclick="closeCampWizard()">&times;</button>
+
+    <!-- Progress -->
+    <div class="wiz-progress">
+      <div class="wiz-progress-bar" id="wizBar" style="width:33.33%"></div>
+    </div>
+    <div class="wiz-dots">
+      <div class="wiz-dot active"><span class="wiz-dot-num">1</span><span class="wiz-dot-label">기본 정보</span></div>
+      <div class="wiz-dot"><span class="wiz-dot-num">2</span><span class="wiz-dot-label">참여자·퀘스트</span></div>
+      <div class="wiz-dot"><span class="wiz-dot-num">3</span><span class="wiz-dot-label">보상·검토</span></div>
+    </div>
+
+    <!-- Step 1: 기본 정보 + 목표 -->
+    <div class="wiz-step" id="wizStep1">
+      <div class="reg-field">
+        <label>프로젝트 이름 <span class="field-req">*</span></label>
+        <input type="text" id="cwProjName" placeholder="예: AxiomDEX" oninput="validateStep1()">
       </div>
-      <div class="reg-field"><label>체인</label>
-        <select id="cfChain"><option value="ethereum">Ethereum</option><option value="solana">Solana</option><option value="base">Base</option><option value="arbitrum">Arbitrum</option><option value="bnb">BNB</option><option value="polygon">Polygon</option><option value="multi">멀티체인</option></select>
+      <div class="wiz-row-2">
+        <div class="reg-field">
+          <label>카테고리 <span class="field-req">*</span></label>
+          <select id="cwSector" onchange="validateStep1()">
+            <option value="">선택하세요</option>
+            <option value="defi">DeFi</option>
+            <option value="nft">NFT / Collectibles</option>
+            <option value="gamefi">GameFi</option>
+            <option value="l1l2">L1 · L2 / Infra</option>
+            <option value="ai">AI · DePIN</option>
+            <option value="meme">Meme Token</option>
+            <option value="other">기타</option>
+          </select>
+        </div>
+        <div class="reg-field">
+          <label>체인 <span class="field-hint">(선택)</span></label>
+          <select id="cwChain">
+            <option value="other" selected>기타</option>
+            <option value="ethereum">Ethereum</option>
+            <option value="solana">Solana</option>
+            <option value="base">Base</option>
+            <option value="arbitrum">Arbitrum</option>
+            <option value="bnb">BNB Chain</option>
+            <option value="polygon">Polygon</option>
+            <option value="multi">멀티체인</option>
+          </select>
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>캠페인 기간 <span class="field-req">*</span></label>
+        <div class="wiz-date-row">
+          <input type="date" id="cwStart" onchange="validateStep1()">
+          <span class="wiz-date-sep">~</span>
+          <input type="date" id="cwEnd" onchange="validateStep1()">
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>캠페인 목표 <span class="field-req">*</span> <span class="field-hint">1개 이상 선택</span></label>
+        <div class="wiz-goals">
+          <button class="wiz-goal" data-goal="community" onclick="toggleGoal(this); validateStep1()">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128101;</span>
+            <span class="wiz-goal-name">커뮤니티 성장</span>
+          </button>
+          <button class="wiz-goal" data-goal="awareness" onclick="toggleGoal(this); validateStep1()">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128226;</span>
+            <span class="wiz-goal-name">인지도 확대</span>
+          </button>
+          <button class="wiz-goal" data-goal="dapp" onclick="toggleGoal(this); validateStep1()">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128241;</span>
+            <span class="wiz-goal-name">dApp 사용자 확보</span>
+          </button>
+          <button class="wiz-goal" data-goal="onchain" onclick="toggleGoal(this); validateStep1()">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#128279;</span>
+            <span class="wiz-goal-name">온체인 활동</span>
+          </button>
+          <button class="wiz-goal" data-goal="content" onclick="toggleGoal(this); validateStep1()">
+            <span class="wiz-goal-check">&#10003;</span>
+            <span class="wiz-goal-emoji">&#127909;</span>
+            <span class="wiz-goal-name">콘텐츠 생성</span>
+          </button>
+        </div>
+      </div>
+      <div class="wiz-validation-msg" id="step1Msg" style="display:none;">모든 필수 항목을 입력해주세요.</div>
+    </div>
+
+    <!-- Step 2: 참여자 + 퀘스트 -->
+    <div class="wiz-step" id="wizStep2" style="display:none;">
+      <div class="wiz-section">
+        <div class="wiz-section-header">
+          <span class="wiz-section-icon">&#128100;</span>
+          <span class="wiz-section-title">일반 유저 퀘스트</span>
+        </div>
+        <label class="wiz-skip-label" onclick="event.stopPropagation()">
+          <input type="checkbox" id="skipGeneral" onchange="toggleGeneralSkip(); validateStep2()">
+          <span>해당 없음 (일반 유저 대상 아님)</span>
+        </label>
+        <div id="generalQuestArea">
+          <div class="wiz-quest-groups">
+            <div class="wiz-quest-group">
+              <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--blue);"></span>소셜</div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="twitter_follow" data-target="general" onchange="validateStep2()"><span class="wq-name">트위터 팔로우</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="twitter_rt" data-target="general" onchange="validateStep2()"><span class="wq-name">RT &amp; 좋아요</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="telegram_join" data-target="general" onchange="validateStep2()"><span class="wq-name">텔레그램 가입</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="social" data-atype="discord_join" data-target="general" onchange="validateStep2()"><span class="wq-name">디스코드 참여</span></div>
+            </div>
+            <div class="wiz-quest-group">
+              <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--green);"></span>온체인</div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="token_swap" data-target="general" onchange="validateStep2()"><span class="wq-name">스왑 체험</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="staking" data-target="general" onchange="validateStep2()"><span class="wq-name">스테이킹</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="onchain" data-atype="nft_mint" data-target="general" onchange="validateStep2()"><span class="wq-name">NFT 민팅</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wiz-section-divider"></div>
+
+      <div class="wiz-section">
+        <div class="wiz-section-header">
+          <span class="wiz-section-icon">&#11088;</span>
+          <span class="wiz-section-title">인플루언서(KOL) 퀘스트</span>
+        </div>
+        <label class="wiz-skip-label" onclick="event.stopPropagation()">
+          <input type="checkbox" id="skipKOL" onchange="toggleKOLSkip(); validateStep2()">
+          <span>해당 없음 (인플루언서 대상 아님)</span>
+        </label>
+        <div id="kolQuestArea">
+          <div class="reg-field" style="margin-bottom:0.75rem;">
+            <label>최소 팔로워 수</label>
+            <select id="cwMinFollower">
+              <option value="5000">5K+</option>
+              <option value="10000">10K+</option>
+              <option value="50000">50K+</option>
+              <option value="100000">100K+</option>
+            </select>
+          </div>
+          <div class="wiz-quest-groups">
+            <div class="wiz-quest-group">
+              <div class="wiz-qg-label"><span class="wiz-qg-dot" style="background:var(--purple);"></span>콘텐츠</div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="review" data-target="kol" onchange="validateStep2()"><span class="wq-name">리뷰 작성 (텔레그램 광고 포함)</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="youtube_video" data-target="kol" onchange="validateStep2()"><span class="wq-name">유튜브 영상</span></div>
+              <div class="wiz-quest-item"><input type="checkbox" class="wiz-quest-cb" data-qtype="content" data-atype="twitter_thread" data-target="kol" onchange="validateStep2()"><span class="wq-name">트위터 스레드</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wiz-validation-msg" id="step2Msg" style="display:none;"></div>
+    </div>
+
+    <!-- Step 3: 보상 + 검토 -->
+    <div class="wiz-step" id="wizStep3" style="display:none;">
+      <div class="wiz-row-2">
+        <div class="reg-field">
+          <label>보상 토큰</label>
+          <select id="cwToken">
+            <option value="usdt">USDT</option>
+            <option value="token">자체 토큰</option>
+            <option value="nft">NFT</option>
+            <option value="point">포인트</option>
+          </select>
+        </div>
+        <div class="reg-field">
+          <label>총 예산 (USD)</label>
+          <input type="number" id="cwBudget" placeholder="예: 10,000">
+        </div>
+      </div>
+      <div class="reg-field">
+        <label>퀘스트별 보상 단가</label>
+        <div class="wiz-qr-list" id="questRewardInputs"></div>
+      </div>
+      <div class="wiz-divider"></div>
+      <div class="reg-field" style="margin-bottom:0.5rem;">
+        <label>전체 요약</label>
+        <div class="wiz-review" id="wizReview"></div>
       </div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-      <div class="reg-field"><label>시작일</label><input type="date" id="cfStart"></div>
-      <div class="reg-field"><label>종료일</label><input type="date" id="cfEnd"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
-      <div class="reg-field"><label>보상 토큰</label>
-        <select id="cfToken"><option value="USDT">USDT</option><option value="TOKEN">자체 토큰</option><option value="NFT">NFT</option><option value="POINT">포인트</option></select>
+
+    <!-- Done -->
+    <div class="wiz-step" id="wizDone" style="display:none;text-align:center;padding:2.5rem 0;">
+      <div class="wiz-done-icon">&#127881;</div>
+      <h3 class="wiz-done-title" id="wizDoneTitle">캠페인이 접수되었습니다!</h3>
+      <p class="modal-desc" id="wizDoneDesc">관리자 승인 후 메인에 노출됩니다.</p>
+      <div class="wiz-done-stats">
+        <div class="wiz-done-stat">
+          <span class="wiz-done-stat-num" id="doneBudget">$0</span>
+          <span class="wiz-done-stat-lbl">총 예산</span>
+        </div>
+        <div class="wiz-done-stat">
+          <span class="wiz-done-stat-num" id="doneQuests">0개</span>
+          <span class="wiz-done-stat-lbl">퀘스트</span>
+        </div>
       </div>
-      <div class="reg-field"><label>총 보상 (USD)</label><input type="number" id="cfAmount" placeholder="10000"></div>
+      <button class="reg-btn" onclick="closeCampWizard(); loadDashboard();">확인</button>
     </div>
-    <div class="reg-field"><label>최대 참여자</label><input type="number" id="cfMaxPart" placeholder="500"></div>
-    <div class="reg-field"><label>설명 (선택)</label><input type="text" id="cfDesc" placeholder="캠페인 설명"></div>
-    <button class="reg-btn" id="campFormBtn" onclick="submitCampForm()">캠페인 접수 (심사 요청)</button>
+
+    <!-- Nav Buttons -->
+    <div class="wiz-nav" id="wizNav">
+      <button class="wiz-btn-prev" id="wizPrev" onclick="wizGo(-1)" style="display:none;">이전</button>
+      <button class="wiz-btn-next disabled" id="wizNext" onclick="wizGo(1)">다음</button>
+    </div>
   </div>
 </div>
 
@@ -126,13 +303,26 @@
 <script>
   const STATUS_LABEL = { pending: '대기중', live: '승인됨 (Live)', rejected: '거절됨', ended: '종료' };
 
+  // ==================== WIZARD STATE ====================
+  let wizStep = 1;
+  const WIZ_TOTAL = 3;
+  let _wizEditId = null;
+
+  const GOAL_QUEST_MAP = {
+    community: ['telegram_join', 'discord_join'],
+    awareness: ['twitter_follow', 'twitter_rt'],
+    dapp: ['token_swap', 'nft_mint'],
+    onchain: ['token_swap', 'nft_mint', 'staking'],
+    content: ['review', 'youtube_video', 'twitter_thread'],
+  };
+
+  // ==================== DASHBOARD ====================
   async function loadDashboard() {
     if (!Auth.isLoggedIn || (!Auth.isProject && !Auth.isAdmin)) {
       show('#needLogin');
       return;
     }
     show('#dashboard');
-    // Admin sees "My Campaigns", Project sees "Dashboard"
     const pageTitle = Auth.isAdmin ? 'My Campaigns' : 'Dashboard';
     document.querySelector('#dashboard h1').textContent = pageTitle;
     document.title = pageTitle + ' — SHILL VAULT';
@@ -143,7 +333,6 @@
 
     try {
       const camps = await api('/api/campaigns?creatorId=' + Auth.user.id);
-
       const total = camps.length;
       const pending = camps.filter(c => c.status === 'pending').length;
       const live = camps.filter(c => c.status === 'live').length;
@@ -155,10 +344,7 @@
       $('#statParts').textContent = formatNum(parts);
       $('#campCount').textContent = total;
 
-      if (total === 0) {
-        show('#campEmpty');
-        return;
-      }
+      if (total === 0) { show('#campEmpty'); return; }
       hide('#campEmpty');
 
       let html = '<table class="dash-table"><thead><tr><th>프로젝트</th><th>체인</th><th>상태</th><th>참여자</th><th>보상</th><th></th></tr></thead><tbody>';
@@ -181,89 +367,360 @@
       });
       html += '</tbody></table>';
       $('#campList').innerHTML = html;
-    } catch (e) {
-      show('#campEmpty');
-    }
+    } catch (e) { show('#campEmpty'); }
   }
 
-  // Cache loaded campaign data for edit
-  let _campCache = {};
-
+  // ==================== OPEN / EDIT WIZARD ====================
   function openNewCampModal() {
-    $('#cfEditId').value = '';
-    $('#cfName').value = '';
-    $('#cfCategory').value = 'defi';
-    $('#cfChain').value = 'ethereum';
-    $('#cfStart').value = '';
-    $('#cfEnd').value = '';
-    $('#cfToken').value = 'USDT';
-    $('#cfAmount').value = '';
-    $('#cfMaxPart').value = '';
-    $('#cfDesc').value = '';
-    $('#campFormTitle').textContent = '캠페인 접수';
-    $('#campFormDesc').textContent = '캠페인을 접수하면 관리자 승인 후 메인에 노출됩니다.';
-    $('#campFormBtn').textContent = '캠페인 접수 (심사 요청)';
-    openModal('campFormModal');
+    resetWizard();
+    _wizEditId = null;
+    document.getElementById('wizDoneTitle').textContent = '캠페인이 접수되었습니다!';
+    document.getElementById('wizDoneDesc').textContent = '관리자 승인 후 메인에 노출됩니다.';
+    openModal('campModal');
   }
 
   async function editCampaign(id) {
     try {
       const camp = await api('/api/campaigns/' + id);
-      $('#cfEditId').value = id;
-      $('#cfName').value = camp.project_name || '';
-      $('#cfCategory').value = camp.category || 'defi';
-      $('#cfChain').value = camp.chain || 'ethereum';
-      $('#cfStart').value = camp.start_date ? camp.start_date.split('T')[0] : '';
-      $('#cfEnd').value = camp.end_date ? camp.end_date.split('T')[0] : '';
-      $('#cfToken').value = camp.reward_token || 'USDT';
-      $('#cfAmount').value = camp.reward_amount || '';
-      $('#cfMaxPart').value = camp.max_participants || '';
-      $('#cfDesc').value = camp.description || '';
-      $('#campFormTitle').textContent = '캠페인 수정';
-      $('#campFormDesc').textContent = '수정 후 재제출하면 관리자 재심사를 받습니다.';
-      $('#campFormBtn').textContent = '재제출 (심사 요청)';
-      openModal('campFormModal');
+      resetWizard();
+      _wizEditId = id;
+      populateWizardFromCampaign(camp);
+      document.getElementById('wizDoneTitle').textContent = '캠페인이 수정되었습니다!';
+      document.getElementById('wizDoneDesc').textContent = '관리자 재심사 후 메인에 노출됩니다.';
+      openModal('campModal');
     } catch (e) { alert(e.message || '불러오기 실패'); }
   }
 
-  async function submitCampForm() {
-    const editId = $('#cfEditId').value;
-    const body = {
-      project_name: $('#cfName').value,
-      category: $('#cfCategory').value,
-      chain: $('#cfChain').value,
-      start_date: $('#cfStart').value || null,
-      end_date: $('#cfEnd').value || null,
-      reward_token: $('#cfToken').value,
-      reward_amount: Number($('#cfAmount').value) || 0,
-      max_participants: Number($('#cfMaxPart').value) || 0,
-      description: $('#cfDesc').value || null,
+  function populateWizardFromCampaign(camp) {
+    // Step 1: Basic info
+    document.getElementById('cwProjName').value = camp.project_name || '';
+    document.getElementById('cwSector').value = camp.category || '';
+    document.getElementById('cwChain').value = camp.chain || 'other';
+    document.getElementById('cwStart').value = camp.start_date ? camp.start_date.split('T')[0] : '';
+    document.getElementById('cwEnd').value = camp.end_date ? camp.end_date.split('T')[0] : '';
+
+    // Auto-detect goals from existing quests
+    const quests = camp.quests || [];
+    const questActions = new Set(quests.map(q => q.action_type));
+    const GOAL_REVERSE = {
+      telegram_join: ['community'], discord_join: ['community'],
+      twitter_follow: ['awareness'], twitter_rt: ['awareness'],
+      token_swap: ['dapp', 'onchain'], nft_mint: ['dapp', 'onchain'],
+      staking: ['onchain'],
+      review: ['content'], youtube_video: ['content'], twitter_thread: ['content'],
     };
+    const detected = new Set();
+    questActions.forEach(a => (GOAL_REVERSE[a] || []).forEach(g => detected.add(g)));
+    detected.forEach(goal => {
+      const btn = document.querySelector('.wiz-goal[data-goal="' + goal + '"]');
+      if (btn) btn.classList.add('selected');
+    });
 
-    if (!body.project_name) { alert('프로젝트 이름을 입력하세요.'); return; }
+    // Step 2: Quest checkboxes
+    const KOL_ACTIONS = ['review', 'youtube_video', 'twitter_thread'];
+    const hasGeneral = quests.some(q => !KOL_ACTIONS.includes(q.action_type));
+    const hasKOL = quests.some(q => KOL_ACTIONS.includes(q.action_type));
 
-    try {
-      if (editId) {
-        // Update (resubmit) — backend will reset status to pending
-        await api('/api/campaigns/' + editId, { method: 'PUT', body: JSON.stringify(body) });
-        alert('재제출되었습니다. 관리자 승인을 기다려주세요.');
-      } else {
-        // Create new
-        await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
-        if (Auth.isAdmin) {
-          alert('캠페인이 생성되어 바로 메인에 노출됩니다.');
-        } else {
-          alert('캠페인이 접수되었습니다. 관리자 승인을 기다려주세요.');
-        }
-      }
-      closeModal('campFormModal');
-      loadDashboard();
-    } catch (e) {
-      alert(e.message || '처리 실패');
+    if (!hasGeneral) {
+      document.getElementById('skipGeneral').checked = true;
+      toggleGeneralSkip();
     }
+    if (!hasKOL) {
+      document.getElementById('skipKOL').checked = true;
+      toggleKOLSkip();
+    }
+
+    quests.forEach(q => {
+      const target = KOL_ACTIONS.includes(q.action_type) ? 'kol' : 'general';
+      const cb = document.querySelector('.wiz-quest-cb[data-atype="' + q.action_type + '"][data-target="' + target + '"]');
+      if (cb) cb.checked = true;
+    });
+
+    // Step 3: Rewards
+    document.getElementById('cwToken').value = (camp.reward_token || 'usdt').toLowerCase();
+    document.getElementById('cwBudget').value = camp.reward_amount || '';
+
+    // Store per-quest rewards for step 3
+    window._editQuestRewards = {};
+    quests.forEach(q => {
+      if (q.reward_per_user) window._editQuestRewards[q.action_type] = q.reward_per_user;
+    });
+
+    validateStep1();
+    validateStep2();
   }
 
-  // connectWallet and showRegForm are defined in app.js
+  // ==================== WIZARD FUNCTIONS ====================
+  function toggleGoal(el) { el.classList.toggle('selected'); }
+
+  function validateStep1() {
+    const name = document.getElementById('cwProjName').value.trim();
+    const sector = document.getElementById('cwSector').value;
+    const start = document.getElementById('cwStart').value;
+    const end = document.getElementById('cwEnd').value;
+    const goals = $$('#wizStep1 .wiz-goal.selected').length;
+    const valid = name && sector && start && end && goals > 0;
+    if (wizStep === 1) {
+      document.getElementById('wizNext').classList.toggle('disabled', !valid);
+      document.getElementById('step1Msg').style.display = valid ? 'none' : '';
+    }
+    return valid;
+  }
+
+  function toggleGeneralSkip() {
+    const skip = document.getElementById('skipGeneral').checked;
+    document.getElementById('generalQuestArea').style.display = skip ? 'none' : '';
+    if (skip) $$('#generalQuestArea .wiz-quest-cb').forEach(cb => cb.checked = false);
+  }
+
+  function toggleKOLSkip() {
+    const skip = document.getElementById('skipKOL').checked;
+    document.getElementById('kolQuestArea').style.display = skip ? 'none' : '';
+    if (skip) $$('#kolQuestArea .wiz-quest-cb').forEach(cb => cb.checked = false);
+  }
+
+  function validateStep2() {
+    const skipGen = document.getElementById('skipGeneral').checked;
+    const skipKOL = document.getElementById('skipKOL').checked;
+    const genChecked = $$('#generalQuestArea .wiz-quest-cb:checked').length;
+    const kolChecked = $$('#kolQuestArea .wiz-quest-cb:checked').length;
+    const genOk = skipGen || genChecked > 0;
+    const kolOk = skipKOL || kolChecked > 0;
+    const bothSkipped = skipGen && skipKOL;
+    const valid = genOk && kolOk && !bothSkipped;
+    if (wizStep === 2) {
+      document.getElementById('wizNext').classList.toggle('disabled', !valid);
+      const msg = document.getElementById('step2Msg');
+      if (bothSkipped) {
+        msg.textContent = '일반 유저와 인플루언서 모두 "해당 없음"일 수 없습니다. 최소 한쪽은 대상자를 선택하세요.';
+        msg.style.display = '';
+      } else if (!valid) {
+        msg.textContent = '각 섹션에서 퀘스트를 선택하거나 "해당 없음"을 체크해주세요.';
+        msg.style.display = '';
+      } else {
+        msg.style.display = 'none';
+      }
+    }
+    return valid;
+  }
+
+  function applyQuestRecommendations() {
+    const selectedGoals = [];
+    $$('#wizStep1 .wiz-goal.selected').forEach(el => selectedGoals.push(el.dataset.goal));
+    const recommended = new Set();
+    selectedGoals.forEach(g => (GOAL_QUEST_MAP[g] || []).forEach(atype => recommended.add(atype)));
+    $$('.wiz-quest-cb[data-target="general"]').forEach(cb => { cb.checked = recommended.has(cb.dataset.atype); });
+    $$('.wiz-quest-cb[data-target="kol"]').forEach(cb => { cb.checked = recommended.has(cb.dataset.atype); });
+  }
+
+  function buildStep3() {
+    const container = document.getElementById('questRewardInputs');
+    const quests = [];
+    $$('.wiz-quest-cb:checked').forEach(cb => {
+      const name = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+      const target = cb.dataset.target;
+      const tag = target === 'kol' ? ' (KOL)' : '';
+      if (name) quests.push({ atype: cb.dataset.atype, name: name + tag });
+    });
+    let html = '';
+    quests.forEach(q => {
+      const saved = (window._editQuestRewards && window._editQuestRewards[q.atype]) || '';
+      html += '<div class="wiz-qr-row"><span class="wiz-qr-name">' + q.name + '</span><div class="wiz-qr-input"><span>$</span><input type="number" placeholder="0" data-atype="' + q.atype + '" value="' + saved + '"></div></div>';
+    });
+    if (!html) html = '<p style="color:var(--text-3);font-size:0.82rem;">선택된 퀘스트가 없습니다.</p>';
+    container.innerHTML = html;
+    buildSummary();
+  }
+
+  function buildSummary() {
+    const name = document.getElementById('cwProjName').value || '-';
+    const startD = document.getElementById('cwStart').value || '-';
+    const endD = document.getElementById('cwEnd').value || '-';
+    const chain = document.getElementById('cwChain').selectedOptions[0]?.text || '-';
+    const goals = [];
+    $$('#wizStep1 .wiz-goal.selected .wiz-goal-name').forEach(el => goals.push(el.textContent));
+
+    const skipGen = document.getElementById('skipGeneral').checked;
+    const skipKOL = document.getElementById('skipKOL').checked;
+    const genNames = [];
+    const kolNames = [];
+    $$('.wiz-quest-cb:checked').forEach(cb => {
+      const n = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent;
+      if (!n) return;
+      if (cb.dataset.target === 'kol') kolNames.push(n);
+      else genNames.push(n);
+    });
+
+    const token = document.getElementById('cwToken').selectedOptions[0]?.text || '-';
+    const budget = document.getElementById('cwBudget').value;
+    const confirmText = _wizEditId ? '수정 내용을 확인했으며 캠페인을 재제출합니다' : '위 내용을 확인했으며 캠페인을 제출합니다';
+
+    const r = (l, v) => '<div class="wr-row"><span class="wr-label">' + l + '</span><span class="wr-value">' + v + '</span></div>';
+    const qTags = (arr) => arr.map(n => '<span class="wr-quest-tag">' + n + '</span>').join(' ');
+
+    let questSummary = '';
+    if (skipGen) questSummary += '<span style="color:var(--text-3);">일반유저: 해당 없음</span>';
+    else if (genNames.length) questSummary += '<div style="margin-bottom:0.25rem;"><span style="font-size:0.7rem;color:var(--text-3);">일반유저:</span> ' + qTags(genNames) + '</div>';
+    if (skipKOL) questSummary += '<span style="color:var(--text-3);">KOL: 해당 없음</span>';
+    else if (kolNames.length) questSummary += '<div><span style="font-size:0.7rem;color:var(--text-3);">KOL:</span> ' + qTags(kolNames) + '</div>';
+
+    document.getElementById('wizReview').innerHTML =
+      r('프로젝트', name) + r('체인', chain) + r('기간', startD + ' ~ ' + endD) + r('목표', goals.join(', ') || '-') +
+      '<div class="wr-row" style="flex-direction:column;align-items:flex-start;gap:0.35rem;"><span class="wr-label">퀘스트</span><div style="width:100%;">' + (questSummary || '-') + '</div></div>' +
+      r('보상 토큰', token) + r('총 예산', '$' + Number(budget || 0).toLocaleString()) +
+      '<label class="wr-confirm" onclick="event.stopPropagation()"><input type="checkbox" class="wr-confirm-check" onchange="updateLaunchBtn()"><span>' + confirmText + '</span></label>';
+    updateLaunchBtn();
+  }
+
+  function updateLaunchBtn() {
+    const cb = document.querySelector('#wizReview .wr-confirm-check');
+    if (wizStep === WIZ_TOTAL) document.getElementById('wizNext').classList.toggle('disabled', !(cb && cb.checked));
+  }
+
+  function updateWizDots() {
+    const dots = $$('.wiz-dots .wiz-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.remove('active', 'done');
+      if (i + 1 < wizStep) dot.classList.add('done');
+      else if (i + 1 === wizStep) dot.classList.add('active');
+    });
+  }
+
+  function wizGo(dir) {
+    if (dir === 1 && document.getElementById('wizNext').classList.contains('disabled')) return;
+    const next = wizStep + dir;
+    if (next < 1 || next > WIZ_TOTAL + 1) return;
+
+    if (next === 2 && dir === 1) {
+      if (!validateStep1()) return;
+      if (!_wizEditId) applyQuestRecommendations();
+    }
+    if (next === 3 && dir === 1) {
+      if (!validateStep2()) return;
+      buildStep3();
+    }
+    if (next === WIZ_TOTAL + 1) {
+      const confirmCb = document.querySelector('#wizReview .wr-confirm-check');
+      if (!(confirmCb && confirmCb.checked)) {
+        document.getElementById('wizReview').classList.add('shake');
+        setTimeout(() => document.getElementById('wizReview').classList.remove('shake'), 500);
+        return;
+      }
+      const budget = Number(document.getElementById('cwBudget').value) || 0;
+      document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
+      document.getElementById('doneQuests').textContent = $$('.wiz-quest-cb:checked').length + '개';
+      submitCampaignToBackend();
+      for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
+      document.getElementById('wizDone').style.display = 'block';
+      document.getElementById('wizNav').style.display = 'none';
+      document.getElementById('wizBar').style.width = '100%';
+      $$('.wiz-dots .wiz-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+      launchConfetti();
+      return;
+    }
+
+    document.getElementById('wizStep' + wizStep).style.display = 'none';
+    document.getElementById('wizStep' + next).style.display = 'block';
+    wizStep = next;
+    document.getElementById('wizBar').style.width = ((wizStep / WIZ_TOTAL) * 100) + '%';
+    document.getElementById('wizPrev').style.display = wizStep === 1 ? 'none' : '';
+    document.getElementById('wizNext').textContent = wizStep === WIZ_TOTAL ? (_wizEditId ? '캠페인 수정' : '캠페인 제출') : '다음';
+    updateWizDots();
+
+    if (wizStep === 1) validateStep1();
+    else if (wizStep === 2) validateStep2();
+    else if (wizStep === WIZ_TOTAL) updateLaunchBtn();
+  }
+
+  function resetWizard() {
+    _wizEditId = null;
+    window._editQuestRewards = null;
+    wizStep = 1;
+    for (let i = 1; i <= WIZ_TOTAL; i++) {
+      const el = document.getElementById('wizStep' + i);
+      if (el) el.style.display = i === 1 ? 'block' : 'none';
+    }
+    document.getElementById('wizDone').style.display = 'none';
+    document.getElementById('wizNav').style.display = 'flex';
+    document.getElementById('wizBar').style.width = '33.33%';
+    document.getElementById('wizPrev').style.display = 'none';
+    document.getElementById('wizNext').textContent = '다음';
+    document.getElementById('wizNext').classList.add('disabled');
+    const dots = $$('.wiz-dots .wiz-dot');
+    dots.forEach((d, i) => { d.classList.remove('active', 'done'); if (i === 0) d.classList.add('active'); });
+    document.getElementById('cwProjName').value = '';
+    document.getElementById('cwSector').value = '';
+    document.getElementById('cwChain').value = 'other';
+    document.getElementById('cwStart').value = '';
+    document.getElementById('cwEnd').value = '';
+    document.getElementById('cwToken').value = 'usdt';
+    document.getElementById('cwBudget').value = '';
+    document.getElementById('skipGeneral').checked = false;
+    document.getElementById('skipKOL').checked = false;
+    document.getElementById('generalQuestArea').style.display = '';
+    document.getElementById('kolQuestArea').style.display = '';
+    $$('.wiz-quest-cb').forEach(cb => cb.checked = false);
+    $$('.wiz-goal').forEach(g => g.classList.remove('selected'));
+    document.getElementById('step1Msg').style.display = 'none';
+    document.getElementById('step2Msg').style.display = 'none';
+  }
+
+  function closeCampWizard() {
+    closeModal('campModal');
+    setTimeout(resetWizard, 300);
+  }
+
+  async function submitCampaignToBackend() {
+    if (!Auth.isLoggedIn) return;
+    try {
+      const quests = [];
+      $$('.wiz-quest-cb:checked').forEach(cb => {
+        const title = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
+        const rewardInput = document.querySelector('.wiz-qr-input input[data-atype="' + cb.dataset.atype + '"]');
+        quests.push({
+          title,
+          quest_type: cb.dataset.qtype,
+          action_type: cb.dataset.atype,
+          reward_per_user: Number(rewardInput?.value) || 0,
+        });
+      });
+      const body = {
+        project_name: document.getElementById('cwProjName').value,
+        chain: document.getElementById('cwChain').value,
+        category: document.getElementById('cwSector').value,
+        start_date: document.getElementById('cwStart').value || null,
+        end_date: document.getElementById('cwEnd').value || null,
+        reward_token: document.getElementById('cwToken').value,
+        reward_amount: Number(document.getElementById('cwBudget').value) || 0,
+        max_participants: 500,
+        quests,
+      };
+      if (_wizEditId) {
+        await api('/api/campaigns/' + _wizEditId, { method: 'PUT', body: JSON.stringify(body) });
+      } else {
+        await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
+      }
+    } catch (e) { console.error('Campaign submit failed:', e); }
+  }
+
+  function launchConfetti() {
+    const colors = ['#3182F6','#20C997','#8B5CF6','#F59E0B','#EC4899','#6366F1'];
+    const c = document.createElement('div');
+    c.className = 'confetti-container';
+    document.body.appendChild(c);
+    for (let i = 0; i < 80; i++) {
+      const p = document.createElement('div');
+      p.className = 'confetti-piece';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.background = colors[Math.floor(Math.random() * colors.length)];
+      p.style.animationDelay = Math.random() * 0.6 + 's';
+      p.style.animationDuration = (Math.random() * 1.5 + 2) + 's';
+      p.style.width = (Math.random() * 8 + 4) + 'px';
+      p.style.height = (Math.random() * 14 + 6) + 'px';
+      c.appendChild(p);
+    }
+    setTimeout(() => c.remove(), 4000);
+  }
 
   authRestore().then(() => { initCommon(); loadDashboard(); });
 </script>

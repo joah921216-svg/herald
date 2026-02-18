@@ -39,24 +39,10 @@
 
     <p id="campDesc" style="font-size:0.9rem;color:var(--text-2);margin-bottom:1.5rem;line-height:1.65;"></p>
 
-    <!-- Stats -->
-    <div class="dash-stats" style="grid-template-columns:repeat(4,1fr);">
-      <div class="dash-stat">
-        <div class="dash-stat-label">참여자</div>
-        <div class="dash-stat-value" id="campParticipants">0</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-label">보상 풀</div>
-        <div class="dash-stat-value" id="campReward">$0</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-label">퀘스트</div>
-        <div class="dash-stat-value" id="campQuestCount">0</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-label">기간</div>
-        <div class="dash-stat-value" id="campPeriod" style="font-size:0.9rem;">-</div>
-      </div>
+    <!-- Campaign Details -->
+    <div class="dash-card">
+      <div class="dash-card-title">캠페인 상세 정보</div>
+      <div class="camp-info-grid" id="campInfoGrid"></div>
     </div>
 
     <!-- Quests -->
@@ -103,7 +89,12 @@
   const params = new URLSearchParams(location.search);
   const campaignId = params.get('id');
 
-  // Quest type → emoji mapping
+  // Label mappings
+  const CATEGORY_LABELS = { defi:'DeFi', nft:'NFT / Collectibles', gamefi:'GameFi', l1l2:'L1/L2 · Infra', ai:'AI · DePIN', meme:'Meme Token', other:'기타' };
+  const CHAIN_LABELS = { ethereum:'Ethereum', solana:'Solana', base:'Base', arbitrum:'Arbitrum', bnb:'BNB Chain', polygon:'Polygon', multi:'멀티체인', other:'기타' };
+  const TOKEN_LABELS = { usdt:'USDT', USDT:'USDT', token:'자체 토큰', TOKEN:'자체 토큰', nft:'NFT', NFT:'NFT', point:'포인트', POINT:'포인트' };
+
+  // Quest type mappings
   const QUEST_EMOJI = {
     twitter_follow: '🐦', twitter_rt: '🔁', telegram_join: '✈️', discord_join: '💬',
     token_swap: '🔄', staking: '📌', nft_mint: '🎨',
@@ -114,8 +105,9 @@
     discord_join: '디스코드 참여', token_swap: '스왑 체험', staking: '스테이킹', nft_mint: 'NFT 민팅',
     review: '리뷰 작성', youtube_video: '유튜브 영상', twitter_thread: '트위터 스레드',
   };
+  const KOL_ACTIONS = ['review', 'youtube_video', 'twitter_thread'];
 
-  let myParticipations = {}; // questId -> status
+  let myParticipations = {};
 
   async function loadMyParticipations() {
     if (!Auth.isLoggedIn) return;
@@ -143,20 +135,19 @@
       $('#campIcon').style.background = 'linear-gradient(135deg,' + grad + ')';
       $('#campIcon').textContent = abbr;
       $('#campName').textContent = camp.project_name;
-      $('#campChain').textContent = camp.chain || '-';
-      $('#campCategory').textContent = camp.category || '-';
+      $('#campChain').textContent = CHAIN_LABELS[camp.chain] || camp.chain || '-';
+      $('#campCategory').textContent = CATEGORY_LABELS[camp.category] || camp.category || '-';
       $('#campStatus').innerHTML = statusBadge(camp.status);
       if (camp.description) $('#campDesc').textContent = camp.description;
       else hide('#campDesc');
-      $('#campParticipants').textContent = formatNum(camp.current_participants) + (camp.max_participants ? ' / ' + formatNum(camp.max_participants) : '');
-      $('#campReward').textContent = '$' + formatNum(camp.reward_amount);
-      $('#campPeriod').textContent = formatDate(camp.start_date) + ' ~ ' + formatDate(camp.end_date);
 
-      // Set page title
       document.title = (camp.project_name || 'Campaign') + ' — SHILL VAULT';
 
+      // Render detailed info grid
+      renderCampInfo(camp);
+
+      // Render quests
       const quests = camp.quests || [];
-      $('#campQuestCount').textContent = quests.length;
       $('#questCountBadge').textContent = quests.length;
 
       if (quests.length === 0) {
@@ -170,45 +161,97 @@
     }
   }
 
+  function renderCampInfo(camp) {
+    const grid = document.getElementById('campInfoGrid');
+    const r = (label, value) => '<div class="camp-info-item"><span class="camp-info-label">' + label + '</span><span class="camp-info-value">' + value + '</span></div>';
+
+    let html =
+      r('프로젝트명', camp.project_name || '-') +
+      r('상태', statusBadge(camp.status)) +
+      r('카테고리', CATEGORY_LABELS[camp.category] || camp.category || '-') +
+      r('체인', CHAIN_LABELS[camp.chain] || camp.chain || '-') +
+      r('보상 토큰', TOKEN_LABELS[camp.reward_token] || camp.reward_token || '-') +
+      r('총 예산', '$' + formatNum(camp.reward_amount)) +
+      r('최대 참여자', camp.max_participants ? formatNum(camp.max_participants) + '명' : '제한 없음') +
+      r('현재 참여자', formatNum(camp.current_participants) + '명') +
+      r('캠페인 기간', formatDate(camp.start_date) + ' ~ ' + formatDate(camp.end_date)) +
+      r('생성일', formatDate(camp.created_at));
+
+    // Per-quest reward breakdown
+    const quests = camp.quests || [];
+    if (quests.length > 0) {
+      const rewardList = quests.map(q => {
+        const label = ACTION_LABELS[q.action_type] || q.title || q.action_type;
+        return label + ': $' + (q.reward_per_user || 0);
+      }).join(', ');
+      html += '<div class="camp-info-item camp-info-full"><span class="camp-info-label">퀘스트별 보상 단가</span><span class="camp-info-value">' + rewardList + '</span></div>';
+    }
+
+    if (camp.description) {
+      html += '<div class="camp-info-item camp-info-full"><span class="camp-info-label">설명</span><span class="camp-info-value">' + camp.description + '</span></div>';
+    }
+
+    grid.innerHTML = html;
+  }
+
   function renderQuests(quests) {
+    const general = quests.filter(q => !KOL_ACTIONS.includes(q.action_type));
+    const kol = quests.filter(q => KOL_ACTIONS.includes(q.action_type));
+
     const list = $('#questList');
     list.innerHTML = '';
-    quests.forEach(q => {
-      const emoji = QUEST_EMOJI[q.action_type] || '📋';
-      const typeClass = 'quest-type-' + (q.quest_type || 'social');
-      const actionLabel = ACTION_LABELS[q.action_type] || q.action_type || q.quest_type || '-';
-      const myStatus = myParticipations[q.id];
 
-      let btnHtml;
-      if (myStatus === 'completed' || myStatus === 'rewarded') {
-        btnHtml = '<button class="quest-join-btn completed" disabled>완료</button>';
-      } else if (myStatus === 'joined') {
-        btnHtml = '<button class="quest-join-btn joined" disabled>참여중</button>';
-      } else if (!Auth.isLoggedIn) {
-        btnHtml = '<button class="quest-join-btn connect" onclick="openModal(\'walletModal\')">지갑 연결</button>';
-      } else if (Auth.isProject) {
-        // 프로젝트 계정은 퀘스트 참여 불가
-        btnHtml = '';
-      } else {
-        btnHtml = '<button class="quest-join-btn" onclick="joinQuest(\'' + q.id + '\', this)">참여하기</button>';
-      }
+    if (general.length > 0) {
+      const header = document.createElement('div');
+      header.className = 'quest-group-header';
+      header.innerHTML = '<span class="quest-group-icon">&#128100;</span> 일반 유저 퀘스트';
+      list.appendChild(header);
+      general.forEach(q => list.appendChild(createQuestItem(q)));
+    }
 
-      const item = document.createElement('div');
-      item.className = 'quest-item';
-      item.id = 'quest-' + q.id;
-      item.innerHTML = `
-        <div class="quest-type-badge ${typeClass}">${emoji}</div>
-        <div class="quest-item-body">
-          <div class="quest-item-title">${q.title || q.name || actionLabel}</div>
-          <div class="quest-item-meta">
-            <span>${actionLabel}</span>
-            <span>${q.reward_per_user ? '$' + q.reward_per_user : '-'} 보상</span>
-            <span>${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}명</span>
-          </div>
+    if (kol.length > 0) {
+      const header = document.createElement('div');
+      header.className = 'quest-group-header';
+      header.innerHTML = '<span class="quest-group-icon">&#11088;</span> 인플루언서(KOL) 퀘스트';
+      list.appendChild(header);
+      kol.forEach(q => list.appendChild(createQuestItem(q)));
+    }
+  }
+
+  function createQuestItem(q) {
+    const emoji = QUEST_EMOJI[q.action_type] || '📋';
+    const typeClass = 'quest-type-' + (q.quest_type || 'social');
+    const actionLabel = ACTION_LABELS[q.action_type] || q.action_type || q.quest_type || '-';
+    const myStatus = myParticipations[q.id];
+
+    let btnHtml;
+    if (myStatus === 'completed' || myStatus === 'rewarded') {
+      btnHtml = '<button class="quest-join-btn completed" disabled>완료</button>';
+    } else if (myStatus === 'joined') {
+      btnHtml = '<button class="quest-join-btn joined" disabled>참여중</button>';
+    } else if (!Auth.isLoggedIn) {
+      btnHtml = '<button class="quest-join-btn connect" onclick="openModal(\'walletModal\')">지갑 연결</button>';
+    } else if (Auth.isProject) {
+      btnHtml = '';
+    } else {
+      btnHtml = '<button class="quest-join-btn" onclick="joinQuest(\'' + q.id + '\', this)">참여하기</button>';
+    }
+
+    const item = document.createElement('div');
+    item.className = 'quest-item';
+    item.id = 'quest-' + q.id;
+    item.innerHTML = `
+      <div class="quest-type-badge ${typeClass}">${emoji}</div>
+      <div class="quest-item-body">
+        <div class="quest-item-title">${q.title || q.name || actionLabel}</div>
+        <div class="quest-item-meta">
+          <span>${actionLabel}</span>
+          <span>${q.reward_per_user ? '$' + q.reward_per_user + ' 보상' : '보상 미정'}</span>
+          <span>${formatNum(q.current_participants)}${q.max_participants ? ' / ' + formatNum(q.max_participants) : ''}명</span>
         </div>
-        ${btnHtml}`;
-      list.appendChild(item);
-    });
+      </div>
+      ${btnHtml}`;
+    return item;
   }
 
   async function joinQuest(questId, btn) {
@@ -219,7 +262,6 @@
       btn.className = 'quest-join-btn joined';
       btn.textContent = '참여중';
       myParticipations[questId] = 'joined';
-      // Update participant count in the quest item
       const item = document.getElementById('quest-' + questId);
       if (item) {
         const meta = item.querySelectorAll('.quest-item-meta span');
@@ -229,15 +271,6 @@
             const newCount = parseInt(match[1].replace(/,/g, '')) + 1;
             meta[2].textContent = meta[2].textContent.replace(/^[\d,]+/, formatNum(newCount));
           }
-        }
-      }
-      // Update campaign participants
-      const el = $('#campParticipants');
-      if (el) {
-        const match = el.textContent.match(/^([\d,]+)/);
-        if (match) {
-          const newCount = parseInt(match[1].replace(/,/g, '')) + 1;
-          el.textContent = el.textContent.replace(/^[\d,]+/, formatNum(newCount));
         }
       }
     } catch (e) {
@@ -253,9 +286,6 @@
     }
   }
 
-  // connectWallet and showRegForm are defined in app.js
-
-  // Init
   authRestore().then(() => { initCommon(); loadCampaign(); });
 </script>
 </body>

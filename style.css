@@ -782,3 +782,32 @@ footer { padding: 2.5rem 2rem; border-top: 1px solid var(--border); }
   .quest-item { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   .quest-join-btn { width: 100%; text-align: center; }
 }
+
+/* === CAMPAIGN DETAIL INFO GRID === */
+.camp-info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+}
+.camp-info-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--border);
+}
+.camp-info-item:nth-child(odd) { border-right: 1px solid var(--border); }
+.camp-info-label { font-size: 0.78rem; color: var(--text-3); font-weight: 500; }
+.camp-info-value { font-size: 0.85rem; font-weight: 600; color: var(--text); text-align: right; }
+.camp-info-full {
+  grid-column: 1 / -1; flex-direction: column; align-items: flex-start; gap: 0.25rem;
+}
+.camp-info-full .camp-info-value { font-weight: 400; color: var(--text-2); line-height: 1.6; text-align: left; }
+@media(max-width:768px) {
+  .camp-info-grid { grid-template-columns: 1fr; }
+  .camp-info-item:nth-child(odd) { border-right: none; }
+}
+
+/* === QUEST GROUP HEADERS === */
+.quest-group-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.85rem; font-weight: 700; color: var(--text);
+  padding: 0.75rem 0 0.25rem; margin-top: 0.5rem;
+}
+.quest-group-header:first-child { margin-top: 0; }
+.quest-group-icon { font-size: 1.1rem; }
