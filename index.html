@@ -154,6 +154,31 @@
   </div>
 </section>
 
+<!-- ==================== ROLE SWITCH MODAL ==================== -->
+<div class="modal-overlay" id="roleSwitchModal">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" onclick="closeModal('roleSwitchModal')">&times;</button>
+    <div id="roleSwitchPrompt">
+      <div style="text-align:center;margin-bottom:1rem;">
+        <div style="font-size:2rem;margin-bottom:0.5rem;">&#128188;</div>
+        <h3 style="margin:0;">프로젝트 계정 전환</h3>
+      </div>
+      <p class="modal-desc" style="text-align:center;">캠페인 등록은 프로젝트 계정에서만 가능합니다.<br>프로젝트 계정으로 전환하시겠습니까?</p>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:1.2rem;">
+        <button class="reg-btn" onclick="showRoleSwitchForm()">프로젝트 계정으로 전환</button>
+        <button class="reg-btn" style="background:var(--bg-2);color:var(--text);" onclick="closeModal('roleSwitchModal')">돌아가기</button>
+      </div>
+    </div>
+    <div id="roleSwitchForm" style="display:none;">
+      <h3>프로젝트 정보 입력</h3>
+      <p class="modal-desc">전환 후에는 캠페인을 등록할 수 있지만, 퀘스트 참여는 불가합니다.</p>
+      <div class="reg-field"><label>프로젝트 이름 <span style="font-size:0.75rem;color:var(--red);">(필수)</span></label><input type="text" id="rsProjName" placeholder="예: AxiomDEX"></div>
+      <div class="reg-field"><label>이메일 <span style="font-size:0.75rem;color:var(--red);">(필수)</span></label><input type="email" id="rsEmail" placeholder="name@example.com"></div>
+      <button class="reg-btn" onclick="submitRoleSwitch()">전환하기</button>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== WALLET MODAL ==================== -->
 <div class="modal-overlay" id="walletModal">
   <div class="modal">
@@ -173,20 +198,6 @@
     <!-- Connected State -->
     <div id="walletInfo" style="display:none;">
       <h3>지갑 연결됨</h3>
-      <div class="wallet-connected-info">
-        <div class="wci-row">
-          <span class="wci-label">지갑</span>
-          <span class="wci-value" id="wiName">-</span>
-        </div>
-        <div class="wci-row">
-          <span class="wci-label">주소</span>
-          <span class="wci-addr" id="wiAddr">-</span>
-        </div>
-        <div class="wci-row">
-          <span class="wci-label">역할</span>
-          <span class="wci-value" id="wiRole">-</span>
-        </div>
-      </div>
       <button class="wallet-disconnect-btn" onclick="doDisconnect()">연결 해제</button>
     </div>
   </div>
@@ -448,96 +459,45 @@
 <link rel="stylesheet" href="dashboard.css">
 <script src="app.js"></script>
 <script>
-// ==================== WALLET CONNECTION ====================
-async function connectWallet(type) {
-  const provider = findProviderByName(type);
-  const walletName = WALLET_INFO[type]?.name || type;
-  if (!provider) {
-    const el = document.getElementById('walletError');
-    el.textContent = walletName + '이(가) 감지되지 않습니다. 확장프로그램을 확인해주세요.';
-    el.style.display = 'block';
-    return;
-  }
-  try {
-    const result = await authConnect(provider, walletName);
-    if (result.needsRegistration) {
-      showRegForm(result.nonce, result.addr, provider);
-    } else {
-      closeModal('walletModal');
-      setupNav();
-      updateWalletInfo();
-    }
-  } catch (e) {
-    const el = document.getElementById('walletError');
-    el.textContent = e.code === 4001 ? '사용자가 연결을 거부했습니다.' : (e.message || '연결 실패');
-    el.style.display = 'block';
-  }
-}
-
-function showRegForm(nonce, addr, provider) {
-  hide('#walletConnect');
-  let selectedRole = 'user';
-  $('#walletRegister').innerHTML = `
-    <h3>회원가입</h3>
-    <p class="modal-desc">${shortAddr(addr)} 지갑으로 가입합니다.</p>
-    <div class="auth-reg">
-      <div class="auth-role-picker">
-        <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)">
-          <span class="auth-role-icon">&#128100;</span>
-          <span class="auth-role-name">일반 유저</span>
-          <span class="auth-role-desc">퀘스트 참여 및 보상</span>
-        </button>
-        <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)">
-          <span class="auth-role-icon">&#128188;</span>
-          <span class="auth-role-name">프로젝트</span>
-          <span class="auth-role-desc">캠페인 생성 및 관리</span>
-        </button>
-      </div>
-      <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail" placeholder="name@example.com"></div>
-      <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName" placeholder="예: AxiomDEX"></div>
-      <button class="reg-btn" onclick="submitReg()">가입하기</button>
-    </div>
-  `;
-  show('#walletRegister');
-
-  window._regCtx = { nonce, addr, provider };
-  window.selectRegRole = function(el) {
-    $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedRole = el.dataset.role;
-    document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
-  };
-  window.submitReg = async function() {
-    try {
-      const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
-      if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
-      await authSign(addr, nonce, provider, regData);
-      closeModal('walletModal');
-      setupNav();
-      updateWalletInfo();
-    } catch (e) { alert(e.message || '가입 실패'); }
-  };
-}
-
-function updateWalletInfo() {
-  if (!Auth.isLoggedIn) return;
-  const wiName = document.getElementById('wiName');
-  const wiAddr = document.getElementById('wiAddr');
-  const wiRole = document.getElementById('wiRole');
-  if (wiName) wiName.textContent = Auth.walletName || '-';
-  if (wiAddr) wiAddr.textContent = shortAddr(Auth.wallet);
-  if (wiRole) wiRole.textContent = (Auth.role || '-').toUpperCase();
-  hide('#walletConnect');
-  hide('#walletRegister');
-  show('#walletInfo');
-}
-
-// doDisconnect and doLogout are defined in app.js
-
-// ==================== LOGIN GATE ====================
+// ==================== LOGIN GATE & ROLE CHECK ====================
 function startCampaignOrLogin() {
   if (!Auth.isLoggedIn) { openModal('walletModal'); return; }
+  if (Auth.isUser) { openModal('roleSwitchModal'); return; }
   openModal('campModal');
+}
+
+function showRoleSwitchForm() {
+  hide('#roleSwitchPrompt');
+  show('#roleSwitchForm');
+}
+
+async function submitRoleSwitch() {
+  const projName = document.getElementById('rsProjName')?.value?.trim();
+  const email = document.getElementById('rsEmail')?.value?.trim();
+  if (!projName) { alert('프로젝트 이름을 입력하세요.'); return; }
+  if (!email) { alert('이메일을 입력하세요.'); return; }
+  try {
+    const updated = await api('/api/users/me', {
+      method: 'PUT',
+      body: JSON.stringify({ role: 'project', project_name: projName, email }),
+    });
+    // Backend returns a new JWT with updated role
+    if (updated.token) {
+      Auth.save(updated.token, { ...Auth.user, role: 'project', project_name: projName, email });
+    } else {
+      Auth.save(Auth.token, { ...Auth.user, role: 'project', project_name: projName, email });
+    }
+    closeModal('roleSwitchModal');
+    location.reload();
+  } catch (e) { alert(e.message || '전환 실패'); }
+}
+
+function applyRoleUI() {
+  // 일반 유저: "For Projects" 섹션과 위저드 숨김
+  if (Auth.isLoggedIn && Auth.isUser) {
+    const fp = document.getElementById('for-projects');
+    if (fp) fp.style.display = 'none';
+  }
 }
 
 // ==================== LOAD LIVE CAMPAIGNS (Card Grid) ====================
@@ -827,7 +787,7 @@ if (ctaEl) ctaObs.observe(ctaEl);
 // ==================== INIT ====================
 authRestore().then(() => {
   initCommon();
-  if (Auth.isLoggedIn) updateWalletInfo();
+  applyRoleUI();
   loadCampaignCards();
 });
 </script>

@@ -83,6 +83,11 @@ window.addEventListener('eip6963:announceProvider', (event) => {
 // 이미 등록된 지갑들에게 announce 요청
 window.dispatchEvent(new Event('eip6963:requestProvider'));
 
+// 지갑이 뒤늦게 inject되는 경우를 대비해 한번 더 요청
+setTimeout(() => {
+  window.dispatchEvent(new Event('eip6963:requestProvider'));
+}, 500);
+
 // RDNS 매핑
 const WALLET_RDNS = {
   metamask: 'io.metamask',
@@ -91,7 +96,6 @@ const WALLET_RDNS = {
 };
 
 function _safeGetEthereum() {
-  // window.ethereum 접근 시 에러 날 수 있으므로 try/catch
   try { return window.ethereum || null; } catch { return null; }
 }
 
@@ -103,26 +107,23 @@ function _safeGetProviders() {
 }
 
 function findMetaMask() {
-  // 1. EIP-6963 (가장 안전)
   const eip = _eip6963Providers.get('io.metamask');
   if (eip) return eip.provider;
-  // 2. providers 배열에서 찾기
   const fromArr = _safeGetProviders().find(p => {
     try { return p.isMetaMask && !p.isRabby && !p.isPhantom; } catch { return false; }
   });
   if (fromArr) return fromArr;
-  // 3. window.ethereum fallback (단독 설치)
   try {
     const eth = _safeGetEthereum();
     if (eth?.isMetaMask && !eth?.isRabby && !eth?.isPhantom) return eth;
-  } catch { /* ignore */ }
+  } catch {}
   return null;
 }
 
 function findRabby() {
   const eip = _eip6963Providers.get('io.rabby');
   if (eip) return eip.provider;
-  try { if (window.rabby) return window.rabby; } catch { /* ignore */ }
+  try { if (window.rabby) return window.rabby; } catch {}
   const fromArr = _safeGetProviders().find(p => {
     try { return p.isRabby; } catch { return false; }
   });
@@ -130,14 +131,14 @@ function findRabby() {
   try {
     const eth = _safeGetEthereum();
     if (eth?.isRabby) return eth;
-  } catch { /* ignore */ }
+  } catch {}
   return null;
 }
 
 function findPhantom() {
   const eip = _eip6963Providers.get('app.phantom');
   if (eip) return eip.provider;
-  try { if (window.phantom?.ethereum) return window.phantom.ethereum; } catch { /* ignore */ }
+  try { if (window.phantom?.ethereum) return window.phantom.ethereum; } catch {}
   const fromArr = _safeGetProviders().find(p => {
     try { return p.isPhantom; } catch { return false; }
   });
@@ -170,15 +171,12 @@ async function authConnect(provider, walletName) {
   localStorage.setItem('sv_wallet', addr);
   localStorage.setItem('sv_wallet_name', walletName);
 
-  // Check if user exists
   const nonceData = await api('/api/auth/nonce?walletAddress=' + addr);
 
   if (!nonceData.exists) {
-    // New user — need registration
     return { needsRegistration: true, nonce: nonceData.nonce, addr };
   }
 
-  // Existing user — sign and login
   return await authSign(addr, nonceData.nonce, provider);
 }
 
@@ -199,7 +197,6 @@ async function authRestore() {
   const name = localStorage.getItem('sv_wallet_name');
   if (!saved) return false;
 
-  // Find the correct provider based on previously used wallet
   const nameMap = { 'MetaMask': 'metamask', 'Rabby Wallet': 'rabby', 'Rabby': 'rabby', 'Phantom': 'phantom' };
   const provider = findProviderByName(nameMap[name] || '') || findAnyProvider();
   if (!provider) return false;
@@ -213,7 +210,7 @@ async function authRestore() {
       Auth.walletName = name || 'Wallet';
       return true;
     }
-  } catch { /* silent */ }
+  } catch {}
   return false;
 }
 
@@ -252,25 +249,23 @@ const WALLET_INFO = {
   phantom:  { name: 'Phantom', desc: 'Solana & EVM 지갑', gradient: '#ab9ff2,#6e56cf', label: 'PH', badge: null },
 };
 
+// 모든 지갑 버튼을 항상 클릭 가능하게 렌더링.
+// 프로바이더 감지는 클릭 시점에 다시 수행하므로, 초기 감지 실패해도 OK.
 function buildWalletButtons(containerId) {
   const container = document.getElementById(containerId || 'walletOptions');
   if (!container) return;
 
   let html = '';
   for (const [key, info] of Object.entries(WALLET_INFO)) {
-    const provider = findProviderByName(key);
-    const disabled = !provider;
-    // 설치된 지갑: 클릭 가능. 미설치: 비활성화하되 항상 표시
-    html += `<button class="wallet-opt${disabled ? ' wc-disabled' : ''}" onclick="${disabled ? '' : "connectWallet('" + key + "')"}" ${disabled ? 'title="설치되지 않음"' : ''}>
+    html += `<button class="wallet-opt" onclick="connectWallet('${key}')">
       <div class="wallet-opt-icon" style="background:linear-gradient(135deg,${info.gradient});">
         <span style="color:white;font-weight:800;font-size:0.7rem;">${info.label}</span>
       </div>
       <div>
         <div class="wallet-opt-name">${info.name}</div>
-        <div class="wallet-opt-desc">${disabled ? '미설치' : info.desc}</div>
+        <div class="wallet-opt-desc">${info.desc}</div>
       </div>
-      ${info.badge && !disabled ? '<span class="wallet-opt-badge">' + info.badge + '</span>' : ''}
-      ${disabled ? '<span class="wallet-opt-badge wc-soon">미설치</span>' : ''}
+      ${info.badge ? '<span class="wallet-opt-badge">' + info.badge + '</span>' : ''}
     </button>`;
   }
   container.innerHTML = html;
@@ -281,13 +276,103 @@ window.addEventListener('eip6963:announceProvider', () => {
   buildWalletButtons('walletOptions');
 });
 
+// ==================== CENTRALIZED WALLET CONNECT & REGISTRATION ====================
+async function connectWallet(type) {
+  // 클릭 시점에 프로바이더 재감지 (초기 빌드 시 놓쳤을 수 있음)
+  const provider = findProviderByName(type);
+  const walletName = WALLET_INFO[type]?.name || type;
+  const errEl = document.getElementById('walletError');
+  if (errEl) errEl.style.display = 'none';
+
+  if (!provider) {
+    if (errEl) {
+      errEl.textContent = walletName + '이(가) 감지되지 않습니다. 확장 프로그램을 설치하고 새로고침하세요.';
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+
+  try {
+    const result = await authConnect(provider, walletName);
+    if (result.needsRegistration) {
+      showRegForm(result.nonce, result.addr, provider);
+    } else {
+      closeModal('walletModal');
+      location.reload();
+    }
+  } catch (e) {
+    if (errEl) {
+      errEl.textContent = e.code === 4001 ? '사용자가 연결을 거부했습니다.' : (e.message || '연결 실패');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+function showRegForm(nonce, addr, provider) {
+  hide('#walletConnect');
+  let selectedRole = 'user';
+  const regEl = document.getElementById('walletRegister');
+  if (!regEl) return;
+
+  regEl.innerHTML = `
+    <h3>회원가입</h3>
+    <p class="modal-desc">${shortAddr(addr)} 지갑으로 가입합니다.</p>
+    <div class="auth-reg">
+      <div class="auth-role-picker">
+        <button class="auth-role-opt selected" data-role="user" onclick="_selectRegRole(this)">
+          <span class="auth-role-icon">&#128100;</span>
+          <span class="auth-role-name">일반 유저</span>
+          <span class="auth-role-desc">퀘스트 참여 및 보상</span>
+        </button>
+        <button class="auth-role-opt" data-role="project" onclick="_selectRegRole(this)">
+          <span class="auth-role-icon">&#128188;</span>
+          <span class="auth-role-name">프로젝트</span>
+          <span class="auth-role-desc">캠페인 생성 및 관리</span>
+        </button>
+      </div>
+      <div class="reg-field"><label>이메일 <span id="regEmailTag" style="font-size:0.75rem;color:var(--text-3);">(선택)</span></label><input type="email" id="regEmail" placeholder="name@example.com"></div>
+      <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름 <span style="font-size:0.75rem;color:var(--red);">(필수)</span></label><input type="text" id="regProjName" placeholder="예: AxiomDEX"></div>
+      <button class="reg-btn" onclick="_submitReg()">가입하기</button>
+    </div>
+  `;
+  show('#walletRegister');
+
+  window._selectRegRole = function(el) {
+    $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedRole = el.dataset.role;
+    document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
+    const tag = document.getElementById('regEmailTag');
+    if (tag) {
+      tag.textContent = selectedRole === 'project' ? '(필수)' : '(선택)';
+      tag.style.color = selectedRole === 'project' ? 'var(--red)' : 'var(--text-3)';
+    }
+  };
+
+  window._submitReg = async function() {
+    const email = document.getElementById('regEmail')?.value?.trim();
+    const projName = document.getElementById('regProjName')?.value?.trim();
+
+    if (selectedRole === 'project') {
+      if (!email) { alert('프로젝트 역할은 이메일이 필수입니다.'); return; }
+      if (!projName) { alert('프로젝트 이름을 입력하세요.'); return; }
+    }
+
+    try {
+      const regData = { role: selectedRole, email: email || undefined };
+      if (selectedRole === 'project') regData.project_name = projName;
+      await authSign(addr, nonce, provider, regData);
+      closeModal('walletModal');
+      location.reload();
+    } catch (e) { alert(e.message || '가입 실패'); }
+  };
+}
+
 // ==================== GLOBAL LOGOUT/DISCONNECT ====================
 function doDisconnect() {
   Auth.clear();
-  // Close dropdown
   const dd = document.getElementById('walletDropdown');
   if (dd) dd.remove();
-  // Reset wallet modal if exists
   const wc = document.getElementById('walletConnect');
   const wi = document.getElementById('walletInfo');
   const wr = document.getElementById('walletRegister');
@@ -318,14 +403,13 @@ function toggleWalletDropdown(e) {
     </div>
     <div class="wd-addr">${Auth.wallet || '-'}</div>
     <div class="wd-divider"></div>
-    ${Auth.isAdmin ? '<a href="admin.html" class="wd-item">Admin Dashboard</a><a href="project.html" class="wd-item">My Campaigns</a>' : ''}
+    ${Auth.isAdmin ? '<a href="admin.html" class="wd-item">Admin Dashboard</a><a href="project.html" class="wd-item">Dashboard</a>' : ''}
     ${Auth.isProject && !Auth.isAdmin ? '<a href="project.html" class="wd-item">Dashboard</a>' : ''}
-    ${Auth.isUser ? '<a href="user.html" class="wd-item">My Quests</a>' : ''}
+    ${Auth.isUser ? '<a href="user.html" class="wd-item">My Participations</a>' : ''}
     <div class="wd-divider"></div>
     <button class="wd-disconnect" onclick="doLogout()">지갑 연결 해제</button>
   `;
 
-  // Position it near the wallet button
   const btn = e.currentTarget;
   const rect = btn.getBoundingClientRect();
   dd.style.position = 'fixed';
@@ -333,7 +417,6 @@ function toggleWalletDropdown(e) {
   dd.style.right = Math.max(12, window.innerWidth - rect.right) + 'px';
   document.body.appendChild(dd);
 
-  // Close on outside click
   setTimeout(() => {
     document.addEventListener('click', function _close(ev) {
       if (!dd.contains(ev.target)) { dd.remove(); document.removeEventListener('click', _close); }
@@ -350,17 +433,14 @@ function setupNav() {
 
   if (Auth.isLoggedIn) {
     if (Auth.isAdmin) {
-      // Admin: Admin Dashboard, My Campaigns, Campaigns
       links = '<li><a href="admin.html">Admin Dashboard</a></li>'
-            + '<li><a href="project.html">My Campaigns</a></li>'
+            + '<li><a href="project.html">Dashboard</a></li>'
             + '<li><a href="index.html#campaigns">Campaigns</a></li>';
     } else if (Auth.isProject) {
-      // Project: Dashboard, Campaigns
       links = '<li><a href="project.html">Dashboard</a></li>'
             + '<li><a href="index.html#campaigns">Campaigns</a></li>';
     } else {
-      // User: My Quests, Campaigns
-      links = '<li><a href="user.html">My Quests</a></li>'
+      links = '<li><a href="user.html">My Participations</a></li>'
             + '<li><a href="index.html#campaigns">Campaigns</a></li>';
     }
     links += `<li><button class="wallet-btn connected" onclick="toggleWalletDropdown(event)">${shortAddr(Auth.wallet)}</button></li>`;

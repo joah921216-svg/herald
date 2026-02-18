@@ -249,17 +249,7 @@
     } catch (e) { alert(e.message || '반려 실패'); }
   }
 
-  async function connectWallet(type) {
-    const provider = findProviderByName(type);
-    const walletName = WALLET_INFO[type]?.name || type;
-    if (!provider) { $('#walletError').textContent = walletName + '이(가) 감지되지 않습니다.'; show('#walletError'); return; }
-    try {
-      const result = await authConnect(provider, walletName);
-      if (!result.needsRegistration) { closeModal('walletModal'); location.reload(); }
-    } catch (e) { $('#walletError').textContent = e.message || '연결 실패'; show('#walletError'); }
-  }
-
-  // doDisconnect and doLogout are defined in app.js
+  // connectWallet, showRegForm, doDisconnect, doLogout are defined in app.js
 
   async function init() {
     await authRestore();

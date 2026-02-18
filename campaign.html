@@ -186,6 +186,9 @@
         btnHtml = '<button class="quest-join-btn joined" disabled>참여중</button>';
       } else if (!Auth.isLoggedIn) {
         btnHtml = '<button class="quest-join-btn connect" onclick="openModal(\'walletModal\')">지갑 연결</button>';
+      } else if (Auth.isProject) {
+        // 프로젝트 계정은 퀘스트 참여 불가
+        btnHtml = '';
       } else {
         btnHtml = '<button class="quest-join-btn" onclick="joinQuest(\'' + q.id + '\', this)">참여하기</button>';
       }
@@ -250,70 +253,7 @@
     }
   }
 
-  // Wallet connect
-  async function connectWallet(type) {
-    const provider = findProviderByName(type);
-    const walletName = WALLET_INFO[type]?.name || type;
-    if (!provider) { $('#walletError').textContent = walletName + '이(가) 감지되지 않습니다.'; show('#walletError'); return; }
-    try {
-      const result = await authConnect(provider, walletName);
-      if (result.needsRegistration) {
-        showRegForm(result.nonce, result.addr, provider);
-      } else {
-        closeModal('walletModal');
-        setupNav();
-        location.reload();
-      }
-    } catch (e) {
-      $('#walletError').textContent = e.message || '연결 실패';
-      show('#walletError');
-    }
-  }
-
-  function showRegForm(nonce, addr, provider) {
-    hide('#walletConnect');
-    let selectedRole = 'user';
-    $('#walletRegister').innerHTML = `
-      <h3>회원가입</h3>
-      <p class="modal-desc">${shortAddr(addr)} 지갑으로 가입합니다.</p>
-      <div class="auth-reg">
-        <div class="auth-role-picker">
-          <button class="auth-role-opt selected" data-role="user" onclick="selectRegRole(this)">
-            <span class="auth-role-icon">&#128100;</span>
-            <span class="auth-role-name">일반 유저</span>
-            <span class="auth-role-desc">퀘스트 참여 및 보상</span>
-          </button>
-          <button class="auth-role-opt" data-role="project" onclick="selectRegRole(this)">
-            <span class="auth-role-icon">&#128188;</span>
-            <span class="auth-role-name">프로젝트</span>
-            <span class="auth-role-desc">캠페인 생성 및 관리</span>
-          </button>
-        </div>
-        <div class="reg-field"><label>이메일 (선택)</label><input type="email" id="regEmail" placeholder="name@example.com"></div>
-        <div class="reg-field" id="regProjField" style="display:none;"><label>프로젝트 이름</label><input type="text" id="regProjName" placeholder="예: AxiomDEX"></div>
-        <button class="reg-btn" onclick="submitReg()">가입하기</button>
-      </div>
-    `;
-    show('#walletRegister');
-
-    window._regData = { nonce, addr, provider };
-    window.selectRegRole = function(el) {
-      $$('.auth-role-opt').forEach(o => o.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedRole = el.dataset.role;
-      document.getElementById('regProjField').style.display = selectedRole === 'project' ? '' : 'none';
-    };
-    window.submitReg = async function() {
-      try {
-        const regData = { role: selectedRole, email: $('#regEmail')?.value || undefined };
-        if (selectedRole === 'project') regData.project_name = $('#regProjName')?.value || undefined;
-        await authSign(addr, nonce, provider, regData);
-        closeModal('walletModal');
-        setupNav();
-        location.reload();
-      } catch (e) { alert(e.message || '가입 실패'); }
-    };
-  }
+  // connectWallet and showRegForm are defined in app.js
 
   // Init
   authRestore().then(() => { initCommon(); loadCampaign(); });
