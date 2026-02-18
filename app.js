@@ -279,9 +279,9 @@ function formatNum(n) { return (n || 0).toLocaleString(); }
 
 // ==================== WALLET UI BUILDER ====================
 const WALLET_INFO = {
-  metamask: { name: 'MetaMask', desc: '브라우저 확장 지갑', gradient: '#f6851b,#e2761b', label: 'MM', badge: '인기' },
-  rabby:    { name: 'Rabby Wallet', desc: 'EVM 멀티체인 지갑', gradient: '#7084ff,#5c6fff', label: 'RB', badge: null },
-  phantom:  { name: 'Phantom', desc: 'Solana & EVM 지갑', gradient: '#ab9ff2,#6e56cf', label: 'PH', badge: null },
+  metamask: { name: 'MetaMask', desc: '브라우저 확장 지갑', gradient: '#f6851b,#e2761b', label: 'MM', badge: '인기', installUrl: 'https://metamask.io/download/' },
+  rabby:    { name: 'Rabby Wallet', desc: 'EVM 멀티체인 지갑', gradient: '#7084ff,#5c6fff', label: 'RB', badge: null, installUrl: 'https://rabby.io/' },
+  phantom:  { name: 'Phantom', desc: 'Solana & EVM 지갑', gradient: '#ab9ff2,#6e56cf', label: 'PH', badge: null, installUrl: 'https://phantom.app/download' },
 };
 
 // 모든 지갑 버튼을 항상 클릭 가능하게 렌더링.
@@ -321,8 +321,9 @@ async function connectWallet(type) {
   console.log('[SV] connectWallet:', type, '→ provider:', provider ? 'found' : 'null');
 
   if (!provider) {
+    const installUrl = WALLET_INFO[type]?.installUrl;
     if (errEl) {
-      errEl.textContent = walletName + '이(가) 감지되지 않습니다. 확장 프로그램을 설치하고 새로고침하세요.';
+      errEl.innerHTML = walletName + '이(가) 감지되지 않습니다. <a href="' + (installUrl || '#') + '" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:underline;font-weight:600;">' + walletName + ' 설치하기 &rarr;</a>';
       errEl.style.display = 'block';
     }
     return;
