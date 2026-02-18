@@ -1,0 +1,231 @@
+<!--
+  ============================================================
+  한국 크립토 KOL 쇼케이스 — Coming Soon 버전
+  ============================================================
+  "더 많은 유저가 필요하신가요?" 섹션 아래에 삽입
+  나중에 KOL 공개 시 mystery 카드를 실제 카드로 교체하면 됩니다.
+  ============================================================
+-->
+
+<style>
+.kol-section {
+  padding: 80px 24px 88px;
+  background: #fafafa;
+  overflow: hidden;
+}
+.kol-header {
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto 52px;
+}
+.kol-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #34d399;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-label-dot {
+  width: 6px; height: 6px;
+  background: #34d399;
+  border-radius: 50%;
+  animation: kolPulse 2.5s ease-in-out infinite;
+}
+@keyframes kolPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.kol-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+  margin: 0 0 10px;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-subtitle {
+  font-size: 15px;
+  color: #888;
+  margin: 0;
+  line-height: 1.65;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ── 트랙 ── */
+.kol-track-area {
+  position: relative;
+  margin: 0 -24px;
+}
+.kol-track-area::before,
+.kol-track-area::after {
+  content:''; position:absolute; top:0; bottom:0;
+  width:100px; z-index:2; pointer-events:none;
+}
+.kol-track-area::before { left:0; background:linear-gradient(to right,#fafafa,transparent) }
+.kol-track-area::after { right:0; background:linear-gradient(to left,#fafafa,transparent) }
+
+.kol-track {
+  display:flex; gap:14px; width:max-content;
+  padding:4px 0; animation:kolScroll 50s linear infinite;
+}
+.kol-track:hover { animation-play-state:paused }
+@keyframes kolScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+.kol-track.row2 { margin-top:14px; animation:kolScrollR 45s linear infinite }
+@keyframes kolScrollR { 0%{transform:translateX(-50%)} 100%{transform:translateX(0)} }
+
+/* ── 미스터리 카드 ── */
+.kol-card {
+  flex-shrink: 0;
+  width: 250px;
+  background: #fff;
+  border: 1px dashed #e0e0e0;
+  border-radius: 14px;
+  padding: 18px;
+  transition: all .2s ease;
+}
+.kol-card:hover {
+  border-color: #ccc;
+  box-shadow: 0 2px 12px rgba(0,0,0,.03);
+  transform: translateY(-2px);
+}
+
+.kol-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.kol-av {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ebebeb, #f5f5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.kol-av span {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ccc;
+}
+
+.kol-nm {
+  font-size: 14px; font-weight: 700; color: #bbb; margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-hd {
+  font-size: 12px; color: #d4d4d4; margin: 1px 0 0;
+}
+
+.kol-stats { display:flex; gap:6px }
+
+.kol-st {
+  flex:1; background:#f9f9f9; border-radius:8px;
+  padding:8px 6px; text-align:center;
+}
+.kol-st-icon { font-size:12px; color:#d4d4d4; margin-bottom:2px }
+.kol-st-val {
+  font-size: 13px; font-weight: 700; color: #ccc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-st-lbl {
+  font-size:9px; color:#d4d4d4;
+  text-transform:uppercase; letter-spacing:.3px; margin-top:1px;
+}
+
+/* ── 하단 ── */
+.kol-bottom {
+  text-align: center;
+  margin-top: 52px;
+}
+.kol-bottom p {
+  font-size: 14px; color: #999; margin: 0 0 18px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:12px 28px; background:#111; color:#fff;
+  font-weight:600; font-size:14px; border-radius:10px;
+  border:none; cursor:pointer; transition:all .2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.kol-btn:hover { background:#333; transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.1) }
+.kol-btn svg { transition:transform .2s }
+.kol-btn:hover svg { transform:translateX(2px) }
+
+@media (max-width:640px) {
+  .kol-section { padding:60px 16px 72px }
+  .kol-title { font-size:21px }
+  .kol-card { width:215px; padding:14px }
+  .kol-track-area::before,
+  .kol-track-area::after { width:50px }
+}
+</style>
+
+
+<section class="kol-section" id="kol-showcase">
+  <div class="kol-header">
+    <div class="kol-label"><span class="kol-label-dot"></span> KOL Network</div>
+    <h2 class="kol-title">한국 대표 크립토 KOL들이<br>합류하고 있습니다</h2>
+    <p class="kol-subtitle">검증된 인플루언서 네트워크와 함께<br>프로젝트를 한국 커뮤니티에 알리세요.</p>
+  </div>
+
+  <div class="kol-track-area">
+    <div class="kol-track" id="kolTrack1"></div>
+  </div>
+  <div class="kol-track-area">
+    <div class="kol-track row2" id="kolTrack2"></div>
+  </div>
+
+  <div class="kol-bottom">
+    <p>파트너 KOL 네트워크가 곧 공개됩니다.</p>
+    <button class="kol-btn" onclick="startCampaignOrLogin()">
+      캠페인 시작하기
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+    </button>
+  </div>
+</section>
+
+
+<script>
+const LABELS = [
+  "합류 예정","협의 중","Coming Soon","준비 중",
+  "합류 예정","Coming Soon","협의 중","준비 중",
+  "합류 예정","Coming Soon","협의 중","준비 중",
+  "합류 예정","Coming Soon","협의 중","준비 중",
+];
+
+function mysteryCard(label) {
+  return `<div class="kol-card">
+    <div class="kol-top">
+      <div class="kol-av"><span>?</span></div>
+      <div><p class="kol-nm">${label}</p><p class="kol-hd">@••••••••</p></div>
+    </div>
+    <div class="kol-stats">
+      <div class="kol-st"><div class="kol-st-icon">𝕏</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Followers</div></div>
+      <div class="kol-st"><div class="kol-st-icon">✈️</div><div class="kol-st-val">•••</div><div class="kol-st-lbl">Members</div></div>
+    </div>
+  </div>`;
+}
+
+function init() {
+  const t1 = document.getElementById('kolTrack1');
+  const t2 = document.getElementById('kolTrack2');
+  if (!t1||!t2) return;
+  const mid = Math.ceil(LABELS.length/2);
+  const r1 = LABELS.slice(0,mid).map(mysteryCard).join('');
+  const r2 = LABELS.slice(mid).map(mysteryCard).join('');
+  t1.innerHTML = r1+r1;
+  t2.innerHTML = r2+r2;
+}
+
+document.addEventListener('DOMContentLoaded',init);
+if(document.readyState!=='loading') init();
+</script>
