@@ -85,6 +85,8 @@
 .dash-action.reject:hover { background: var(--red); color: white; }
 .dash-action.view { background: var(--blue-soft); color: var(--blue); }
 .dash-action.view:hover { background: var(--blue); color: white; }
+.dash-action.delete { background: rgba(220,38,38,0.08); color: #dc2626; }
+.dash-action.delete:hover { background: #dc2626; color: white; }
 
 /* Empty state */
 .dash-empty {

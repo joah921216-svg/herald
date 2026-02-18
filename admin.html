@@ -162,6 +162,7 @@
           <td>
             <button class="dash-action approve" onclick="approveCampaign('${c.id}')">승인</button>
             <button class="dash-action reject" onclick="startReject('${c.id}')" style="margin-left:0.3rem;">반려</button>
+            <button class="dash-action delete" onclick="deleteCampaign('${c.id}')" style="margin-left:0.3rem;">삭제</button>
           </td>
         </tr>`;
       });
@@ -181,8 +182,8 @@
       camps.forEach(c => {
         const creator = c.users?.wallet_address ? shortAddr(c.users.wallet_address) : '-';
         const actions = c.status === 'pending'
-          ? `<button class="dash-action approve" onclick="approveCampaign('${c.id}')">승인</button> <button class="dash-action reject" onclick="startReject('${c.id}')">반려</button>`
-          : `<a href="campaign.html?id=${c.id}" class="dash-action view">상세</a>`;
+          ? `<button class="dash-action approve" onclick="approveCampaign('${c.id}')">승인</button> <button class="dash-action reject" onclick="startReject('${c.id}')">반려</button> <button class="dash-action delete" onclick="deleteCampaign('${c.id}')">삭제</button>`
+          : `<a href="campaign.html?id=${c.id}" class="dash-action view">상세</a> <button class="dash-action delete" onclick="deleteCampaign('${c.id}')">삭제</button>`;
         html += `<tr>
           <td><a href="campaign.html?id=${c.id}" style="font-weight:600;color:var(--text);text-decoration:none;">${c.project_name}</a></td>
           <td>${c.chain || '-'}</td>
@@ -247,6 +248,16 @@
       loadAllCampaigns();
       loadStats();
     } catch (e) { alert(e.message || '반려 실패'); }
+  }
+
+  async function deleteCampaign(id) {
+    if (!confirm('정말 이 캠페인을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+    try {
+      await api('/api/campaigns/' + id, { method: 'DELETE' });
+      loadPending();
+      loadAllCampaigns();
+      loadStats();
+    } catch (e) { alert(e.message || '삭제 실패'); }
   }
 
   // connectWallet, showRegForm, doDisconnect, doLogout are defined in app.js
