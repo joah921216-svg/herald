@@ -588,10 +588,21 @@ function validateStep2() {
   const kolChecked = $$('#kolQuestArea .wiz-quest-cb:checked').length;
   const genOk = skipGen || genChecked > 0;
   const kolOk = skipKOL || kolChecked > 0;
-  const valid = genOk && kolOk;
+  // 둘 다 해당 없음이면 안 됨 — 최소 한쪽은 대상자가 있어야 함
+  const bothSkipped = skipGen && skipKOL;
+  const valid = genOk && kolOk && !bothSkipped;
   if (wizStep === 2) {
     document.getElementById('wizNext').classList.toggle('disabled', !valid);
-    document.getElementById('step2Msg').style.display = valid ? 'none' : '';
+    const msg = document.getElementById('step2Msg');
+    if (bothSkipped) {
+      msg.textContent = '일반 유저와 인플루언서 모두 "해당 없음"일 수 없습니다. 최소 한쪽은 대상자를 선택하세요.';
+      msg.style.display = '';
+    } else if (!valid) {
+      msg.textContent = '각 섹션에서 퀘스트를 선택하거나 "해당 없음"을 체크해주세요.';
+      msg.style.display = '';
+    } else {
+      msg.style.display = 'none';
+    }
   }
   return valid;
 }
