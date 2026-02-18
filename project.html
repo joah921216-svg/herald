@@ -386,7 +386,14 @@
       });
       html += '</tbody></table>';
       $('#campList').innerHTML = html;
-    } catch (e) { show('#campEmpty'); }
+    } catch (e) {
+      console.error('Dashboard load error:', e);
+      show('#campEmpty');
+      if (e.status === 401) {
+        Auth.clear();
+        location.reload();
+      }
+    }
   }
 
   // ==================== OPEN / EDIT WIZARD ====================
@@ -653,7 +660,7 @@
     });
   }
 
-  function wizGo(dir) {
+  async function wizGo(dir) {
     if (dir === 1 && document.getElementById('wizNext').classList.contains('disabled')) return;
     const next = wizStep + dir;
     if (next < 1 || next > WIZ_TOTAL + 1) return;
@@ -673,16 +680,26 @@
         setTimeout(() => document.getElementById('wizReview').classList.remove('shake'), 500);
         return;
       }
-      const budget = Number(document.getElementById('cwBudget').value) || 0;
-      document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
-      document.getElementById('doneQuests').textContent = $$('.wiz-quest-cb:checked').length + '개';
-      submitCampaignToBackend();
-      for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
-      document.getElementById('wizDone').style.display = 'block';
-      document.getElementById('wizNav').style.display = 'none';
-      document.getElementById('wizBar').style.width = '100%';
-      $$('.wiz-dots .wiz-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
-      launchConfetti();
+      const btn = document.getElementById('wizNext');
+      btn.textContent = '제출 중...';
+      btn.classList.add('disabled');
+      try {
+        await submitCampaignToBackend();
+        const budget = Number(document.getElementById('cwBudget').value) || 0;
+        document.getElementById('doneBudget').textContent = '$' + budget.toLocaleString();
+        document.getElementById('doneQuests').textContent = $$('.wiz-quest-cb:checked').length + '개';
+        for (let i = 1; i <= WIZ_TOTAL; i++) document.getElementById('wizStep' + i).style.display = 'none';
+        document.getElementById('wizDone').style.display = 'block';
+        document.getElementById('wizNav').style.display = 'none';
+        document.getElementById('wizBar').style.width = '100%';
+        $$('.wiz-dots .wiz-dot').forEach(d => { d.classList.remove('active'); d.classList.add('done'); });
+        launchConfetti();
+        loadDashboard();
+      } catch (e) {
+        btn.textContent = _wizEditId ? '캠페인 수정' : '캠페인 제출';
+        btn.classList.remove('disabled');
+        alert('캠페인 제출 실패: ' + (e.message || '서버 오류'));
+      }
       return;
     }
 
@@ -744,38 +761,36 @@
   }
 
   async function submitCampaignToBackend() {
-    if (!Auth.isLoggedIn) return;
-    try {
-      const quests = [];
-      $$('.wiz-quest-cb:checked').forEach(cb => {
-        const title = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
-        const rewardInput = document.querySelector('.wiz-qr-input input[data-atype="' + cb.dataset.atype + '"]');
-        quests.push({
-          title,
-          quest_type: cb.dataset.qtype,
-          action_type: cb.dataset.atype,
-          reward_per_user: Number(rewardInput?.value) || 0,
-        });
+    if (!Auth.isLoggedIn) throw new Error('로그인이 필요합니다.');
+    const quests = [];
+    $$('.wiz-quest-cb:checked').forEach(cb => {
+      const title = cb.closest('.wiz-quest-item')?.querySelector('.wq-name')?.textContent || '';
+      const rewardInput = document.querySelector('.wiz-qr-input input[data-atype="' + cb.dataset.atype + '"]');
+      quests.push({
+        title,
+        quest_type: cb.dataset.qtype,
+        action_type: cb.dataset.atype,
+        reward_per_user: Number(rewardInput?.value) || 0,
       });
-      const body = {
-        project_name: document.getElementById('cwProjName').value,
-        chain: document.getElementById('cwChain').value,
-        category: document.getElementById('cwSector').value,
-        start_date: document.getElementById('cwStart').value || null,
-        end_date: document.getElementById('cwEnd').value || null,
-        reward_token: document.getElementById('cwToken').value,
-        reward_amount: Number(document.getElementById('cwBudget').value) || 0,
-        max_participants: 500,
-        min_twitter_followers: Number(document.getElementById('cwMinTwitter')?.value) || 0,
-        min_telegram_followers: Number(document.getElementById('cwMinTelegram')?.value) || 0,
-        quests,
-      };
-      if (_wizEditId) {
-        await api('/api/campaigns/' + _wizEditId, { method: 'PUT', body: JSON.stringify(body) });
-      } else {
-        await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
-      }
-    } catch (e) { console.error('Campaign submit failed:', e); }
+    });
+    const body = {
+      project_name: document.getElementById('cwProjName').value,
+      chain: document.getElementById('cwChain').value,
+      category: document.getElementById('cwSector').value,
+      start_date: document.getElementById('cwStart').value || null,
+      end_date: document.getElementById('cwEnd').value || null,
+      reward_token: document.getElementById('cwToken').value,
+      reward_amount: Number(document.getElementById('cwBudget').value) || 0,
+      max_participants: 500,
+      min_twitter_followers: Number(document.getElementById('cwMinTwitter')?.value) || 0,
+      min_telegram_followers: Number(document.getElementById('cwMinTelegram')?.value) || 0,
+      quests,
+    };
+    if (_wizEditId) {
+      await api('/api/campaigns/' + _wizEditId, { method: 'PUT', body: JSON.stringify(body) });
+    } else {
+      await api('/api/campaigns', { method: 'POST', body: JSON.stringify(body) });
+    }
   }
 
   function launchConfetti() {
