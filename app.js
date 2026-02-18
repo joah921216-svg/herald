@@ -107,42 +107,77 @@ function _safeGetProviders() {
 }
 
 function findMetaMask() {
-  const eip = _eip6963Providers.get('io.metamask');
-  if (eip) return eip.provider;
-  const fromArr = _safeGetProviders().find(p => {
-    try { return p.isMetaMask && !p.isRabby && !p.isPhantom; } catch { return false; }
-  });
-  if (fromArr) return fromArr;
+  // 1. providers 배열에서 MetaMask만 (Rabby/Phantom 제외)
   try {
-    const eth = _safeGetEthereum();
-    if (eth?.isMetaMask && !eth?.isRabby && !eth?.isPhantom) return eth;
-  } catch {}
+    const providers = window.ethereum?.providers;
+    if (Array.isArray(providers)) {
+      const p = providers.find(p => p.isMetaMask && !p.isRabby && !p.isPhantom);
+      if (p) { console.log('[SV] MetaMask found in providers[]'); return p; }
+    }
+  } catch (e) { console.log('[SV] MetaMask providers check error:', e.message); }
+  // 2. window.ethereum 직접 (Rabby/Phantom 아닌 경우만)
+  try {
+    const eth = window.ethereum;
+    if (eth && eth.isMetaMask && !eth.isRabby && !eth.isPhantom) {
+      console.log('[SV] MetaMask found via window.ethereum');
+      return eth;
+    }
+  } catch (e) { console.log('[SV] MetaMask window.ethereum error:', e.message); }
+  // 3. EIP-6963 fallback
+  const eip = _eip6963Providers.get('io.metamask');
+  if (eip) { console.log('[SV] MetaMask found via EIP-6963'); return eip.provider; }
+  console.log('[SV] MetaMask not found');
   return null;
 }
 
 function findRabby() {
-  const eip = _eip6963Providers.get('io.rabby');
-  if (eip) return eip.provider;
-  try { if (window.rabby) return window.rabby; } catch {}
-  const fromArr = _safeGetProviders().find(p => {
-    try { return p.isRabby; } catch { return false; }
-  });
-  if (fromArr) return fromArr;
+  // 1. window.ethereum에서 isRabby 확인 (최우선 — 유저 지정)
   try {
-    const eth = _safeGetEthereum();
-    if (eth?.isRabby) return eth;
-  } catch {}
+    const eth = window.ethereum;
+    if (eth && eth.isRabby) {
+      console.log('[SV] Rabby found via window.ethereum.isRabby');
+      return eth;
+    }
+  } catch (e) { console.log('[SV] Rabby window.ethereum error:', e.message); }
+  // 2. providers 배열
+  try {
+    const providers = window.ethereum?.providers;
+    if (Array.isArray(providers)) {
+      const p = providers.find(p => p.isRabby);
+      if (p) { console.log('[SV] Rabby found in providers[]'); return p; }
+    }
+  } catch (e) { console.log('[SV] Rabby providers check error:', e.message); }
+  // 3. window.rabby (일부 버전)
+  try {
+    if (window.rabby) { console.log('[SV] Rabby found via window.rabby'); return window.rabby; }
+  } catch (e) { console.log('[SV] Rabby window.rabby error:', e.message); }
+  // 4. EIP-6963 fallback
+  const eip = _eip6963Providers.get('io.rabby');
+  if (eip) { console.log('[SV] Rabby found via EIP-6963'); return eip.provider; }
+  console.log('[SV] Rabby not found');
   return null;
 }
 
 function findPhantom() {
+  // 1. window.phantom.ethereum (최우선 — 유저 지정)
+  try {
+    if (window.phantom && window.phantom.ethereum) {
+      console.log('[SV] Phantom found via window.phantom.ethereum');
+      return window.phantom.ethereum;
+    }
+  } catch (e) { console.log('[SV] Phantom window.phantom error:', e.message); }
+  // 2. providers 배열
+  try {
+    const providers = window.ethereum?.providers;
+    if (Array.isArray(providers)) {
+      const p = providers.find(p => p.isPhantom);
+      if (p) { console.log('[SV] Phantom found in providers[]'); return p; }
+    }
+  } catch (e) { console.log('[SV] Phantom providers check error:', e.message); }
+  // 3. EIP-6963 fallback
   const eip = _eip6963Providers.get('app.phantom');
-  if (eip) return eip.provider;
-  try { if (window.phantom?.ethereum) return window.phantom.ethereum; } catch {}
-  const fromArr = _safeGetProviders().find(p => {
-    try { return p.isPhantom; } catch { return false; }
-  });
-  if (fromArr) return fromArr;
+  if (eip) { console.log('[SV] Phantom found via EIP-6963'); return eip.provider; }
+  console.log('[SV] Phantom not found');
   return null;
 }
 
@@ -278,11 +313,12 @@ window.addEventListener('eip6963:announceProvider', () => {
 
 // ==================== CENTRALIZED WALLET CONNECT & REGISTRATION ====================
 async function connectWallet(type) {
-  // 클릭 시점에 프로바이더 재감지 (초기 빌드 시 놓쳤을 수 있음)
   const provider = findProviderByName(type);
   const walletName = WALLET_INFO[type]?.name || type;
   const errEl = document.getElementById('walletError');
   if (errEl) errEl.style.display = 'none';
+
+  console.log('[SV] connectWallet:', type, '→ provider:', provider ? 'found' : 'null');
 
   if (!provider) {
     if (errEl) {
@@ -293,6 +329,7 @@ async function connectWallet(type) {
   }
 
   try {
+    console.log('[SV] Requesting accounts from', walletName, '...');
     const result = await authConnect(provider, walletName);
     if (result.needsRegistration) {
       showRegForm(result.nonce, result.addr, provider);
@@ -301,8 +338,13 @@ async function connectWallet(type) {
       location.reload();
     }
   } catch (e) {
+    console.error('[SV] Wallet connect error:', { code: e.code, message: e.message, error: e });
     if (errEl) {
-      errEl.textContent = e.code === 4001 ? '사용자가 연결을 거부했습니다.' : (e.message || '연결 실패');
+      if (e.code === 4001) {
+        errEl.textContent = '사용자가 연결을 거부했습니다.';
+      } else {
+        errEl.textContent = (e.message || '연결 실패') + (e.code ? ' (code: ' + e.code + ')' : '');
+      }
       errEl.style.display = 'block';
     }
   }
